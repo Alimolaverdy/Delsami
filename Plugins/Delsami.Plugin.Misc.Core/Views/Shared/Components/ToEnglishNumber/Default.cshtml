@@ -1,0 +1,39 @@
+﻿<script asp-location="Footer">
+    // $(document).ready(function () {
+    function toEnglishDigits(str) {
+
+        // convert persian digits [۰۱۲۳۴۵۶۷۸۹]
+        var e = '۰'.charCodeAt(0);
+        str = str.replace(/[۰-۹]/g, function (t) {
+            return t.charCodeAt(0) - e;
+        });
+
+        // convert arabic indic digits [٠١٢٣٤٥٦٧٨٩]
+        e = '٠'.charCodeAt(0);
+        str = str.replace(/[٠-٩]/g, function (t) {
+            return t.charCodeAt(0) - e;
+        });
+        return str;
+    }
+
+    $(document).on('change', '.productQuantityTextBox, .qty-input', function () {
+        $(this).val(toEnglishDigits($(this).val()));
+    });
+
+
+    // $(document).on('click', '.decrease-quantity', function () {
+    //     var quantityElm = $(this).parent().parent().find(".quantityBox").first();
+
+    //     if (Number(quantityElm.val()) > 1)
+    //         quantityElm.val(Number(quantityElm.val()) - Number(1));
+    // });
+
+
+    // $(document).on('click', '.increase-quantity', function () {
+    //     var quantityElm = $(this).parent().parent().find(".quantityBox").first();
+
+    //     quantityElm.val(Number(quantityElm.val()) + Number(1));
+    // });
+
+
+</script>

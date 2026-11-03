@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Delsami core",
+  "SystemName": "Delsami.Misc.Core",
+  "Version": "1",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "AliMolaverdi",
+  "DisplayOrder": 1,
+  "FileName": "Delsami.Plugin.Misc.Core.dll",
+  "Description": "This plugin provide some basic features"
+}
