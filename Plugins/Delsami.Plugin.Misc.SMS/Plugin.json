@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Delsami SMS",
+  "SystemName": "Delsami.Misc.SMS",
+  "Version": "1",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "AliMolaverdi",
+  "DisplayOrder": 1,
+  "FileName": "Delsami.Plugin.Misc.SMS.dll",
+  "Description": "This plugin provide sms feature"
+}

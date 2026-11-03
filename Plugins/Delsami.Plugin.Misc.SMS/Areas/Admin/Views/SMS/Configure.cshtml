@@ -1,0 +1,65 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    NopHtml.SetActiveMenuItemSystemName(T("Delsami.Plugin.Misc.SMSManagement.Configuration.SystemName").Text);
+}
+
+<form asp-controller="SMS" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="SenderNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SenderNumber" asp-required="true" />
+                                <span asp-validation-for="SenderNumber"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MaximumLengthOfSMS" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaximumLengthOfSMS" asp-required="true" />
+                                <span asp-validation-for="MaximumLengthOfSMS"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Apikey" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Apikey" asp-required="true" />
+                                <span asp-validation-for="Apikey"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="BaseUrl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="BaseUrl" asp-required="true" />
+                                <span asp-validation-for="BaseUrl"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

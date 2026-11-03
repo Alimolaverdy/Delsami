@@ -86,6 +86,10 @@
     {
       "SystemName": "Delsami.Misc.Core",
       "Version": "1"
+    },
+    {
+      "SystemName": "Delsami.Misc.SMS",
+      "Version": "1"
     }
   ],
   "PluginNamesToUninstall": [],

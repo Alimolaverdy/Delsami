@@ -77,13 +77,13 @@ namespace Delsami.Plugin.Misc.Core.Helpers
         {
             switch (paymentMethodSystemName)
             {
-                case "ZarIran.Payments.Digipay": return MonitoringProvider.Digipay;
+                case "Delsami.Payments.Digipay": return MonitoringProvider.Digipay;
                 case "Payments.BankPasargad": return MonitoringProvider.Pasargad;
-                case "ZarIran.Payments.Saman": return MonitoringProvider.Saman;
-                case "ZarIran.Payments.Tara": return MonitoringProvider.Tara;
-                case "ZarIran.Payment.Tejarat": return MonitoringProvider.Tejarat;
-                case "ZarIran.Payments.TorobPay": return MonitoringProvider.Torobpay;
-                case "ZarIran.Payments.Barook": return MonitoringProvider.Barook;
+                case "Delsami.Payments.Saman": return MonitoringProvider.Saman;
+                case "Delsami.Payments.Tara": return MonitoringProvider.Tara;
+                case "Delsami.Payment.Tejarat": return MonitoringProvider.Tejarat;
+                case "Delsami.Payments.TorobPay": return MonitoringProvider.Torobpay;
+                case "Delsami.Payments.Barook": return MonitoringProvider.Barook;
                 case "Payments.Mellat": return MonitoringProvider.Mellat;
                 default:
                     return MonitoringProvider.None;

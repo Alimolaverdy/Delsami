@@ -49,7 +49,7 @@ namespace Delsami.Plugin.Misc.Core.Services
 
         private CacheKey GetCacheKey(int customerId)
         {
-            var cacheKey = new CacheKey("ZarIran.OtpCacheKey.{0}-{1}", customerId.ToString(), "ActivationCode");
+            var cacheKey = new CacheKey("Delsami.OtpCacheKey.{0}-{1}", customerId.ToString(), "ActivationCode");
             cacheKey.CacheTime = 5;
 
             return cacheKey;

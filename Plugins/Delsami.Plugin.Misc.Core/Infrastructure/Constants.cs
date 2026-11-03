@@ -2,7 +2,7 @@
 {
     public class Constants
     {
-        public const string ZarIranMarketServiceName = "ZarIranMarket";
+        public const string DelsamiMarketServiceName = "DelsamiMarket";
 
         public const string ViraServiceWrapperServiceName = "ViraServiceWrapper";
 
@@ -16,7 +16,7 @@
 
         public const string CASH_REPAIR_SHOP = "CashRepairShop";
 
-        public const string CancelPendingOrderScheduleTaskType = "ZarIran.Plugin.Misc.Core.ScheduleTasks.CancelPendingOrderScheduleTask";
+        public const string CancelPendingOrderScheduleTaskType = "Delsami.Plugin.Misc.Core.ScheduleTasks.CancelPendingOrderScheduleTask";
 
         public const string Marketer = "OnSiteMarketerSystemName";
 

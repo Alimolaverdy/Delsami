@@ -53,7 +53,7 @@ namespace Delsami.Plugin.Misc.Core.Components
                 Amount = await _priceFormatter.FormatPriceAsync(rewardPointsAmount, true, false)
             };
 
-            return View("/Plugins/ZarIran.Misc.Core/Views/Shared/Components/CreditBalance/Default.cshtml", creditBalance);
+            return View("/Plugins/Delsami.Misc.Core/Views/Shared/Components/CreditBalance/Default.cshtml", creditBalance);
         }
 
         #endregion
