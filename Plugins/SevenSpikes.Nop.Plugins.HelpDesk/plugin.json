@@ -1,0 +1,12 @@
+{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Help Desk",
+  "SystemName": "SevenSpikes.Nop.Plugins.HelpDesk",
+  "Version": "4.6",
+  "SupportedVersions": [ "4.60" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.HelpDesk.dll",
+  "Description": "This plugin will help you provide a complete customer care service and make every day support easy."
+}

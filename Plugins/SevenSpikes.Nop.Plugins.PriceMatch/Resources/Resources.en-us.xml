@@ -1,0 +1,351 @@
+﻿<?xml version="1.0" encoding="utf-16" ?>
+<Language Name="English">
+  <LocaleResource Name="SevenSpikes.PriceMatch">
+    <Value>Price Match</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Submenus.Settings">
+    <Value>Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Submenus.PriceMatchRequests">
+    <Value>Price match requests</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings">
+    <Value>Nop Price Match Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.GeneralSettings">
+    <Value>General Settings</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.IsEnabled">
+    <Value>Is plugin enabled for store</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.IsEnabled.Hint">
+    <Value>Enables/Disables the Price Match plugin. Useful for multi-store configurations, where you can disable the plugin for a particular store(s).</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.IsPriceMatchEnabledForGuests">
+    <Value>Is price match enabled for guests</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.IsPriceMatchEnabledForGuests.Hint">
+    <Value>Enables/Disables the Price Match plugin for guests.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.EnableCaptcha">
+    <Value>Is captcha enabled</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.EnableCaptcha.Hint">
+    <Value>Enables/Disables the captcha when submitting a new price match request form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.AdditionalDiscountAmount">
+    <Value>Additional Discount Amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.AdditionalDiscountAmount.Hint">
+    <Value>Specify the additional discount amount that will be added to the rounded difference between current product price and the competitors price.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.AdditionalDiscountEndDateInDays">
+    <Value>Additional Discount End Date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.AdditionalDiscountEndDateInDays.Hint">
+    <Value>Specify the additional discount end date in days. If set to "0" the field won't be prepopulated.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.DefaultEmailAccount">
+    <Value>Default Email Account</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.DefaultEmailAccount.Hint">
+    <Value>The email account from which the emails are going to be sent.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.SendEmailToVendorOnNewRequest">
+    <Value>Send email when a new price match request is submitted (Vendor)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.SendEmailToVendorOnNewRequest.Hint">
+    <Value>Specify whether an email will be send to the vendor when a new price match request is submitted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.IncludeStoreOwnerInBccOnNewRequest">
+    <Value>Include store owner email in BCC</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.IncludeStoreOwnerInBccOnNewRequest.Hint">
+    <Value>Specify whether the store owner will be added to the BCC of the new price match request email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.SendEmailOnDenyRequest">
+    <Value>Send email when a price match request is denied (Customer)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.SendEmailOnDenyRequest.Hint">
+    <Value>Specify whether an email will be send to the customer when his price match request is denied.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.AutoApprovePriceMatchRequests">
+    <Value>Automatically approve requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.AutoApprovePriceMatchRequests.Hint">
+    <Value>Specify whether requests will be automatically approved below certain discount percentage</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.MaximumPriceIntervalFromOriginalPrice">
+    <Value>Maximum price interval from customer's original price</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.MaximumPriceIntervalFromOriginalPrice.Hint">
+    <Value>Specify the maximum price difference for which the price match requests can be automatically approved.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.SendEmailToVendorOnNewAutoApprovedRequest">
+    <Value>Send email when a new price match request is automatically approved (Vendor)</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.SendEmailToVendorOnNewAutoApprovedRequest.Hint">
+    <Value>Specify whether an email will be send to the vendor when a new price match request is automatically approved.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.IncludeStoreOwnerInBccOnNewAutoApprovedRequest">
+    <Value>Include store owner email in BCC</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.IncludeStoreOwnerInBccOnNewAutoApprovedRequest.Hint">
+    <Value>Specify whether the store owner will be added to the BCC of the new auto approved price match request email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.WidgetZone">
+    <Value>Widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.WidgetZone.None">
+    <Value>None</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.WidgetZone.Hint">
+    <Value>The widget zone where the price match button will appear on product details page. "None" means that the button won't be visible.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.GroupedProductsWidgetZone">
+    <Value>Grouped Products Widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.GroupedProductsWidgetZone.Hint">
+    <Value>The widget zone for grouped products where the price match button will appear on product details page. "None" means that the button won't be visible.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.AccountNavigationWidgetZone">
+    <Value>Account Navigation Widget zone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.Settings.AccountNavigationWidgetZone.Hint">
+    <Value>The widget zone where the price match will appear on account navigation page. "None" means that the button won't be visible.</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequests">
+    <Value>List of price match requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.ApprovedRequest">
+    <Value>The price match request was approved successfully.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.DeniedRequest">
+    <Value>The price match request was denied successfully.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.PriceDifferenceFormatted">
+    <Value>Price difference</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.PriceDifferenceFormatted.Hint">
+    <Value>The difference between product and competitors price</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountAmount">
+    <Value>Discount amount</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountAmount.Hint">
+    <Value>The discount amount. NOTE: It is calculated by adding the rounded price difference and the additional discount amount ( if any ) together</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountEndDate">
+    <Value>Discount end date</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountEndDate.Hint">
+    <Value>The end date to which the discount will be active</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountEndDate.NoExpirationDate">
+    <Value>[no expiration date]</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountLimitationTimes">
+    <Value>Discount limitation</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountLimitationTimes.Hint">
+    <Value>The number of times the discount can be used</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.MaximumDiscountedQuantity">
+    <Value>Maximum discounted quantity</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.MaximumDiscountedQuantity.Hint">
+    <Value>Maximum product quantity which could be discounted. For example, you can have two products (the same) in the cart but only one of them will be discounted. It can be used for scenarios like "buy 2 get 1 free". Leave empty if any quantity could be discounted.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountName">
+    <Value>Discount</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountName.Hint">
+    <Value>The name of the discount generated by the Price Match plugin.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountCouponCode">
+    <Value>Coupon code</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountUsedTimes">
+    <Value>[ Used {0} time(s) ]</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.Title">
+    <Value>View price match request</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.BackToList">
+    <Value>Back to list</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.Button.Approve">
+    <Value>Approve</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.Button.Deny">
+    <Value>Deny</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.InvalidPriceMatchRequest">
+    <Value>[ Price match request with id #{0} does not exists! ]</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.InvalidVendorAccess">
+    <Value>[ Access Denied. You don't have permissions to perform this action. ]</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.InvalidStore">
+    <Value>[ Store with id #{0} does not exists! ]</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.InvalidProduct">
+    <Value>[ Product with id #{0} does not exists! ]</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.InvalidDiscount">
+    <Value>[ Discount with id #{0} does not exists! ]</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.Id">
+    <Value>Id</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerName">
+    <Value>Name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerName.Hint">
+    <Value>The name of the customer who submitted the price match request</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerName.Required">
+    <Value>Name is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerEmail">
+    <Value>Email</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerEmail.Hint">
+    <Value>The email of the customer who submitted the price match request</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerEmail.Required">
+    <Value>Email is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerPhone">
+    <Value>Phone</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerPhone.Hint">
+    <Value>The phone of the customer who submitted the price match request</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProductPriceFormatted">
+    <Value>Product price</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProductPriceFormatted.Hint">
+    <Value>The price of the product at the time when the price match has been submitted</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorPriceFormatted">
+    <Value>Competitor price</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorPriceFormatted.Hint">
+    <Value>The price that competitor offers</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CreatedOn">
+    <Value>Created on</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CreatedOn.Hint">
+    <Value>The creation date of the price match request</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.AdditionalInformation">
+    <Value>Additional information</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.AdditionalInformation.Hint">
+    <Value>Add any additional information that will be send in the emails</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProcessedBy">
+    <Value>Processed by</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProcessedBy.AutoApproved">
+    <Value>System [ auto-approved ]</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProcessedBy.Hint">
+    <Value>The name of the store owner/vendor who processed the price match</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProcessedOn">
+    <Value>Processed on</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProcessedOn.Hint">
+    <Value>The date on which the price match was processed</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProductName">
+    <Value>Product name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProductName.Hint">
+    <Value>The name of the product for which the price match request is submitted</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.StoreName">
+    <Value>Store name</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.StoreName.Hint">
+    <Value>The store where the price match request is submitted</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.Status">
+    <Value>Status</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.Status.Hint">
+    <Value>The status of the price match request</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorUrl">
+    <Value>Competitor URL</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorUrl.Hint">
+    <Value>The URL of the competitor's offer</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorUrl.Required">
+    <Value>URL is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorPrice">
+    <Value>Competitor price</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorPrice.Required">
+    <Value>Price is required.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.Message">
+    <Value>Message</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.Message.Hint">
+    <Value>The message of the price match request</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Common.PriceMatchRequest.Message.Required">
+    <Value>Message is required.</Value>
+  </LocaleResource>
+  
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.PriceMatchForm.BeforeFormText">
+    <Value>Found a lower price? Complete this simple form.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.PriceMatchForm.Title">
+    <Value>Price match form - {0} {1}</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.PriceMatchForm.InvalidPrice">
+    <Value>Competitor's price should be lower than the current product price.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.PriceMatchForm.Success">
+    <Value>Your price match request has been successfully submitted. Once your request is processed, you will be notified by email.</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.PriceMatchForm.AutoApproveSuccess">
+    <Value>Your price match request has been approved! Please check your email for more information!</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.PriceMatchButton">
+    <Value>Price match</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.AccountNavigation.Requests.Link">
+    <Value>Price match requests</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.PriceMatchRequests">
+    <Value>Price Match Requests</Value>
+  </LocaleResource>
+  <LocaleResource Name="SevenSpikes.PriceMatch.Public.PriceMatchRequests.Title">
+    <Value>Price Match Request #{0} - {1}</Value>
+  </LocaleResource>
+
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.PriceMatch.Domain.Enums.Status.Pending">
+    <Value>Pending</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.PriceMatch.Domain.Enums.Status.Approved">
+    <Value>Approved</Value>
+  </LocaleResource>
+  <LocaleResource Name="Enums.SevenSpikes.Nop.Plugins.PriceMatch.Domain.Enums.Status.Denied">
+    <Value>Denied</Value>
+  </LocaleResource>
+</Language>

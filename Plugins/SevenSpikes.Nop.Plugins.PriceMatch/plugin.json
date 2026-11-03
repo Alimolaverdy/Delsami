@@ -1,0 +1,12 @@
+﻿{
+	"Group": "7Spikes",
+	"FriendlyName": "Nop Price Match",
+	"SystemName": "SevenSpikes.Nop.Plugins.PriceMatch",
+	"Version": "4.6",
+	"SupportedVersions": [ "4.60" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+	"Author": "Seven Spikes Ltd",
+	"DisplayOrder": 5,
+	"FileName": "SevenSpikes.Nop.Plugins.PriceMatch.dll",
+	"Description": "This plugin allows you to place a special 'Price Match' button on the product page and let your customers inform you about lower prices on the same items in other web-stores."
+}

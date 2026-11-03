@@ -1,0 +1,48 @@
+﻿@inject IStoreService storeService
+@inject IPictureService pictureService
+@inject ILocalizationService localizationService
+@inject IUrlRecordService urlRecordService
+
+@{
+    ProductsWithPictureModel model = ViewData["Model"] as ProductsWithPictureModel;
+
+    var items = model.Items;
+    var storeUrl = (await storeService.GetStoreByIdAsync(model.StoreId)).Url;
+}
+
+    <table border="0" cellspacing="5">
+
+        @{
+            for (int i = 0; i < items.Count; i++)
+            {
+                var item = items[i];
+
+                //new row after every third element
+                if (i % 3 == 0)
+                {
+                    @Html.Raw("<tr>")
+                }
+
+                string productUrl = storeUrl + item.ProductSeName;
+                string currentProductHtml = string.Empty;
+
+                if (model.IncludePictures)
+                {
+                    currentProductHtml += $"<a href=\"{productUrl}\"><img src=\"{item.ImageUrl}\"/></a><br />";
+                }
+
+                currentProductHtml += $"<a href=\"{productUrl}\">{item.ProductName}</a>";
+
+                <td style="text-align: center; vertical-align: top; width: 200px;">@Html.Raw(currentProductHtml)</td>
+
+                // close the row in two cases:
+                // - after the last element
+                // - or if the element is the last in the row (we have 3 products in a row)
+                if (i == items.Count - 1 || (i > 0 && i % 3 == 2))
+                {
+                    @Html.Raw("</tr>")
+                }
+            }
+        }
+
+    </table>

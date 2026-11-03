@@ -1,0 +1,193 @@
+@model ArticleAdminModel
+
+<div class="card-body advanced-setting">
+    <div class="form-group row clearfix">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+        </div>
+    </div>
+    <div class="form-group row clearfix">
+        <div class="col-md-3">
+            <nop-label asp-for="AddToMenu" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="AddToMenu" />
+        </div>
+    </div>
+    <div class="form-group row clearfix">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+        </div>
+    </div>
+    @(await Html.LocalizedEditorAsync<ArticleAdminModel, ArticleLocalizedModel>
+            ("article-general-settings-localized",
+        @<div>
+            <div class="form-group row clearfix">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.Locales[item].Title" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.Locales[item].Title" />
+                    <span asp-validation-for="@Model.Locales[item].Title"></span>
+                </div>
+            </div>
+            <div class="form-group row clearfix">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.Locales[item].NavigationTitle" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.Locales[item].NavigationTitle" />
+                    <span asp-validation-for="@Model.Locales[item].NavigationTitle"></span>
+                </div>
+            </div>
+            <div class="form-group row clearfix">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.Locales[item].Content" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.Locales[item].Content" asp-template="RichEditor"/>
+                    <span asp-validation-for="@Model.Locales[item].Content"></span>
+                </div>
+            </div>
+            <div>
+                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+            </div>
+        </div>,
+    @<div>
+        <div class="form-group row clearfix">
+            <div class="col-md-3">
+                <nop-label asp-for="Title" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Title" />
+                <span asp-validation-for="Title"></span>
+            </div>
+        </div>
+        <div class="form-group row clearfix">
+            <div class="col-md-3">
+                <nop-label asp-for="NavigationTitle" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="NavigationTitle" />
+                <span asp-validation-for="NavigationTitle"></span>
+            </div>
+        </div>
+        <div class="form-group row clearfix">
+            <div class="col-md-3">
+                <nop-label asp-for="Content" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Content" asp-template="RichEditor"/>
+                <span asp-validation-for="Content"></span>
+            </div>
+        </div>
+    </div>))
+</div>
+
+<div id="revision-articles-grid"></div>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $("#revision-articles-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("List", "ArticleRevisionAdmin", new {articleId = Model.Id}))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            RevisionNumber: { editable: false, type: "number" },
+                            Author: { editable: false, type: "string" },
+                            CreatedOnUtc: { editable: false, type: "date" },
+                            IsCurrent: { editable: false, type: "boolean" },
+                            Content: { editable: false, type: "string" },
+                            Id: { editable: false, type: "number" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "create" || e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                numeric: false,
+                previousNext: false,
+                info: false
+            },
+            scrollable: false,
+            columns: [
+            {
+                field: "RevisionNumber",
+                title: "@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.RevisionNumber")",
+                width: 50,
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" }
+            }, {
+                field: "Author",
+                title: "@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Author")"
+            }, {
+                field: "CreatedOnUtc",
+                title: "@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.CreationDate")",
+                template: "#= kendo.toString(kendo.parseDate(CreatedOnUtc, 'yyyy-MM-dd HH-mm'), 'MM/dd/yyyy HH:mm') #",
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" }
+            }, {
+                field: "IsCurrent",
+                title: "@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.IsCurrent")",
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                template: '# if(IsCurrent) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-times false-icon"></i> #} #',
+                width: 100
+            }, {
+                template: kendo.template($("#commands-template").html()),
+                headerAttributes: { style: "text-align:center" },
+                attributes: { style: "text-align:center" },
+                filterable: false,
+                sortable: false
+            }, {
+                command: { text: "@T("SevenSpikes.KnowledgeBase.Admin.Entities.Article.ViewContent")", click: showContent }
+            }]
+        });
+    });
+
+    function showContent(e) {
+        e.preventDefault();
+        var dataItem = this.dataItem($(e.currentTarget).closest("tr"));
+        var url = "@Html.Raw(Url.Action("ViewContent", "ArticleRevisionAdmin"))/" + dataItem.Id;
+        javascript: OpenWindow(url, 800, 700, true);
+    }
+</script>
+
+<script id="commands-template" type="text/x-kendo-template">
+    <a class="k-button" href="@Html.Raw(Url.Action("SetArticleToRevisionState", "ArticleRevisionAdmin"))/#: Id#" title="@T("SevenSpikes.Knowledgebase.Admin.Set")">
+        <span class="k-icon k-edit"></span>
+        @T("SevenSpikes.Knowledgebase.Admin.Set")
+    </a>
+</script>

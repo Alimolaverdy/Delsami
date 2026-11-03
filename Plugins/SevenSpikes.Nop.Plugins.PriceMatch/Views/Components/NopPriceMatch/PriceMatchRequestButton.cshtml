@@ -1,0 +1,45 @@
+﻿@model PriceMatchRequestButtonModel
+
+@{
+    var theme = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+    var kendoVersion = "2020.1.406";
+
+    var kendoCoreCssFilePath = $"~/lib/kendo/{kendoVersion}/js/kendo.core.min.js";
+    var kendoUserEventsCssFilePath = $"~/lib/kendo/{kendoVersion}/js/kendo.userevents.min.js";
+    var kendoDragAndDropCssFilePath = $"~/lib/kendo/{kendoVersion}/js/kendo.draganddrop.min.js";
+    var kendoPopupJsFilePath = $"~/lib/kendo/{kendoVersion}/js/kendo.popup.min.js";
+    var kendoWindowCssFilePath = $"~/lib/kendo/{kendoVersion}/js/kendo.window.min.js";
+    var kendoFxCssFilePath = $"~/lib/kendo/{kendoVersion}/js/kendo.fx.min.js";
+    var kendoNumericTextBoxCssFilePath = $"~/lib/kendo/{kendoVersion}/js/kendo.numerictextbox.min.js";
+
+    var priceMatchCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.PriceMatch/Themes/" + theme + "/Content/PriceMatch.css";
+
+    bool supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+
+    string endpoint = Url.Action("GetPriceMatchRequestForm", "PriceMatch", new { productId = Model.ProductId });
+
+    string title = T("SevenSpikes.PriceMatch.Public.PriceMatchForm.Title", Model.ProductName, Model.ProductPriceFormatted).Text;
+}
+
+<link rel="stylesheet" href="@priceMatchCssFilePath" />
+
+@if (supportRtl)
+{
+    var priceMatchRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.PriceMatch/Themes/" + theme + "/Content/PriceMatch.rtl.css";
+
+    <link rel="stylesheet" href="@priceMatchRtlCssFilePath" />
+}
+
+<script src="@kendoCoreCssFilePath" asp-location="Footer"></script>
+<script src="@kendoUserEventsCssFilePath" asp-location="Footer"></script>
+<script src="@kendoDragAndDropCssFilePath" asp-location="Footer"></script>
+<script src="@kendoPopupJsFilePath" asp-location="Footer"></script>
+<script src="@kendoWindowCssFilePath" asp-location="Footer"></script>
+<script src="@kendoFxCssFilePath" asp-location="Footer"></script>
+<script src="@kendoNumericTextBoxCssFilePath" asp-location="Footer"></script>
+<script src="~/Plugins/SevenSpikes.Nop.Plugins.PriceMatch/Scripts/PriceMatch.min.js" asp-location="Footer"></script>
+
+<div class="price-match-wrapper" data-price-match-endpoint="@Html.Raw(endpoint)" data-price-match-form-title="@title">
+    <button type="button" class="button-2 price-match-button">@T("SevenSpikes.PriceMatch.Public.PriceMatchButton")</button>
+</div>

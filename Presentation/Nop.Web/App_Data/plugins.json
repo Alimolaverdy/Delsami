@@ -94,6 +94,10 @@
     {
       "SystemName": "NopShop.Misc.LoginWithMobile",
       "Version": "1.6"
+    },
+    {
+      "SystemName": "Delsami.Widgets.AddressLocation",
+      "Version": "1"
     }
   ],
   "PluginNamesToUninstall": [],

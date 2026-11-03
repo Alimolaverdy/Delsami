@@ -1,0 +1,52 @@
+﻿@model SaleCampaignModel
+
+@{
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Plugins.SaleCampaigns.Admin.Submenus.ManageSaleCampaigns");
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore, "The trial is limited to only 1 sales campaign with a maximum of 5 products.")
+
+        <nop-tabs id="sale-campaign-create-or-edit">
+            <nop-tab asp-name="tab-settings" asp-default="true" asp-title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.SettingsTabTitle")">
+                @{ await Html.RenderPartialAsync("_CreateOrUpdate.GeneralSettings", Model); }
+            </nop-tab>
+            <nop-tab asp-name="tab-product-customization" asp-title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.ProductCustomizationTabTitle")">
+                @{ await Html.RenderPartialAsync("_CreateOrUpdate.ProductCustomization", Model); }
+            </nop-tab>
+            <nop-tab asp-name="tab-category-customization" asp-title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.CategoryCustomizationTabTitle")">
+                @{ await Html.RenderPartialAsync("_CreateOrUpdate.CategoryCustomization", Model); }
+            </nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-scheduling" asp-title="@T("SevenSpikes.Scheduling.Admin.Schedule.TabTitle")">
+                    @await Component.InvokeAsync("ScheduleAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id })
+                </nop-tab>
+                <nop-tab asp-name="tab-conditions" asp-title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.ConditionsTabTitle")">
+                    @await Component.InvokeAsync("ConditionsAdmin", new { entityType = Plugin.EntityType, entityId = Model.Id, availableConditionTypes = Plugin.AvailableConditionTypes, active = true, defaultGroupState = false })
+                </nop-tab>
+                <nop-tab asp-name="tab-override-conditions" asp-title="@T("SevenSpikes.Conditions.Admin.ProductOverrides.TabTitle")">
+                    @await Component.InvokeAsync("ProductOverridesAdmin", new {entityType = Plugin.EntityType, entityId = Model.Id})
+                </nop-tab>
+                <nop-tab asp-name="tab-peview" asp-title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.PreviewTabTitle")">
+                    @{ await Html.RenderPartialAsync("_CreateOrUpdate.Preview", Model); }
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</section>
+
+
+<script>
+    $(document).ready(function () {
+        if (typeof ($().livequery) === 'function') {
+            $('#sale-campaign-create-or-edit #tab-conditions #condition > div:not(.condition-groups-panel)').livequery(function () {
+                $(this).remove();
+            });
+        }
+    });
+</script>

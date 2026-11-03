@@ -1,0 +1,43 @@
+﻿@model DelsamiCustomerAddressEditModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    //page class
+    NopHtml.AppendPageCssClassParts("html-address-edit-page");
+    var returnToCheckout = (bool?)ViewData["ReturnToCheckout"];
+
+}
+@section left
+{
+    @await Component.InvokeAsync(typeof(CustomerNavigationViewComponent), new { selectedTabId = CustomerNavigationEnum.Addresses })
+}
+<form asp-route="DelsamiOnePageCheckoutAddAddress" method="post" id="AddAddress">
+    <input type="hidden" name="ReturnToCheckout" value="@((bool?)ViewData["ReturnToCheckout"] == true ? "true" : "false")" />
+    <div class="page account-page address-edit-page">
+        <div class="page-title">
+            <h1>@T("Account.CustomerAddresses.AddNew")</h1>
+        </div>
+        <div class="page-body">
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            @{
+                var dataDictAddress = new ViewDataDictionary(ViewData);
+                dataDictAddress.TemplateInfo.HtmlFieldPrefix = "Address";
+                @await Html.PartialAsync("_CreateOrUpdateAddress", Model.Address, dataDictAddress)
+            }
+            <div class="buttons">
+                <button type="submit" class="button-1 save-address-button">@T("Common.Save")</button>
+            </div>
+        </div>
+    </div>
+</form>
+<script>
+    $("#AddAddress").on("submit", function () {
+        $(".save-address-button")
+            .prop("disabled", true)
+            .text("@T("Common.Wait")");
+    });
+</script>

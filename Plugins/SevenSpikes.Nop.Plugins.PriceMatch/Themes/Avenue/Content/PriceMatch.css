@@ -1,0 +1,145 @@
+
+.price-match-wrapper {
+	display: inline-block;
+    margin: 8px 4px;
+    vertical-align: middle;
+}
+.price-match-button {
+	display: block;
+	width: 45px;
+	height: 42px;
+	outline: 1px solid transparent;
+	background-color: #222;
+	font-size: 0;
+	color: #fff;
+	text-transform: uppercase;
+	transition: all 0.2s ease;
+}
+.price-match-button:hover {
+	outline-color: #222;
+}
+.price-match-button:before {
+    content: "$";
+    display: block;
+	font-size: 18px;
+	letter-spacing: 0;
+	color: #fff;
+}
+
+/* form container */
+
+.k-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+    bottom: 0;
+	left: 0;
+    z-index: 1060;
+	background-color: rgba(0,0,0,0.6);
+	opacity: 1 !important;
+    transition: all 0.3s ease !important; /*currently Kendo fadeToggle overrides this*/
+}
+.priceMatchWindow {
+	position: absolute;
+	left: 0 !important;
+    right: 0;
+	z-index: 1070;
+	width: 750px;
+	max-width: 100%;
+	margin: auto;
+	box-shadow: 0 0 20px rgba(0,0,0,0.15);
+	background-color: #fff;
+	padding-top: 0 !important;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+	margin-top: 0 !important;
+	background-color: #fff;
+	padding: 25px 25px 0;
+    text-align: center;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    display: inline-block;
+    max-width: 90%;
+    overflow: hidden;
+    font-size: 21px;
+    line-height: 30px;
+    font-weight: 400;
+    color: #222;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+}
+.priceMatchWindow .k-window-actions a {
+	display: block;
+    width: 50px;
+    height: 50px;
+    outline: 1px solid transparent;
+    background-color: #222;
+    font-size: 0;
+    transition: all 0.2s ease;
+}
+.priceMatchWindow .k-window-actions a:hover {
+	outline-color: #222;
+}
+.priceMatchWindow .k-window-actions a:after {
+    content: "\e905";
+    display: block;
+    padding-left: 1px;
+    font-size: 14px;
+    line-height: 50px;
+    color: #fff;
+    transition: all 0.2s ease;
+}
+.priceMatchWindow .k-window-content {
+	padding: 30px 25px 40px;
+}
+
+/* request form */
+
+.price-match-form {
+	text-align: center;
+}
+.price-match-form .fieldset {
+    margin: 0 0 10px;
+}
+.price-match-form .title {
+	font-size: 16px;
+}
+.price-match-form .captcha-box,
+.price-match-form .message-error {
+	margin: -10px 0 20px;
+}
+.price-match-form .fieldset + .message-error {
+    margin-top: -10px;
+}
+.price-match-form .buttons {
+	margin: 0; /*reset theme styles*/
+	text-align: center;
+}
+.save-price-match-button {
+    min-width: 180px;
+    outline: 1px solid transparent;
+    background-color: #222 !important;
+    padding: 15px 25px;
+    color: #fff !important;
+    text-transform: uppercase;
+    transition: all 0.2s ease;
+}
+.save-price-match-button:hover {
+    outline-color: #222;
+}
+
+
+@media all and (min-width: 1025px) {
+
+    .priceMatchWindow {
+	    width: 950px;
+    }
+}

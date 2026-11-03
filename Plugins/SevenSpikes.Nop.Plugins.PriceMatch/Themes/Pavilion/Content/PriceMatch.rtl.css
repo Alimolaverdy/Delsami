@@ -1,0 +1,16 @@
+
+.priceMatchWindow .k-header {
+    text-align: right;
+}
+
+.priceMatchWindow .k-window-actions {
+    left: 0;
+    right: auto;
+}
+
+@media all and (min-width: 1025px) {
+
+    .price-match-form .inputs label {
+        text-align: right;
+    }
+}

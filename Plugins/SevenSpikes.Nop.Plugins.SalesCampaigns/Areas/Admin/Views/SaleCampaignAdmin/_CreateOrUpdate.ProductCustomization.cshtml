@@ -1,0 +1,277 @@
+﻿@model SaleCampaignModel
+
+<script>
+    $(document).ready(function () {
+        $('#clickForPreview').on('click', function (e) {
+            e.preventDefault();
+
+            var previewClockSelector = '#previewClock';
+
+            var selectedClockType = $('#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.ClockType)').val();
+            var fontWeightSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.FontWeight)';
+            var fontStyleSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.FontStyle)';
+            var fontSizeSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.FontSize)';
+            var textAlignSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.ClockTextAlign)';
+            var fontColorSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.FontColor).Replace("_", "")';
+            var backgroundColorSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.BackgroundColor).Replace("_", "")';
+
+            var paddingTopSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.PaddingTop)';
+            var paddingRightSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.PaddingRight)';
+            var paddingBottomSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.PaddingBottom)';
+            var paddingLeftSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.PaddingLeft)';
+
+            var marginTopSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.MarginTop)';
+            var marginRightSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.MarginRight)';
+            var marginBottomSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.MarginBottom)';
+            var marginLeftSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.MarginLeft)';
+
+            var customCSSSelector = '#@Html.IdFor(model => model.SaleCampaignProductPageCustomization.CustomCSS)';
+
+            $(previewClockSelector).text($('#SaleCampaignProductPageCustomization_ClockType option[value=' + selectedClockType + ']').text());
+            $(previewClockSelector).css('font-size', $(fontSizeSelector).val() + 'px');
+            $(previewClockSelector).css('font-weight', $(fontWeightSelector).val());
+            $(previewClockSelector).css('font-style', $(fontStyleSelector).val());
+            $(previewClockSelector).css('text-align', $(textAlignSelector).val().toLowerCase());
+            $(previewClockSelector).css('color', $(fontColorSelector).val());
+            $(previewClockSelector).css('background-color', $(backgroundColorSelector).val());
+            $(previewClockSelector).css('padding', $(paddingTopSelector).val() + 'px ' + $(paddingRightSelector).val() + 'px ' + $(paddingBottomSelector).val() + 'px ' + $(paddingLeftSelector).val() + 'px ');
+            $(previewClockSelector).css('margin', $(marginTopSelector).val() + 'px ' + $(marginRightSelector).val() + 'px ' + $(marginBottomSelector).val() + 'px ' + $(marginLeftSelector).val() + 'px ');
+
+            var splitBySemiColon = $(customCSSSelector).val().split(';');
+
+            for (var i = 0; i < splitBySemiColon.length; i++) {
+                var splitByColon = splitBySemiColon[i].trim().split(':');
+                $(previewClockSelector).css(splitByColon[0], splitByColon[1]);
+            }
+        });
+    });
+</script>
+
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card" style="box-shadow: none; padding: 0 4px 0 34px;">
+                <div class="form-group row">
+                    <div class="callout bg-gray-light">
+                        @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.ProductCustomizationTabTitle.Description")
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.SelectClockType")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignProductPageCustomization.ClockType" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignProductPageCustomization.ClockType" asp-items="Model.SaleCampaignProductPageCustomization.AvailableClockTypes" />
+                            <span asp-validation-for="SaleCampaignProductPageCustomization.ClockType"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default clock-style">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.SelectClockStyle")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignProductPageCustomization.ClockTextAlign" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignProductPageCustomization.ClockTextAlign" asp-items="Model.SaleCampaignProductPageCustomization.AvailableTextAlignTypes" />
+                            <span asp-validation-for="SaleCampaignProductPageCustomization.ClockTextAlign"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignProductPageCustomization.FontWeight" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignProductPageCustomization.FontWeight" asp-items="Model.SaleCampaignProductPageCustomization.AvailableFontWeights" />
+                            <span asp-validation-for="SaleCampaignProductPageCustomization.FontWeight"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignProductPageCustomization.FontStyle" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignProductPageCustomization.FontStyle" asp-items="Model.SaleCampaignProductPageCustomization.AvailableFontStyles" />
+                            <span asp-validation-for="SaleCampaignProductPageCustomization.FontStyle"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignProductPageCustomization.FontSize" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SaleCampaignProductPageCustomization.FontSize" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                            <span asp-validation-for="SaleCampaignProductPageCustomization.FontSize"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignProductPageCustomization.FontColor" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SaleCampaignProductPageCustomization.FontColor" />
+                            <span asp-validation-for="SaleCampaignProductPageCustomization.FontColor"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignProductPageCustomization.BackgroundColor" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SaleCampaignProductPageCustomization.BackgroundColor" />
+                            <span asp-validation-for="SaleCampaignProductPageCustomization.BackgroundColor"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row clearfix">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.MarginSize")</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="style-box">
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignProductPageCustomization.MarginTop" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignProductPageCustomization.MarginTop" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignProductPageCustomization.MarginRight" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignProductPageCustomization.MarginRight" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignProductPageCustomization.MarginBottom" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignProductPageCustomization.MarginBottom" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignProductPageCustomization.MarginLeft" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignProductPageCustomization.MarginLeft" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row clearfix">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.PaddingSize")</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="style-box">
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignProductPageCustomization.PaddingTop" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignProductPageCustomization.PaddingTop" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignProductPageCustomization.PaddingRight" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignProductPageCustomization.PaddingRight" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignProductPageCustomization.PaddingBottom" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignProductPageCustomization.PaddingBottom" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignProductPageCustomization.PaddingLeft" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignProductPageCustomization.PaddingLeft" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CustomizeYourCSS")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignProductPageCustomization.CustomCSS" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-textarea asp-for="SaleCampaignProductPageCustomization.CustomCSS" />
+                        </div>
+                    </div>
+                    <div class="form-group row clearfix">
+                        <div class="col-md-9 col-md-offset-3">
+                            <div class="callout bg-gray-light">
+                                @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CustomizeYourCSS.Text")<br />
+                                @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CustomizeYourCSS.Example")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.Preview")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row clearfix">
+                        <div class="col-md-12">
+                            <button id="clickForPreview" class="btn bg-blue">Click for preview</button>
+                        </div>
+                    </div>
+                    <p>
+                        <div id="previewClock"></div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

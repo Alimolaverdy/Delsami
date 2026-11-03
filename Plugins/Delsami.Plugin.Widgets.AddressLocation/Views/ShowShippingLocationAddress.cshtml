@@ -1,0 +1,117 @@
+﻿@inject AddressLocationSettings addressLocationSettings
+
+@{
+    Layout = "";
+}
+
+
+
+<div style="text-align: center;">
+    <div id="map-shipping" class="al-map-container" style="width:1000px; height:500px; margin:auto;"></div>
+</div>
+@if (addressLocationSettings.MapType == Delsami.Plugin.Widgets.AddressLocation.Enums.MapType.OpenStreetMap)
+{
+    <link href="/plugins/Delsami.widgets.addresslocation/contents/Leaflet/leaflet.css" rel="stylesheet" />
+    <script src="/plugins/Delsami.widgets.addresslocation/contents/Leaflet/leaflet.js"></script>
+
+    <script asp-location="Footer">
+        $(document).ready(function () {
+        var map;
+        var currentLat;
+        var currentLng;
+
+        var latContainer = $("#Latitude-value").text();
+        var lngContainer = $("#longitude-value").text();
+
+
+        var regexForLat = /.*?:\s(-?\d+\.\d+)/gm;
+        var regexForLng = /.*?:\s(-?\d+\.\d+)/gm;
+
+        var matchesForLat = latContainer.matchAll(regexForLat);
+        var matchesForLng = lngContainer.matchAll(regexForLng);
+
+        for (const match of matchesForLat)
+        currentLat = match[1];
+
+        for (const match of matchesForLng)
+        currentLng = match[1];
+
+        marker = InitialMap(currentLat, currentLng);
+
+        setTimeout(function () {
+        map.invalidateSize(true);
+        }, 100);
+
+        function InitialMap(lat, lng) {
+
+        var lat = !lat || lat === "" ? "35.7144537" : lat;
+        var lng = !lng || lng === "" ? "51.3437968" : lng;
+
+        map = L.map('map-shipping')
+        .setView([lat, lng], 13);
+
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+        }).addTo(map);
+
+        marker = L.marker([lat, lng])
+        .addTo(map);
+
+        }
+        });
+    </script>
+}
+else
+{
+    <link rel="stylesheet" href="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.css" />
+    <script src="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.js"></script>
+
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            var map;
+            var currentLat;
+            var currentLng;
+
+            var latContainer = $("#Latitude-value").text();
+            var lngContainer = $("#longitude-value").text();
+
+
+            var regexForLat = /.*?:\s(-?\d+\.\d+)/gm;
+            var regexForLng = /.*?:\s(-?\d+\.\d+)/gm;
+
+            var matchesForLat = latContainer.matchAll(regexForLat);
+            var matchesForLng = lngContainer.matchAll(regexForLng);
+
+            for (const match of matchesForLat)
+                currentLat = match[1];
+
+            for (const match of matchesForLng)
+                currentLng = match[1];
+
+            marker = InitialMap(currentLat, currentLng);
+
+            setTimeout(function () {
+                map.invalidateSize(true);
+            }, 100);
+
+            function InitialMap(lat, lng) {
+
+                var lat = !lat || lat === "" ? "35.7144537" : lat;
+                var lng = !lng || lng === "" ? "51.3437968" : lng;
+
+                map = L.map('map-shipping', {
+                    key: "@addressLocationSettings.NeshanMapApiKey",
+                    maptype: "neshan",
+                    poi: false,
+                    traffic: false,
+                    center: [lat, lng],
+                    zoom: 13,
+                }).setView([lat, lng], 13);
+
+                marker = L.marker([lat, lng])
+                    .addTo(map);
+
+            }
+        });
+    </script>
+}

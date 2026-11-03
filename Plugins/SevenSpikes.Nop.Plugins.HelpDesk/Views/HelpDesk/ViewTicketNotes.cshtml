@@ -1,0 +1,129 @@
+﻿@model ManageTicketNotesPublicModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    var kendoVersion = "2020.1.406";
+
+    //title
+    NopHtml.AddTitleParts(T("SevenSpikes.HelpDesk.Public.ViewTicket.Notes.ViewTicketNotes").Text + "#" + Model.TicketModel.Id);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-helpdesk-page");
+
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.css" />
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.css" />
+
+    var supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.rtl.css" />
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.rtl.css" />
+    }
+
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/lib/kendo/@kendoVersion/js/kendo.all.min.js" asp-location="Footer"></script>
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation")
+}
+
+<div class="page account-page ticketing-page view-ticket-notes-page">
+    <div class="page-title">
+        <h1 class="pt-text">@T("Account.MyAccount") - @T("SevenSpikes.HelpDesk.Public.ViewTicket.Notes.ViewTicketNotes") #@Model.TicketModel.Id</h1>
+    </div>
+
+    <div class="page-body">
+        <div class="conversation">
+            <div class="ticket">
+                <div class="ticket-header">
+                    <div class="ticket-information">
+                        <h3 class="ticket-title">@Model.TicketModel.Subject</h3>
+                        <span class="ticket-date">
+                            @T("SevenSpikes.HelpDesk.Public.ViewTicket.RaisedOn") @Model.TicketModel.CreatedOnUtc
+                            @T("SevenSpikes.HelpDesk.Public.ViewTicket.By") @Model.TicketModel.CustomerName
+                        </span>
+                    </div>
+
+                    <div class="ticket-buttons">
+                        <button class="show-add-note k-button">@T("SevenSpikes.HelpDesk.Public.ViewTicket.Notes.ShowAddNote")</button>
+                        
+                        <a href="@Url.RouteUrl("HelpDeskViewTicket", new { id = Model.TicketModel.Id })" class="k-button return-to-ticket-button">
+                            @T("SevenSpikes.HelpDesk.Public.ViewTicket.Notes.ReturnToTheTicket")
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div id="submit-reply" class="reply-form add-notes-form">
+                @using (Html.BeginForm("SubmitTicketNote", "HelpDesk", FormMethod.Post, new { id = "submit-ticket-note-Form" }))
+                {
+                    @Html.AntiForgeryToken()
+                    <div class="message-error">
+                        @Html.ValidationSummary(true)
+                    </div>
+
+                    @Html.Hidden("ticketId", Model.TicketModel.Id)
+
+                    <div class="fieldset">
+                        <div class="form-fields">
+                            <div class="inputs">
+                                <nop-label asp-for="SubmitTicketNoteModel.NoteContent" />
+                                <nop-textarea asp-for="SubmitTicketNoteModel.NoteContent" style="height: 350px;" />
+                                <nop-required />
+                                <span asp-validation-for="SubmitTicketNoteModel.NoteContent"></span>
+                            </div>
+
+                            <div class="buttons">
+                                <button type="submit" class="k-button button-1 add-note">@T("SevenSpikes.HelpDesk.Public.ViewTicket.Notes.AddNote")</button>
+                            </div>
+                        </div>
+
+                    </div>
+                }
+            </div>
+
+            <div class="ticket-comments">
+                @await Html.PartialAsync("_TicketNotes", Model.TicketModel.TicketNotes)
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        @await Html.PartialAsync("_JSNavigation", "manageTickets")
+
+        var defaultTools = kendo.ui.Editor.defaultTools;
+
+        defaultTools["insertLineBreak"].options.shift = false;
+        defaultTools["insertParagraph"].options.shift = true;
+
+        $("#@Html.IdFor(model => model.SubmitTicketNoteModel.NoteContent)").kendoEditor({
+            encoded: false
+        });
+
+        $("#@Html.IdFor(model => model.SubmitTicketNoteModel.NoteContent)").data("kendoEditor")
+            .toolbar
+            .element
+            .find("select.k-formatting").data("kendoSelectBox")
+            .one("open", function (e) {
+                setTimeout(function () {
+                    e.sender.popup.wrapper.addClass("dropdown-wrapper paragraph-select");
+                });
+            });
+
+        $(document).on("click", ".show-add-note", function (e) {
+            e.preventDefault();
+
+            $('#submit-reply').slideToggle();
+        });
+    });
+
+    // http://stackoverflow.com/questions/8466643/jquery-validate-enable-validation-for-hidden-fields/8565769#8565769
+    // enable the validation of the hidden fields( kendo fields )
+    $.validator.setDefaults({
+        ignore: []
+    });
+</script>

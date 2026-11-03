@@ -1,0 +1,111 @@
+@model SevenSpikes.Nop.Plugins.Knowledgebase.Areas.Admin.Models.CategoryListModel
+@{
+    Layout = "~/Plugins/SevenSpikes.Core/Areas/Admin/Views/Shared/_AdminLayout7Spikes_Knowledgebase.cshtml";
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Knowledgebase.Admin.Submenus.ManageCategories");
+
+    NopHtml.AddCssFileParts("~/Plugins/SevenSpikes.Nop.Plugins.Knowledgebase/Styles/adminstyles.css");
+
+    if (Model.IsPopup)
+    {
+        <script type="text/javascript">
+            try {
+                window.opener.document.location.reload();
+            } catch (e) {
+            }
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Knowledgebase.Admin.Entities.Category")
+    </h1>
+    <div class="float-right">
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.Knowledgebase.Admin.Entities.Article.AddNew")
+        </a>
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div id="category-treeview"></div>
+
+                    <script type="text/javascript" asp-location="Footer">
+                        categories = new kendo.data.HierarchicalDataSource({
+                            transport: {
+                                read: {
+                                    url: "@Html.Raw(Url.Action("List", "KbCategoryAdmin"))",
+                                    type: "POST",
+                                    dataType: "json",
+                                    data: addAntiForgeryToken
+                                }
+                            },
+                            schema: {
+                                model: {
+                                    id: "id",
+                                    hasChildren: "hasChildren"
+                                }
+                            }
+                        });
+
+                        function takeTreeviewAction(itemId, buttonName) {
+
+                            var url = "";
+                            var openPopup = true;
+
+                            if (buttonName == "insertCategory") {
+
+                                url = "@(Url.Action("Create"))?parentCategoryId=" + itemId + "&isPopup=true";
+                            }
+                            else if (buttonName == "insertArticle") {
+
+                                url = "@Url.Action("Create", "ArticleAdmin")?categoryId=" + itemId + "&isPopup=true";
+                            }
+                            else if (buttonName == "viewArticles") {
+
+                                url = "@Url.Action("List", "ArticleAdmin")/" + itemId + "?isPopup=false";
+                                openPopup = false;
+                                window.open(url, "_self");
+                            } else {
+
+                                url = "@(Url.Action("Edit"))/" + itemId + "?isPopup=true";
+                            }
+
+                            if (openPopup) {
+                                javascript:OpenWindow(url, 1050, 700, true);
+                            }
+
+                            return false;
+                        }
+
+                        $(document).ready(function () {
+                            $("#category-treeview").kendoTreeView({
+                                dataSource: categories,
+                                dataTextField: "Name",
+                                template: "<i class='fa fa-folder-open' aria-hidden='true'></i>"+
+                                    "                       <a class='treeview-title' onclick='takeTreeviewAction(#= item.id #);'>#= item.Name #</a><div class='treeview-buttons'>" +
+                                    "                       <a class='btn bg-primary' onclick='takeTreeviewAction(#= item.id #, \"insertCategory\");'><i class='fa fa-list-ul' aria-hidden='true'></i>Insert Category</a>" +
+                                    "                       <a class='btn bg-primary' onclick='takeTreeviewAction(#= item.id #, \"insertArticle\");'><i class='fa fa-file-text-o'></i>Insert Article</a>" +
+                                    "                       <a class='btn bg-primary' onclick='takeTreeviewAction(#= item.id #, \"viewArticles\");'><i class='fa fa-eye'></i>View Articles</a>" +
+                                    "                   </div>"
+                            });
+                        });
+
+                    </script>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

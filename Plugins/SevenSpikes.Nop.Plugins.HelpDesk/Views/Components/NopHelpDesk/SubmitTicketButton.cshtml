@@ -1,0 +1,15 @@
+﻿@model SubmitTicketButtonModel
+
+@{
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.css" />
+
+    var supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.rtl.css" />
+    }
+}
+
+<div class="submit-ticket">
+    <button type="button" class="button-2 submit-ticket-button" onclick="setLocation('@(Url.Action("NewTicket", "HelpDesk", new { productids = Model.ProductId }))')">@T("SevenSpikes.HelpDesk.Public.NewTicketLink.SubmitATicket")</button>
+</div>

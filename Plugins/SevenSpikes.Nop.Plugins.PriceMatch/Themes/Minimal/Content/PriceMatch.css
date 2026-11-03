@@ -1,0 +1,103 @@
+
+.price-match-wrapper {
+	display: inline-block;
+}
+.price-match-button {
+    padding: 5px 10px 5px 25px;
+    border: none;
+    background: url('images/button.png') left center no-repeat;
+    font: 14px "Montserrat", Verdana, sans-serif !important;
+}
+
+/* form container */
+
+.k-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+    bottom: 0;
+	left: 0;
+    z-index: 1060;
+	background-color: #000;
+	opacity: 0.4;
+}
+.priceMatchWindow {
+	position: absolute;
+	left: 0 !important;
+    right: 0;
+	z-index: 1070;
+	width: 600px;
+	max-width: 95%;
+	margin: auto;
+	box-shadow: 0 0 10px rgba(0,0,0,0.15);
+    background-color: #f8f8f8;
+	padding-top: 0 !important;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+	margin-top: 0 !important;
+	padding: 10px 15px;
+    text-align: left;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    display: inline-block;
+    max-width: 90%;
+    overflow: hidden;
+    font-size: 20px;
+    font-family: "Playfair Display", Times New Roman, serif;
+	font-weight: normal;
+    color: #000;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+    visibility: hidden; /*disabled by default*/
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 0;
+	right: 0;
+    z-index: 1;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-actions a {
+	display: block;
+    width: 40px;
+    height: 40px;
+    background: #fff url('images/close.png') center no-repeat;
+    transition: all 0.2s ease;
+}
+/*.priceMatchWindow .k-window-actions a:hover {
+    background-color: #c49169;
+}*/
+.priceMatchWindow .k-window-content {
+	padding: 20px 20px 40px;
+}
+
+/* request form */
+
+.price-match-form {
+	text-align: center;
+}
+.price-match-form .title {
+    margin: 0 0 50px;
+}
+.price-match-form .title strong {
+    font: normal 24px "Playfair Display", Times New Roman, serif;
+    color: #000;
+}
+.price-match-form .captcha-box,
+.price-match-form .message-error {
+	margin: -15px 0 30px;
+}
+.save-price-match-button {
+	min-width: 200px;
+}
+
+
+
+@media all and (min-width: 1025px) {
+
+    .priceMatchWindow {
+	    width: 700px;
+    }
+}

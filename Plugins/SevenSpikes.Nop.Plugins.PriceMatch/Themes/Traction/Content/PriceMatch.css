@@ -1,0 +1,139 @@
+
+.price-match-wrapper {
+	display: inline-block;
+}
+.price-match-button {
+	display: inline-block;
+    min-width: 140px;
+    border: 1px solid #ccc;
+    background-color: #eee;
+    background-position: right center;
+    background-repeat: no-repeat;
+    padding: 8px 38px 8px 12px;
+    font-size: 13px;
+	background-image: url('images/price-match-button.png');
+}
+.price-match-button:hover {
+	opacity: 0.75;
+}
+
+/* form container */
+
+.k-overlay {
+	position: fixed;
+	top: 0;
+    right: 0;
+    bottom: 0;
+	left: 0;
+    z-index: 1060;
+	background-color: #000;
+	opacity: 0.5;
+}
+.priceMatchWindow {
+	position: absolute;
+	left: 0 !important;
+    right: 0;
+	z-index: 1070;
+	width: 600px;
+	max-width: 95%;
+	margin: auto;
+	box-shadow: 0 1px 3px #666;
+	background-color: #fff;
+	padding-top: 0 !important;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+	margin-top: 0 !important;
+	border-bottom: 1px solid #ccc;
+	background-color: #eee;
+	padding: 15px 20px;
+    text-align: left;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    display: inline-block;
+    max-width: 90%;
+    overflow: hidden;
+    font-size: 18px;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 0;
+	right: 10px;
+    bottom: 0;
+	width: 20px;
+    height: 20px;
+    margin: auto;
+}
+.priceMatchWindow .k-window-actions a {
+	display: block;
+    width: 100%;
+    height: 100%;
+    background: #333 url(images/close.png) center no-repeat;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-content {
+	padding: 40px 20px;
+}
+
+/* request form */
+
+.price-match-form {
+	text-align: center;
+}
+.price-match-form .title {
+    margin: 0 0 30px;
+    border-bottom: 1px dashed #ccc;
+    padding: 0 0 10px;
+}
+.price-match-form .title strong {
+    background: none;
+    padding: 0;
+    font-size: 16px;
+    font-weight: normal;
+    color: #333;
+    text-transform: none;
+}
+.price-match-form .captcha-box,
+.price-match-form .message-error {
+	margin: 0 0 20px;
+}
+.price-match-form .buttons {
+	margin: 0; /*reset theme styles*/
+	text-align: center;
+}
+.save-price-match-button {
+	min-width: 100px;
+	border: none;
+    background-color: #c03;
+    padding: 10px 20px;
+    font: normal 15px 'eurostile';
+    color: #fff;
+}
+.save-price-match-button:hover {
+	opacity: 0.8;
+}
+
+/* requests page */
+
+.price-match-requests-page .details {
+    
+}
+.price-match-requests-page .details a {
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+
+
+@media all and (min-width: 1025px) {
+
+    .priceMatchWindow {
+	    width: 800px;
+    }
+    .priceMatchWindow .inputs label {
+	    width: 195px;
+    }
+}

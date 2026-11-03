@@ -1,0 +1,27 @@
+﻿@{
+    var theme = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+    var priceMatchCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.PriceMatch/Themes/" + theme + "/Content/PriceMatch.css";
+
+    bool supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+}
+
+<link rel="stylesheet" href="@priceMatchCssFilePath" />
+
+@if (supportRtl)
+{
+    var priceMatchRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.PriceMatch/Themes/" + theme + "/Content/PriceMatch.rtl.css";
+
+    <link rel="stylesheet" href="@priceMatchRtlCssFilePath" />
+}
+
+@if (ViewBag.IsMobile != null && ViewBag.IsMobile)
+{
+    <option value="@Url.Action("Requests", "PriceMatch")">@T("SevenSpikes.PriceMatch.Public.AccountNavigation.Requests.Link")</option>
+}
+else
+{
+    <li class="price-match-requests">
+        <a asp-controller="PriceMatch" asp-action="Requests">@T("SevenSpikes.PriceMatch.Public.AccountNavigation.Requests.Link")</a>
+    </li>
+}

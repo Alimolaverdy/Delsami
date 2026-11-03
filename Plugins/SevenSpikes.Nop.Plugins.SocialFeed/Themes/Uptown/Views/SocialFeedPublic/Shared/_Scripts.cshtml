@@ -1,0 +1,21 @@
+﻿@model SocialNetworkType
+
+@{
+    var jsThemePath = "~/Plugins/SevenSpikes.Nop.Plugins.SocialFeed/Themes/Uptown/Content/scripts/{0}";   
+    
+    switch (Model)
+    {
+        case SocialNetworkType.Facebook:
+
+            break;
+        case SocialNetworkType.Twitter:
+            
+            break;
+    }
+    
+    var simpleScrollbarJsFilePath = string.Format(jsThemePath, "simple-scrollbar.min.js");
+    var socialFeedJsFilePath = string.Format(jsThemePath, "socialfeed.js");
+}
+
+<script src="@simpleScrollbarJsFilePath" asp-location="Footer"></script>
+<script src="@socialFeedJsFilePath" asp-location="Footer"></script>

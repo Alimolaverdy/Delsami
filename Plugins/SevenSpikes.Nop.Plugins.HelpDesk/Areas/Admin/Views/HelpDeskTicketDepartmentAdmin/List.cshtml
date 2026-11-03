@@ -1,0 +1,81 @@
+﻿@model TicketDepartmentAdminListModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.HelpDesk.Admin.Submenus.TicketDepartments");
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.HelpDesk.Admin.TicketDepartment")
+    </h1>
+    <div class="float-right">
+        <a href="@Url.Action("Create")" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.HelpDesk.Admin.TicketDepartment.AddNew")
+        </a>
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+<section class="content">
+    <div class="form-horizontal">
+        
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "ticket-gepartments-grid",
+                        UrlRead = new DataUrl("List", "HelpDeskTicketDepartmentAdmin", null),
+                        UrlDelete = new DataUrl("DeleteTicketDepartment", "HelpDeskTicketDepartmentAdmin", null),
+                        Length = defaultGridPageSize,
+                        LengthMenu = gridPageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(TicketDepartmentAdminModel.Name))
+                            {
+                                Title = T("SevenSpikes.HelpDesk.Admin.TicketDepartment.Name").Text
+                            },
+                            new ColumnProperty(nameof(TicketDepartmentAdminModel.DisplayOrder))
+                            {
+                                Title = T("SevenSpikes.HelpDesk.Admin.TicketDepartment.DisplayOrder").Text,
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(TicketDepartmentAdminModel.Id))
+                            {
+                                Width = "100",
+                                Render = new RenderCustom("renderEditButton")
+                            },
+                            new ColumnProperty(nameof(TicketDepartmentAdminModel.Id))
+                            {
+                                Width = "100",
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

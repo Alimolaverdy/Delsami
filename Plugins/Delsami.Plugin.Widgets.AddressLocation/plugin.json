@@ -1,0 +1,12 @@
+﻿{
+  "Group": "Widgets",
+  "FriendlyName": "Customer Address Location",
+  "SystemName": "Delsami.Widgets.AddressLocation",
+  "Version": "1",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Nob Parts",
+  "DisplayOrder": 2,
+  "FileName": "Delsami.Plugin.Widgets.AddressLocation.dll",
+  "Description": "This plugin allows customer to choose location for address from map",
+  "DependsOnSystemNames": [ "Delsami.Misc.Core" ]
+}

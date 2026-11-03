@@ -1,0 +1,41 @@
+.price-match-wrapper{
+    margin: 0 5px 0 0 ;
+}
+
+.k-overlay{
+    right: 0;
+}
+
+.priceMatchWindow{
+    left: 0;
+    right: 0 !important;
+}
+
+.priceMatchWindow .k-window-actions{
+    left: 25px;
+    right: auto;
+}
+
+@media all and (min-width: 1281px){
+
+    .price-match-wrapper {
+        margin: 3px 0 0;
+    }
+    .price-match-button:before{
+        margin: 0 0 0 10px ;
+    }
+
+    .variant-overview .price-match-button{
+        margin: 5px 0 0 -50px ;
+    }
+
+    .price-match-requests-page .price-match-request{
+        text-align: right;
+    }
+
+    .price-match-requests-page .price-match-request .title{
+        text-align: right;
+    }
+
+}
+

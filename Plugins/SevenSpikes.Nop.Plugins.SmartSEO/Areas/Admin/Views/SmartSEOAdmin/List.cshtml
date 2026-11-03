@@ -1,0 +1,119 @@
+﻿@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+}
+
+@{
+    var defaultGridPageSize = EngineContext.Current.Resolve<AdminAreaSettings>().DefaultGridPageSize;
+    var gridPageSizes = EngineContext.Current.Resolve<AdminAreaSettings>().GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.NopSmartSEO.Admin.Submenus.SmartSEOTemplates");
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.NopSmartSEO.Admin.NopSmartSEO")
+    </h1>
+    <div class="pull-right">
+
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.NopSmartSEO.Admin.NopSmartSEO.AddNew")
+        </a>
+
+    </div>
+</div>
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @{ 
+                        await Html.RenderPartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "smart-seo-grid",
+                            UrlRead = new DataUrl("List", "SmartSEOAdmin", null),
+                            UrlDelete = new DataUrl("DeleteTempleteFromGrid", "SmartSEOAdmin", null),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(SmartSeoListModel.Name))
+                                {
+                                    Title = T("SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Name").Text
+                                },
+                                new ColumnProperty(nameof(SmartSeoListModel.CategoriesNames))
+                                {
+                                    Title = T("SevenSpikes.NopSmartSEO.Admin.SEOTemplate.CategoriesNames").Text
+                                },
+                                new ColumnProperty(nameof(SmartSeoListModel.ManufacturerNames))
+                                {
+                                    Title = T("SevenSpikes.NopSmartSEO.Admin.SEOTemplate.ManufacturerNames").Text
+                                },
+                                new ColumnProperty(nameof(SmartSeoListModel.IsActive))
+                                {
+                                    Title = T("SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Active").Text,
+                                    Render = new RenderCustom("renderIsActive"),
+                                    Width = "70"
+                                },
+                                new ColumnProperty(nameof(SmartSeoListModel.IsGlobal))
+                                {
+                                    Title = T("SevenSpikes.NopSmartSEO.Admin.SEOTemplate.Global").Text,
+                                    Render = new RenderCustom("renderIsGlobal"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(SmartSeoListModel.Id))
+                                {
+                                    Render = new RenderCustom("renderEditButton"),
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(SmartSeoListModel.Id))
+                                {
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    Width = "100"
+                                }
+                            }
+                        });
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<nop-antiforgery-token/>
+
+<script>
+
+    function renderIsActive(data, type, row, meta) {
+
+        if (row.IsActive) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderIsGlobal(data, type, row, meta) {
+
+        if (row.IsGlobal) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="Edit/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

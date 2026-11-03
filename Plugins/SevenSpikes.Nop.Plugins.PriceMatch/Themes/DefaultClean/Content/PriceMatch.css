@@ -1,0 +1,140 @@
+
+.price-match-button {
+	background-image: url('images/price-match-button.png');
+}
+
+.k-overlay {
+	position: fixed;
+	z-index: 1060;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	opacity: 0.5;
+}
+.priceMatchWindow {
+	position: absolute;
+	right: 0;
+	left: 0 !important;
+	z-index: 1070;
+	width: 600px;
+	max-width: 100%;
+	margin: auto;
+	border: 1px solid #ddd;
+	box-shadow: 0 0 2px rgba(0,0,0,0.15);
+	background-color: #fff;
+	padding-top: 0 !important;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+	margin-top: 0 !important;
+	border-bottom: 1px solid #ddd;
+	overflow: hidden;
+	background-color: #eee;
+	padding: 10px 15px;
+}
+.priceMatchWindow .k-window-title {
+    float: left;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-size: 18px;
+    color: #444;
+	white-space: nowrap;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 0;
+	right: 0;
+	height: 100%;
+}
+.priceMatchWindow .k-window-actions a {
+	display: block;
+	width: 40px;
+	height: 100%;
+	background: url('images/close.png') center no-repeat;
+	font-size: 0;
+}
+.priceMatchWindow .k-window-content {
+	padding: 20px 15px;
+}
+
+.price-match-form {
+	margin: 0 -15px;
+	padding: 20px 0;
+}
+.price-match-form .title {
+	text-align: center;
+	font-size: 16px;
+}
+.price-match-form .captcha-box {
+	margin: 0 0 30px;
+}
+.price-match-form .message-error {
+	margin: -20px 0 20px;
+}
+.price-match-form .buttons {
+	margin-bottom: 0;
+	text-align: center;
+}
+.save-price-match-button {
+	min-width: 140px;
+	border: none;
+	background-color: #4ab2f1;
+	padding: 10px 30px;
+	text-align: center;
+	font-size: 15px;
+	color: #fff;
+	text-transform: uppercase;
+}
+.save-price-match-button:hover {
+	background-color: #248ece;
+}
+
+.price-match-requests-page .details {
+    border-top: 1px solid #e6e6e6;
+    background-color: #f9f9f9;
+    padding: 20px;
+    line-height: 22px;
+    color: #444;
+}
+.price-match-requests-page .details a {
+    color: #4ab2f1;
+}
+.price-match-requests-page .details a:hover {
+    text-decoration: underline;
+}
+
+.variant-overview .price-match-wrapper {
+	margin: 10px 0 0;
+}
+.variant-overview .price-match-button {
+	display: inline-block;
+	width: auto;
+}
+
+
+@media all and (min-width: 769px) {
+
+.variant-overview .add-to-cart,
+.variant-overview .add-to-cart-panel,
+.variant-overview .add-to-wishlist,
+.variant-overview .price-match-wrapper {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0;
+}
+
+}
+
+@media all and (min-width: 1001px) {
+
+.priceMatchWindow {
+	width: 800px;
+}
+.priceMatchWindow .inputs label {
+	width: 175px;
+}
+
+}

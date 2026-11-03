@@ -1,0 +1,446 @@
+﻿@model Nop.Web.Areas.Admin.Models.Common.AddressModel
+
+@using Nop.Web.Components
+@using Delsami.Plugin.Widgets.AddressLocation
+
+@inject AddressLocationSettings addressLocationSettings
+
+@{
+    var currentCityName =Html.Raw(HttpUtility.HtmlDecode(Model.City));
+
+    SelectListItem item=Model.AvailableCountries.FirstOrDefault(f => f.Value == "106");
+
+    item.Selected = true;
+}
+
+<style>
+    /* CSS */
+    #find-my-location {
+        border-radius: 8px;
+        border-width: 0;
+        cursor: pointer;
+        display: inline-block;
+        font-family: "Haas Grot Text R Web", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        line-height: 20px;
+        list-style: none;
+        margin: 0;
+        padding: 10px 12px;
+        text-align: center;
+        transition: all 200ms;
+        vertical-align: baseline;
+        white-space: nowrap;
+        user-select: none;
+        -webkit-user-select: none;
+        touch-action: manipulation;
+        display: block;
+        margin: 0 auto;
+    }
+</style>
+
+
+
+<div class="button-container">
+    <button id="find-my-location" type="button">@T("Delsami.Plugin.Widgets.AddressLocation.Button.FindMyLocation")</button>
+</div>
+
+<div id="map" class="al-map-container" style="height: 500px;">
+</div>
+
+
+@if(addressLocationSettings.MapType == Delsami.Plugin.Widgets.AddressLocation.Enums.MapType.OpenStreetMap)
+{
+    <link href="/plugins/Delsami.widgets.addresslocation/contents/Leaflet/leaflet.css" rel="stylesheet" />
+    <script src="/plugins/Delsami.widgets.addresslocation/contents/Leaflet/leaflet.js"></script>
+}
+else
+{
+    <link rel="stylesheet" href="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.css" />
+    <script src="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.js"></script>
+}
+
+  <script asp-Location="Footer">
+
+      $(document).on("change",function(){
+        setCityDropdown();
+      });
+
+        $(document).ready(function () {
+
+            @if(Model.Id==0)
+            {
+                <text>
+             $("#Address_CountryId").trigger("change")
+             </text>
+             }
+            setTimeout(() => {
+                setCityDropdown("@currentCityName");
+
+            }, 1000);
+
+
+
+            var marker;
+            var map;
+            var currentUrl = window.location.href.toLowerCase();
+            var defaultLat = "35.7144537";
+            var defaultLng = "51.3437968";
+
+            var inputLat = $("input#address_attribute_@addressLocationSettings.LatitudeAddressAttributeId");
+            var inputLng = $("input#address_attribute_@addressLocationSettings.LongitudeAddressAttributeId");
+            var digiKalaAddressId = $("input#address_attribute_@addressLocationSettings.DigiKalaAddressAttributeId");
+
+            if (currentUrl.includes("admin")) {
+                inputLat.parent().parent().hide();
+                inputLng.parent().parent().hide();
+                digiKalaAddressId.parent().parent().hide();
+            }
+            else {
+                inputLat.parent().hide();
+                inputLng.parent().hide();
+                digiKalaAddressId.parent().hide();
+            }
+
+            var currentLat = inputLat.val();
+            var currentLng = inputLng.val();
+
+            marker = InitialMap(currentLat, currentLng);
+
+            $("#find-my-location").on("click", function () {
+                alert()
+                map.locate({ setView: true, maxZoom: 16 });
+
+                map.on('locationfound', onLocationFound);
+                map.on('locationerror', onLocationError);
+
+            });
+
+            function InitialMap(lat, lng) {
+
+                if (currentUrl.includes("opc-billing")) {
+                    $("#checkout-step-shipping .al-map-container").remove();
+                }
+                else if (currentUrl.includes("opc-shipping")) {
+                    $("#checkout-step-billing .al-map-container").remove();
+                }
+
+                if (currentUrl.includes("opc-billing") && $("#checkout-step-billing .al-map-container").length == 0) {
+                    $("#checkout-step-billing .custom-attributes").last().after('<div id="map" class="al-map-container" style="height: 500px;"></div>');
+                }
+                else if (currentUrl.includes("opc-shipping") && $("#checkout-step-shipping .al-map-container").length == 0) {
+                    $("#checkout-step-shipping .custom-attributes").last().after('<div id="map" class="al-map-container" style="height: 500px;"></div>');
+                }
+
+                var lat = !lat || lat === "" ? defaultLat : lat;
+                var lng = !lng || lng === "" ? defaultLng : lng;
+
+                @if(addressLocationSettings.MapType == Delsami.Plugin.Widgets.AddressLocation.Enums.MapType.OpenStreetMap)
+                {
+                    <text>
+                    map = L.map('map')
+                           .setView([lat, lng], 16)
+                           .on("click", UpdateMarkerLocation);
+                    </text>
+                }
+                else
+                {
+                    <text>
+                   map = L.map('map', {  key: "@addressLocationSettings.NeshanMapApiKey",
+                                         maptype: "neshan",
+                                         poi: false,
+                                         traffic: false,
+                                         center: [lat, lng],
+                                         zoom: 14,
+                                        })
+                                        .on("click", UpdateMarkerLocation);
+
+                    </text>
+                }
+            L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                    maxZoom: 16
+                }).addTo(map);
+
+                var marker = L.marker([lat, lng], { draggable: 'true' })
+                    .addTo(map)
+                    .on("mouseup", UpdateMarkerLocation);
+
+                return marker;
+            }
+
+            function UpdateMarkerLocation(e) {
+                marker.setLatLng(e.latlng);
+                UpdateLatLong(e);
+            }
+
+            function onLocationFound(e) {
+                var radius = e.accuracy;
+
+                UpdateMarkerLocation(e);
+            }
+
+            function onLocationError(e) {
+                alert(e.message);
+            }
+
+            function UpdateLatLong(e) {
+
+                inputLng.val(e.latlng.lng);
+
+                inputLat.val(e.latlng.lat);
+
+                $.ajax({
+                    url: `https://api.neshan.org/v5/reverse?lat=${e.latlng.lat}&lng=${e.latlng.lng}`,
+                    headers: {
+                        'Api-Key': '@addressLocationSettings.NeshanServiceApiKey',
+                    },
+                    success: function (data) {
+                        $("#Address_Address1").val(data.formatted_address);
+                        $("#BillingNewAddress_Address1").val(data.formatted_address);
+                        $("#ShippingNewAddress_Address1").val(data.formatted_address);
+                        var stateProvince = data.state.replace("استان ", "");
+
+                        
+                        $("#Address_StateProvinceId option").filter(function () {
+                            return $(this).text() === stateProvince;
+                        }).prop('selected', true);
+
+                        $("#Address_StateProvinceId").trigger("change");
+
+                        $("#BillingNewAddress_StateProvinceId option").filter(function () {
+                            return $(this).text() === stateProvince;
+                        }).prop('selected', true);
+
+                        $("#ShippingNewAddress_StateProvinceId option").filter(function () {
+                            return $(this).text() === stateProvince;
+                        }).prop('selected', true);
+
+                        $("#Address_City").val(data.city)
+                        $("#BillingNewAddress_City").val(data.city)
+                        $("#ShippingNewAddress_City").val(data.city)
+
+                    setCityDropdown(data.city);
+                    }
+                });
+            }
+
+            function GetLatLngByAddressId(addressId) {
+
+                return $.ajax({
+                    url: "Checkout/GetAddressById?addressId=" + addressId
+                });
+            }
+
+        });
+
+            function setCityDropdown(cityname) {
+                var selectedStateProvinceId = $("#Address_StateProvinceId").val();
+
+        if (selectedStateProvinceId !== null && selectedStateProvinceId !== "0") {
+
+            $("#city-id").empty();
+
+            $.ajax({
+                url: `/AddressLocation/GetCitiesByStateProvinceId?stateProvinceId=${selectedStateProvinceId}`,
+                method: 'GET',
+                success: function (cities) {
+                  console.table(cities);
+
+                    $.each(cities, function (i, item) {
+                        console.log(item.Name);
+
+                        let option = $("<option>", { value: item.Id, text: item.Name });
+
+                        $("#city-id").append(option);
+                    });
+
+                    if (cityname) {
+                        $("#city-id option").filter(function () {
+                            return $(this).text() === cityname;
+                        }).prop('selected', true);
+                    }
+                },
+                error: function (xhr, status, error) {
+                    // alert('@T("Delsami.Plugin.Widgets.AddressLocation.InvalidStateProvince")');
+                }
+            });
+        }
+    }
+    </script>
+
+
+<script>
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.CountryId)").change(function () {
+            var selectedItem = $(this).val();
+            var ddlStates = $("#@Html.IdFor(model => model.StateProvinceId)");
+            $.ajax({
+                cache: false,
+                type: "GET",
+                url: "@(Url.Action("GetStatesByCountryId", "Country"))",
+                data: {
+                    "countryId": selectedItem,
+                    "addSelectStateItem": "false"
+                },
+                success: function (data, textStatus, jqXHR) {
+                    ddlStates.html('');
+                    $.each(data,
+                        function (id, option) {
+                            ddlStates.append($('<option></option>').val(option.id).html(option.name));
+                        });
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                    $("#statesAlert").click();
+                }
+            });
+        });
+    });
+</script>
+
+<input asp-for="Id" type="hidden" />
+<input asp-for="FirstNameRequired" type="hidden" />
+<input asp-for="LastNameRequired" type="hidden" />
+<input asp-for="EmailRequired" type="hidden" />
+<input asp-for="CompanyRequired" type="hidden" />
+<input asp-for="CountryRequired" type="hidden" />
+<input asp-for="CountyRequired" type="hidden" />
+<input asp-for="CityRequired" type="hidden" />
+<input asp-for="StreetAddressRequired" type="hidden" />
+<input asp-for="StreetAddress2Required" type="hidden" />
+<input asp-for="ZipPostalCodeRequired" type="hidden" />
+<input asp-for="PhoneRequired" type="hidden" />
+<input asp-for="FaxRequired" type="hidden" />
+
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="FirstName" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="FirstName" asp-required="@Model.FirstNameRequired" />
+        <span asp-validation-for="FirstName"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="LastName" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="LastName" asp-required="@Model.LastNameRequired" />
+        <span asp-validation-for="LastName"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Email" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="Email" asp-required="@Model.EmailRequired" />
+        <span asp-validation-for="Email"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Company" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="Company" asp-required="@Model.CompanyRequired" />
+        <span asp-validation-for="Company"></span>
+    </div>
+</div>
+<div class="form-group row" style="display:none">
+    <div class="col-md-3">
+        <nop-label asp-for="CountryId" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="CountryId" asp-items="Model.AvailableCountries" asp-required="@Model.CountryRequired" />
+        <span asp-validation-for="CountryId"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="StateProvinceId" />
+    </div>
+    <div class="col-md-9">
+        <nop-select asp-for="StateProvinceId" asp-items="Model.AvailableStates" />
+        <span asp-validation-for="StateProvinceId"></span>
+    </div>
+</div>
+<div class="form-group row" style="display:none">
+    <div class="col-md-3">
+        <nop-label asp-for="County"/>
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="County" asp-required="@Model.CountyRequired" />
+        <span asp-validation-for="County"></span>
+    </div>
+</div>
+@* <div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="City" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="City" asp-required="@Model.CityRequired" />
+        <span asp-validation-for="City"></span>
+    </div>
+</div> *@
+
+ <div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="City" />
+    </div>
+    <div class="col-md-9">
+            <select class="form-control" name="Address.CityId" id="city-id"></select>
+    </div>
+</div> 
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Address1" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="Address1" asp-required="@Model.StreetAddressRequired" />
+        <span asp-validation-for="Address1"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="Address2" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="Address2" asp-required="@Model.StreetAddress2Required" />
+        <span asp-validation-for="Address2"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="ZipPostalCode" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="ZipPostalCode" asp-required="@Model.ZipPostalCodeRequired" />
+        <span asp-validation-for="ZipPostalCode"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="PhoneNumber" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="PhoneNumber" asp-required="@Model.PhoneRequired" />
+        <span asp-validation-for="PhoneNumber"></span>
+    </div>
+</div>
+<div class="form-group row">
+    <div class="col-md-3">
+        <nop-label asp-for="FaxNumber" />
+    </div>
+    <div class="col-md-9">
+        <nop-editor asp-for="FaxNumber" asp-required="@Model.FaxRequired" />
+        <span asp-validation-for="FaxNumber"></span>
+    </div>
+</div>
+
+@if (Model.CustomAddressAttributes.Count > 0)
+{
+    @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
+}
+<nop-alert asp-alert-id="statesAlert" asp-alert-message="@T("Admin.Common.Alert.States.Failed")" />

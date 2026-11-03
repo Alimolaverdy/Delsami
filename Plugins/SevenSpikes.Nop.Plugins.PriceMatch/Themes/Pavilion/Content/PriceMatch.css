@@ -1,0 +1,138 @@
+
+.price-match-wrapper {
+	display: inline-block;
+}
+.price-match-button {
+    height: 37px;
+    width: 37px;
+	border: none;
+	background-color: #888;
+	background-image: url('images/button.png');
+	background-repeat: no-repeat;
+	font-size: 0;
+	transition: all 0.2s ease;
+}
+.price-match-button:hover {
+    background-color: #f74258;
+}
+
+/* form container */
+
+.k-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+    bottom: 0;
+	left: 0;
+    z-index: 1060;
+	background-color: #000;
+	opacity: 0.6;
+}
+.priceMatchWindow {
+	position: absolute;
+	left: 0 !important;
+    right: 0;
+	z-index: 1070;
+	width: 600px;
+	max-width: 95%;
+	margin: auto;
+	box-shadow: 0 1px 5px #666;
+	background-color: #fff;
+	padding-top: 0 !important;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+	margin-top: 0 !important;
+	border-bottom: 1px solid #e9e9e9;
+	overflow: hidden;
+	background-color: #f9f9f9;
+	padding: 15px 20px;
+	text-align: left;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    display: inline-block;
+    max-width: 90%;
+    overflow: hidden;
+    font-size: 14px;
+    font-weight: bold;
+	color: #333;
+    text-transform: uppercase;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 0;
+	right: 0;
+    z-index: 1;
+    margin: 13px;
+}
+.priceMatchWindow .k-window-actions a {
+	display: block;
+    width: 24px;
+	height: 24px;
+    background: url(images/close.png) center no-repeat;
+    font-size: 0;
+    opacity: 0.8;
+}
+.priceMatchWindow .k-window-actions a:hover {
+    opacity: 1;
+}
+.priceMatchWindow .k-window-content {
+	padding: 40px 7%;
+}
+
+/* request form */
+
+.price-match-form {
+	text-align: center;
+}
+.price-match-form .title {
+    margin: 0 0 30px;
+    background-color: transparent;
+    padding: 0;
+	font-size: 16px;
+    text-transform: none;
+}
+.price-match-form .title strong {
+    color: #f74258;
+}
+.price-match-form .captcha-box,
+.price-match-form .message-error {
+	margin: 0 0 20px;
+}
+.save-price-match-button {
+	min-width: 120px;
+    border: none;
+    background-color: #f74258;
+    padding: 15px 30px;
+    font-size: 13px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    outline: 1px solid transparent;
+    transition: all 0.2s ease;
+}
+.save-price-match-button:hover {
+	outline-color: #f74258;
+}
+
+/* requests page */
+
+.price-match-requests-page .details a {
+    margin: 0 5px;
+    font-weight: bold;
+}
+.price-match-requests-page .details a:hover {
+    color: #f74258;
+}
+
+
+
+@media all and (min-width: 1025px) {
+
+    .price-match-form .inputs label {
+        text-align: left;
+    }
+}

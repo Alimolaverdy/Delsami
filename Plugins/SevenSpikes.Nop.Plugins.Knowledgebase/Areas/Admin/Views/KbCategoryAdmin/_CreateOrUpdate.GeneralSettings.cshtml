@@ -1,0 +1,58 @@
+@model CategoryAdminModel
+
+<div class="panel-body">
+            
+    @(await Html.LocalizedEditorAsync<CategoryAdminModel, SevenSpikes.Nop.Plugins.Knowledgebase.Areas.Admin.Models.CategoryLocalizedModel>
+        ("category-general-settings-localized",
+        @<div>
+            <div class="form-group row clearfix">
+                <div class="col-md-3">
+                    <nop-label asp-for="@Model.Locales[item].Name" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="@Model.Locales[item].Name" />
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+            @Html.HiddenFor(model => model.Locales[item].LanguageId)
+        </div>,
+        @<div>
+            <div class="form-group row clearfix">
+                <div class="col-md-3">
+                    <nop-label asp-for="Name" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Name" />
+                    @Html.ValidationMessageFor(model => model.Name)
+                </div>
+            </div>
+        </div>
+        ))
+
+    <div class="form-group row clearfix">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="ParentCategoryId" asp-items="Model.AvailableCategories" />
+        </div>
+    </div>
+
+    <div class="form-group row clearfix">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+        </div>
+    </div>
+
+    <div class="form-group row clearfix">
+        <div class="col-md-3">
+            <nop-label asp-for="Published" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="Published" />
+        </div>
+    </div>
+</div>

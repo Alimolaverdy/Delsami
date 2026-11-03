@@ -1,0 +1,56 @@
+﻿@model ReminderModel
+    
+@inject AdminAreaSettings adminAreaSettings    
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="card-body">
+    @{
+        await Html.RenderPartialAsync("Table", new DataTablesModel
+        {
+            Name = "reminder-excluded-customers-grid",
+            UrlRead = new DataUrl("ReminderExcludedCustomerList", "CustomerRemindersAdmin", new RouteValueDictionary { ["reminderId"] = Model.Id }),
+            UrlDelete = new DataUrl("ReminderExcludedCustomerDelete", "CustomerRemindersAdmin", null),
+            Length = defaultGridPageSize,
+            LengthMenu = gridPageSizes,
+            ColumnCollection = new List<ColumnProperty>
+            {
+                new ColumnProperty(nameof(ReminderExcludedCustomerModel.CustomerName))
+                {
+                    Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.CustomerName").Text
+                },
+                new ColumnProperty(nameof(ReminderExcludedCustomerModel.CustomerEmail))
+                {
+                    Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.CustomerEmail").Text
+                },
+                new ColumnProperty(nameof(ReminderExcludedCustomerModel.Id))
+                {
+                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                    Width = "200"
+                }
+            }
+        });
+    }
+</div>
+<div class="card-footer">
+    <button type="submit" id="btnAddNewReminderExcludedCustomer" name="btnAddNewReminderExcludedCustomer"
+            onclick="javascript: OpenWindow('@Url.Action("ReminderExcludedCustomerAddPopup", "CustomerRemindersAdmin", new {reminderId = Model.Id, btnId = "btnRefreshReminderExcludedCustomer", formId = "reminder-form"})    ', 800, 700, true); return false;"
+            class="btn btn-primary">
+        @T("SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomer.AddNewCustomer")
+    </button>
+    <input type="submit" id="btnRefreshReminderExcludedCustomer" name="btnRefreshReminderExcludedCustomer" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshReminderExcludedCustomer').click(function () {
+
+                $('.data-tables-refresh button').click();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+</div>

@@ -1,0 +1,168 @@
+﻿@model CustomerReminderMessageRecordSearchModel
+    
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    //page title
+    ViewBag.PageTitle = T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.ReminderMessages").Text;
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Plugins.CustomerReminders.Admin.Submenus.ReminderMessagesReport");
+}
+
+<form method="post">
+    <nop-antiforgery-token/>
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.ReminderMessages")
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchStartDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchStartDate" />
+                                        <span asp-validation-for="SearchStartDate"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchEndDate" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchEndDate" />
+                                        <span asp-validation-for="SearchEndDate"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchToEmail" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchToEmail" />
+                                        <span asp-validation-for="SearchToEmail"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchReminderId" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchReminderId" asp-items="Model.AvailableReminders" />
+                                        <span asp-validation-for="SearchReminderId"></span>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchLoadNotSent" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-editor asp-for="SearchLoadNotSent" />
+                                        <span asp-validation-for="SearchLoadNotSent"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-md-offset-5">
+                                <button type="button" id="btnSearch" class="btn btn-primary btn-search"><i class="fa fa-search"></i>@T("Admin.Common.Search")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @{ 
+                            await Html.RenderPartialAsync("Table", new DataTablesModel
+                            {
+                                Name = "customer-reminder-message-records-grid",
+                                UrlRead = new DataUrl("CustomerReminderMessageRecordsList", "CustomerReminderMessageRecordsAdmin", null),
+                                SearchButtonId = "btnSearch",
+                                Length = defaultGridPageSize,
+                                LengthMenu = gridPageSizes,
+                                Filters = new List<FilterParameter>
+                                {
+                                    new FilterParameter(nameof(Model.SearchStartDate), typeof(DateTime?)),
+                                    new FilterParameter(nameof(Model.SearchEndDate), typeof(DateTime?)),
+                                    new FilterParameter(nameof(Model.SearchToEmail)),
+                                    new FilterParameter(nameof(Model.SearchReminderId)),
+                                    new FilterParameter(nameof(Model.SearchLoadNotSent), typeof(bool))
+                                },
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                    new ColumnProperty(nameof(CustomerReminderMessageRecordModel.ReminderName))
+                                    {
+                                        Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.ReminderName").Text
+                                    },
+                                    new ColumnProperty(nameof(CustomerReminderMessageRecordModel.CustomerName))
+                                    {
+                                        Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.CustomerName").Text,
+                                        Render = new RenderCustom("renderCustomerEditButton")
+                                    },
+                                    new ColumnProperty(nameof(CustomerReminderMessageRecordModel.CustomerEmail))
+                                    {
+                                        Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.CustomerEmail").Text
+                                    },
+                                    new ColumnProperty(nameof(CustomerReminderMessageRecordModel.FromName))
+                                    {
+                                        Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.FromName").Text
+                                    },
+                                    new ColumnProperty(nameof(CustomerReminderMessageRecordModel.CreatedOn))
+                                    {
+                                        Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.CreatedOn").Text,
+                                        Render = new RenderDate()
+                                    },
+                                    new ColumnProperty(nameof(CustomerReminderMessageRecordModel.EmailSentOn))
+                                    {
+                                        Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.EmailSentOn").Text
+                                    },
+                                    new ColumnProperty(nameof(CustomerReminderMessageRecordModel.MessageState))
+                                    {
+                                        Title = T("SevenSpikes.Plugins.CustomerReminders.Admin.CustomerReminderMessageRecord.MessageState").Text
+                                    },
+                                    new ColumnProperty(nameof(CustomerReminderMessageRecordModel.EmailId))
+                                    { 
+                                        Render = new RenderCustom("renderEditButton"),
+                                        Width = "100"
+                                    }
+                                }
+                            });
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script type="text/javascript">
+
+    function renderCustomerEditButton(data, type, row, meta) {
+
+        return '<a href="@Url.Content("~/Admin/Customer/Edit/")'+ row.CustomerId +'">'+ row.CustomerName +'</a>';
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="@Url.Content("~/Admin/QueuedEmail/Edit/")' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

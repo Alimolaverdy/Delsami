@@ -1,0 +1,141 @@
+﻿@model SaleCampaignModel
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var discountType = $('#@Html.IdFor(model => model.DiscountType)');
+        var assignToCategory = '#@Html.IdFor(model => model.AssignToCategory)';
+        var overrideCents = '#@Html.IdFor(model => model.OverrideCents)';
+
+        var categories = '.showCategories';
+        var usePercentage = '.usePercentage';
+        var percentageSign = '.percentage-sign .input-group-addon.bootstrap-touchspin-postfix';
+        var overrideCentsValue = '.overrideCentsValue';
+
+        $(categories).hide();
+        $(usePercentage).hide();
+        $(percentageSign).hide();
+
+
+        $(overrideCents).change(showCentsValueInput);
+        $(assignToCategory).change(showCategories);
+        showCentsValueInput();
+        showCategories();
+
+        function showCategories() {
+            if ($(assignToCategory).is(':checked') === true) {
+                $(categories).show();
+            } else {
+                $(categories).hide();
+            }
+        }
+
+        function showCentsValueInput() {
+            if ($(overrideCents).is(':checked') === true) {
+                $(overrideCentsValue).show();
+            } else {
+                $(overrideCentsValue).hide();
+            }
+        }
+
+        discountType.change(showAppropriateTableRows);
+        showAppropriateTableRows();
+
+        function showAppropriateTableRows() {
+            //FixedAmmount 
+            if (discountType.val() === "1") {
+                $(percentageSign).hide();
+                $(usePercentage).hide();
+            //Percentage
+            } else if (discountType.val() === "0") {
+                $(percentageSign).show();
+                $(usePercentage).show();
+
+                showCentsValueInput();
+            }
+        }
+    });
+</script>
+
+<section class="content">
+
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card" style="box-shadow: none;">
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="Name" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="Name" />
+                            <span asp-validation-for="Name"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="AssignToCategory" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="AssignToCategory" />
+                            <span asp-validation-for="AssignToCategory"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row showCategories">
+                        <div class="col-md-3">
+                            <nop-label asp-for="CategoryId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="CategoryId" asp-items="Model.AvailableCategories" />
+                            <span asp-validation-for="CategoryId"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="WidgetZone" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="WidgetZone" asp-items="Model.SupportedWidgetZones" />
+                            <span asp-validation-for="WidgetZone"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DiscountType" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="DiscountType" asp-items="Model.AvailableDiscountTypes" />
+                            <span asp-validation-for="DiscountType"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row percentage-sign">
+                        <div class="col-md-3">
+                            <nop-label asp-for="DiscountValue" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="DiscountValue" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.PercentageEscaped").Text" />
+                            <span asp-validation-for="DiscountValue"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row usePercentage">
+                        <div class="col-md-3">
+                            <nop-label asp-for="OverrideCents" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="OverrideCents" />
+                            <span asp-validation-for="OverrideCents"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row usePercentage overrideCentsValue">
+                        <div class="col-md-3">
+                            <nop-label asp-for="OverrideCentsValue" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="OverrideCentsValue" />
+                            <span asp-validation-for="OverrideCentsValue"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

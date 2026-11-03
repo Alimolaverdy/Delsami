@@ -1,0 +1,107 @@
+﻿@model PriceMatchRequestsModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Account").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-price-match-requests-page");
+
+    var theme = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+    var priceMatchCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.PriceMatch/Themes/" + theme + "/Content/PriceMatch.css";
+
+    bool supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+}
+
+<link rel="stylesheet" href="@priceMatchCssFilePath" />
+
+
+@if (supportRtl)
+{
+    var priceMatchRtlCssFilePath = "~/Plugins/SevenSpikes.Nop.Plugins.PriceMatch/Themes/" + theme + "/Content/PriceMatch.rtl.css";
+
+    <link rel="stylesheet" href="@priceMatchRtlCssFilePath" />
+}
+
+@section AccountNavigation
+{
+    @await Component.InvokeAsync("CustomerNavigation")
+}
+
+<div class="page account-page price-match-list-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - @T("SevenSpikes.PriceMatch.Public.PriceMatchRequests")</h1>
+    </div>
+    <div class="page-body">
+        @foreach (var priceMatch in Model.PriceMatchRequests)
+        {
+            <div class="section price-match-list">
+                <div class="title">
+                    <strong>@string.Format(T("SevenSpikes.PriceMatch.Public.PriceMatchRequests.Title").Text, priceMatch.PriceMatchRequest.Id, priceMatch.PriceMatchRequest.StatusName)</strong>
+                </div>
+                <ul class="info">
+                    <li class="product-name">
+                        <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProductName"):</label>
+                        <span><a class="link" href="@(Url.RouteUrl<Product>( new { SeName = priceMatch.PriceMatchRequest.ProductSeName }))">@priceMatch.PriceMatchRequest.ProductName</a></span>
+                    </li>
+                    <li class="created-on">
+                        <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.CreatedOn"):</label>
+                        <span>@priceMatch.PriceMatchRequest.CreatedOn</span>
+                    </li>
+                    <li class="product-price">
+                        <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProductPriceFormatted"):</label>
+                        <span>@priceMatch.PriceMatchRequest.ProductPriceFormatted</span>
+                    </li>
+                    <li class="competitors-price">
+                        <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorPriceFormatted"):</label>
+                        <span>@priceMatch.PriceMatchRequest.CompetitorPriceFormatted</span>
+                    </li>
+                    
+                    @if (priceMatch.PriceMatchRequest.Status == Status.Approved)
+                    {
+                        <li class="discount-amount">
+                            <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountAmount"):</label>
+                            <span><strong>@priceMatch.PriceMatchRequestDiscount.DiscountAmount.ToString("F") %</strong></span>
+                        </li>
+
+                        if (priceMatch.PriceMatchRequestDiscount.DiscountEndDate != null)
+                        {
+                            <li class="discount-end-date">
+                                <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountEndDate"):</label>
+                                <span><strong>@priceMatch.PriceMatchRequestDiscount.DiscountEndDate</strong></span>
+                            </li>
+                        }
+
+                        <li class="discount-limitation">
+                            <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountLimitationTimes"):</label>
+                            <span><strong>@priceMatch.PriceMatchRequestDiscount.DiscountLimitationTimes @T("SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountUsedTimes", priceMatch.PriceMatchRequestDiscount.DiscountUsedTimes)</strong></span>
+                        </li>
+
+                        <li class="discount-coupon-code">
+                            <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountCouponCode"):</label>
+                            <span><strong>@priceMatch.PriceMatchRequestDiscount.DiscountCouponCode</strong></span>
+                        </li>
+                    }
+
+                    @if (!string.IsNullOrEmpty(priceMatch.PriceMatchRequest.AdditionalInformation))
+                    {
+                        <li class="additional-info">
+                            <label>@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.AdditionalInformation"):</label>
+                            <div>@Html.Raw(priceMatch.PriceMatchRequest.AdditionalInformation)</div>
+                        </li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $('.block-account-navigation li.active').removeClass('active').addClass('inactive');
+        $('.block-account-navigation li.price-match-requests').addClass('active');
+    });
+</script>

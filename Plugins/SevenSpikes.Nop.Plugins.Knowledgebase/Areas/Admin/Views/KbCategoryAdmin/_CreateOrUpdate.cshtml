@@ -1,0 +1,39 @@
+@model CategoryAdminModel
+
+@{
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Knowledgebase.Admin.Submenus.ManageCategories");
+}
+
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="@Model.Id" />
+<input type="hidden" asp-for="@Model.IsPopup" />
+
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+<section class="content">
+    <div class="form-horizontal">
+        @if (Url.ActionContext.RouteData.Values["action"].ToString().ToLower() == "create")
+        {
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore, String.Format("Trial message for: {0}", "KnowledgeBaseCategory"))
+        }
+        else
+        {
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        }
+        <nop-tabs id="knowledgebase-category-edit">
+            <nop-tab asp-name="tab-category" asp-default="true" asp-title="@T("SevenSpikes.Knowledgebase.Admin.Entities.Category")">
+                @await Html.PartialAsync(AdminViews.GeneralSettingsTab, Model)
+                @if (Model.Id > 0)
+                {
+                    @await Html.PartialAsync(AdminViews.LimitedToStoresTab, Model)
+                }
+            </nop-tab>
+            <nop-tab asp-name="tab-seo" asp-title="@T("SevenSpikes.Knowledgebase.Admin.Entities.Category.SEO")">
+                @await Html.PartialAsync(AdminViews.SEOTab, Model)
+            </nop-tab>
+            <nop-tab asp-name="tab-articles" class="advanced-setting" asp-title="@T("SevenSpikes.Knowledgebase.Admin.Entities.Category.Articles")">
+                @await Html.PartialAsync(AdminViews.ArticlesTab, Model)
+            </nop-tab>
+        </nop-tabs>
+    </div>
+</section>

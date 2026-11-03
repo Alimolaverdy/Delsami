@@ -1,0 +1,261 @@
+﻿@model TicketDepartmentGridStaffAdminSearchModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminPopupLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try
+            {
+                var gridElement = window.opener.document.getElementById("@ViewBag.btnId");
+                $(gridElement).click();
+            }
+            catch (e){}
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+    
+    <input asp-for="TicketDepartmentId" type="hidden" />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.HelpDesk.Admin.TicketDepartment.Staff.AddNew")
+        </h1>
+        <div class="float-right">
+            &nbsp;
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search card-popup">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-md-4">
+                                        <nop-label asp-for="SearchCustomerRoleIds" />
+                                    </div>
+                                    <div class="col-md-8">
+                                        <nop-select asp-for="SearchCustomerRoleIds" asp-items="Model.AvailableCustomerRoles" asp-multiple="true" />
+                                        <script>
+                                            $(document).ready(function() {
+                                                var rolesIdsInput =
+                                                    $('#@Html.IdFor(model => model.SearchCustomerRoleIds)')
+                                                        .data("kendoMultiSelect");
+                                                rolesIdsInput.setOptions({
+                                                    autoClose: false,
+                                                    filter: "contains"
+                                                });
+
+                                                @if (Model.AvailableCustomerRoles.Count == 0)
+                                                {
+                                                    <text>
+                                                        rolesIdsInput.setOptions({
+                                                            enable: false,
+                                                            placeholder:
+                                                                '@T("Admin.Catalog.Products.CustomerRoles.NoCustomerRolesAvailable")'
+                                                        });
+                                                        rolesIdsInput._placeholder();
+                                                        rolesIdsInput._enable();
+                                                    </text>
+                                                }
+                                            });
+                                        </script>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchEmail" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchEmail" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchFirstName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchFirstName" />
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchLastName" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchLastName" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="button" id="search-customers" value="search-customers" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card panel-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "customers-grid",
+                            UrlRead = new DataUrl("StaffPopupList", "HelpDeskTicketDepartmentAdmin", new RouteValueDictionary { ["ticketDepartmentId"] = Model.TicketDepartmentId }),
+                            Length = defaultGridPageSize,
+                            LengthMenu = gridPageSizes,
+                            SearchButtonId = "search-customers",
+                            Filters = new List<FilterParameter>
+                            {
+                                new FilterParameter(nameof(Model.SearchCustomerRoleIds)),
+                                new FilterParameter(nameof(Model.SearchEmail)),
+                                new FilterParameter(nameof(Model.SearchFirstName)),
+                                new FilterParameter(nameof(Model.SearchLastName))
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(TicketDepartmentGridStaffAdminModel.Id))
+                                {
+                                    IsMasterCheckBox = true,
+                                    Width = "20",
+                                    Render = new RenderCustom("renderSelectedCheckBox")
+                                },
+                                new ColumnProperty(nameof(TicketDepartmentGridStaffAdminModel.StaffName))
+                                {
+                                    Title = T("SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerName").Text
+                                },
+                                new ColumnProperty(nameof(TicketDepartmentGridStaffAdminModel.StaffEmail))
+                                {
+                                    Title = T("SevenSpikes.Conditions.Admin.CustomerOverrides.CustomerEmail").Text
+                                },
+                                new ColumnProperty(nameof(TicketDepartmentGridStaffAdminModel.CustomerRoleNames))
+                                {
+                                    Title = T("Admin.Customers.Customers.List.CustomerRoles").Text
+                                },
+                                new ColumnProperty(nameof(TicketDepartmentGridStaffAdminModel.Active))
+                                {
+                                    Title = T("Admin.Customers.Customers.Fields.Active").Text,
+                                    Render = new RenderCustom("renderIsActive")
+                                }
+                            }
+                        })
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="save" class="btn bg-primary">
+                            <i class="fa fa-floppy-o"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script type="text/javascript" asp-location="Footer">
+
+    function renderSelectedCheckBox(data, type, row, meta) {
+
+        var checked = row.Selected ? 'checked' : '';
+
+        return '<input type="checkbox" id="SelectedCustomerIds" name="SelectedCustomerIds" value="' + row.StaffId + '" class="checkboxGroups" ' + checked + '>';
+    }
+
+    function renderIsActive(data, type, row, meta) {
+
+        if (row.Active) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    var selectedIds = [];
+
+    $(document).ready(function () {
+        $('#search-customers').click(function (e) {
+            //refresh grid
+            e.preventDefault(); //don't reload the page
+
+            var customerOverridesGrid = $("#customers-grid").DataTable();
+            customerOverridesGrid.ajax.reload();
+
+            //return false to don't reload a page
+            return false;
+        });
+
+        $('#mastercheckbox').click(function () {
+            $('.checkboxGroups').attr('checked', $(this).is(':checked')).change();
+        });
+
+        //wire up checkboxes.
+        $('#customers-grid').on('change', 'input[type=checkbox][id!=mastercheckbox]', function (e) {
+            var $check = $(this);
+            if ($check.is(":checked") == true) {
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if (checked == -1) {
+                    //add id to selectedIds.
+                    selectedIds.push($check.val());
+                }
+            }
+            else {
+                var checked = jQuery.inArray($check.val(), selectedIds);
+                if (checked > -1) {
+                    //remove id from selectedIds.
+                    selectedIds = $.grep(selectedIds, function (item, index) {
+                        return item != $check.val();
+                    });
+                }
+            }
+            updateMasterCheckbox();
+        });
+    });
+    function onDataBound(e) {
+        $('#customers-grid input[type=checkbox][id!=mastercheckbox]').each(function () {
+            var currentId = $(this).val();
+            var checked = jQuery.inArray(currentId, selectedIds);
+            //set checked based on if current checkbox's value is in selectedIds.
+            $(this).attr('checked', checked > -1);
+        });
+
+        updateMasterCheckbox();
+    }
+
+    function updateMasterCheckbox() {
+        var numChkBoxes = $('#customers-grid input[type=checkbox][id!=mastercheckbox]').length;
+        var numChkBoxesChecked = $('#customers-grid input[type=checkbox][id!=mastercheckbox]:checked').length;
+        $('#mastercheckbox').attr('checked', numChkBoxes == numChkBoxesChecked && numChkBoxes > 0);
+    }
+
+    function onSubmitChanges(e) {
+        var customerRoleIds = [];
+        $('[name=SearchCustomerRoleIds]:checked').each(function () {
+            customerRoleIds.push($(this).val());
+        });
+
+        e.values.SearchCustomerRoleIds = customerRoleIds.join(",");
+    }
+</script>

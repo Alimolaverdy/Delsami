@@ -1,0 +1,473 @@
+﻿@model SaleCampaignModel
+    
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.SalesCampaigns/Styles/SalesCampaigns.common.css" />
+
+<script>
+    $(document).ready(function () {
+        var categoryClockTypeSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockType)';
+
+        var campaignLabelFontWeightSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontWeight)';
+        var campaignLabelFontStyleSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontStyle)';
+        var campaignLabelFontSizeSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontSize)';
+        var campaignLabelFontSizeUnitSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontSizeUnit)';
+        var campaignLabelFontColorSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontColor).Replace("_", "")';
+
+        var campaignTextFontWeightSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontWeight)';
+        var campaignTextFontStyleSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontStyle)';
+        var campaignTextFontSizeSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontSize)';
+        var campaignTextFontSizeUnitSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontSizeUnit)';
+        var campaignTextFontColorSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontColor).Replace("_", "")';
+
+        var wrapperBackgroundColorSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBackgroundColor).Replace("_", "")';
+        var wrapperBorderInputSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderInput)';
+        var wrapperBorderTypeSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderType)';
+        var wrapperBorderColorSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderColor).Replace("_", "")';
+        var wrapperPaddingTopSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingTop)';
+        var wrapperPaddingRightSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingRight)';
+        var wrapperPaddingBottomSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingBottom)';
+        var wrapperPaddingLeftSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingLeft)';
+
+        var numberBoxBackgroundColorSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBackgroundColor).Replace("_", "")';
+        var numberBoxBorderInputSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderInput)';
+        var numberBoxBorderTypeSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderType)';
+        var numberBoxBorderColorSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderColor).Replace("_", "")';
+        var numberBoxFontWeightSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontWeight)';
+        var numberBoxFontStyleSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontStyle)';
+        var numberBoxFontSizeSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontSize)';
+        var numberBoxFontSizeUnitSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontSizeUnit)';
+        var numberBoxFontColorSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontColor).Replace("_", "")';
+
+        $(categoryClockTypeSelector).change(showNumberBoxFieldset);
+
+        showNumberBoxFieldset();
+
+        $('#clickForCategoryPreview').on('click', function (e) {
+            e.preventDefault();
+             
+            var wrapperSelector = '#campaignWrapper';
+            var campaignLabelSelector = '#campaignLabel';
+            var campaignTextSelector = '#campaignText';
+
+            var clockType = $(categoryClockTypeSelector).val();
+
+            var campaignLabel = GetCampaignLabel(clockType);
+            var campaignText = GetCampaignText(clockType);
+
+            $(campaignLabelSelector).html(campaignLabel);
+            $(campaignTextSelector).html(campaignText);
+
+            if (clockType === "DaysHoursMinutesSeconds" || clockType === "HoursMinutesSeconds" || clockType === "OnlyDays") {
+
+                $('.sale-campaign-box').css('background-color', $(numberBoxBackgroundColorSelector).val());
+                $('.sale-campaign-box').css('border', $(numberBoxBorderInputSelector).val() + "px " + $(numberBoxBorderTypeSelector).val() + " " + $(numberBoxBorderColorSelector).val());
+                $('.sale-campaign-box').css('font-weight', $(numberBoxFontWeightSelector).val());
+                $('.sale-campaign-box').css('font-style', $(numberBoxFontStyleSelector).val());
+                $('.sale-campaign-box').css('font-size', $(numberBoxFontSizeSelector).val() + $(numberBoxFontSizeUnitSelector).val());
+                $('.sale-campaign-box').css('color', $(numberBoxFontColorSelector).val());
+
+                campaignTextSelector = ".sale-campaign-box-label";
+            }
+
+            $(wrapperSelector).css('text-align', 'center');
+            $(wrapperSelector).css('background-color', $(wrapperBackgroundColorSelector).val());
+            $(wrapperSelector).css('border', $(wrapperBorderInputSelector).val() + "px " + $(wrapperBorderTypeSelector).val() + " " + $(wrapperBorderColorSelector).val());
+            $(wrapperSelector).css('padding', $(wrapperPaddingTopSelector).val() + 'px ' + $(wrapperPaddingRightSelector).val() + 'px ' + $(wrapperPaddingBottomSelector).val() + 'px ' + $(wrapperPaddingLeftSelector).val() + 'px ');
+
+            $(campaignLabelSelector).css('font-weight', $(campaignLabelFontWeightSelector).val());
+            $(campaignLabelSelector).css('font-style', $(campaignLabelFontStyleSelector).val());
+            $(campaignLabelSelector).css('font-size', $(campaignLabelFontSizeSelector).val() + $(campaignLabelFontSizeUnitSelector).val());
+            $(campaignLabelSelector).css('color', $(campaignLabelFontColorSelector).val());
+
+            $(campaignTextSelector).css('font-weight', $(campaignTextFontWeightSelector).val());
+            $(campaignTextSelector).css('font-style', $(campaignTextFontStyleSelector).val());
+            $(campaignTextSelector).css('font-size', $(campaignTextFontSizeSelector).val() + $(campaignTextFontSizeUnitSelector).val());
+            $(campaignTextSelector).css('color', $(campaignTextFontColorSelector).val());
+        });
+
+        function showNumberBoxFieldset() {
+            var categoryClockTypeSelector = '#@Html.IdFor(model => model.SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockType)';
+            // Clock type = DaysHoursMinutesSeconds, HoursMinutesSeconds or OnlyDays
+            if ($(categoryClockTypeSelector).val() === "5" || $(categoryClockTypeSelector).val() === "10" || $(categoryClockTypeSelector).val() === "15") {
+                $(".panel-default.number-box").show();
+            } else {
+                $(".panel-default.number-box").hide();
+            }
+        }
+    });
+
+    function GetCampaignLabel(clockType) {
+        // Clock type = DaysHoursMinutesSeconds, HoursMinutesSeconds or OnlyDays
+        if (clockType === "5" || clockType === "10" || clockType === "15") {
+            return "@T("SevenSpikes.Plugins.SaleCampaigns.Public.SaleEndsIn")";
+        }
+
+        return "@T("SevenSpikes.Plugins.SaleCampaigns.Public.OnSaleUntil")";
+    }
+
+    function GetCampaignText(clockType) {
+        var campaignText = "";
+
+        switch (clockType) {
+            case "DaysHoursMinutesSeconds":
+                campaignText = '' +
+                    '<div class="sale-campaign-box-wrapper"><span class="sale-campaign-box">#</span><span class="sale-campaign-box-label">@T("SevenSpikes.Plugins.SaleCampaigns.Public.Days")</span></div>' +
+                    '<div class="sale-campaign-box-wrapper"><span class="sale-campaign-box">#</span><span class="sale-campaign-box-label">@T("SevenSpikes.Plugins.SaleCampaigns.Public.Hours")</span></div>' +
+                    '<div class="sale-campaign-box-wrapper"><span class="sale-campaign-box">#</span><span class="sale-campaign-box-label">@T("SevenSpikes.Plugins.SaleCampaigns.Public.Minutes")</span></div>' +
+                    '<div class="sale-campaign-box-wrapper"><span class="sale-campaign-box">#</span><span class="sale-campaign-box-label">@T("SevenSpikes.Plugins.SaleCampaigns.Public.Seconds")</span></div>';
+                break;
+
+            case "HoursMinutesSeconds":
+                campaignText = '' +
+                    '<div class="sale-campaign-box-wrapper"><span class="sale-campaign-box">#</span><span class="sale-campaign-box-label">@T("SevenSpikes.Plugins.SaleCampaigns.Public.Hours")</span></div>' +
+                    '<div class="sale-campaign-box-wrapper"><span class="sale-campaign-box">#</span><span class="sale-campaign-box-label">@T("SevenSpikes.Plugins.SaleCampaigns.Public.Minutes")</span></div>' +
+                    '<div class="sale-campaign-box-wrapper"><span class="sale-campaign-box">#</span><span class="sale-campaign-box-label">@T("SevenSpikes.Plugins.SaleCampaigns.Public.Seconds")</span></div>';
+                break;
+
+            case "OnlyDays":
+                campaignText = '<div class="sale-campaign-box-wrapper"><span class="sale-campaign-box">#</span><span class="sale-campaign-box-label">@T("SevenSpikes.Plugins.SaleCampaigns.Public.Days")</span></div>';
+                break;
+
+            case "LongDate":
+                campaignText = "Saturday, January 1, 2014, 0:00:00 AM";
+                break;
+
+            case "LongDateWithoutTime":
+                campaignText = "Saturday, January 1, 2014";
+                break;
+
+            case "ShortDate":
+                campaignText = "until 1/1/2014, 0:00 AM";
+                break;
+
+            case "ShortDateWithoutTime":
+                campaignText = "until 1/1/2014";
+                break;
+        }
+
+        return campaignText;
+    }
+</script>
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card" style="box-shadow: none; padding: 0 4px 0 34px;">
+                <div class="form-group row">
+                    <div class="callout bg-gray-light">
+                        @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.CategoryCustomizationTabTitle.Description")
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.SelectClockType")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockType" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockType" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableCategoryClockTypes" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockType"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CampaignLabel")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontWeight" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontWeight" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontWeights" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontWeight"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontStyle" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontStyle" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontStyles" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontStyle"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontSize" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="multi-value">
+                                <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontSize" />
+                            </div>
+                            <div class="multi-value">
+                                <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontSizeUnit" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontSizeUnits"/>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontColor" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontColor" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryClockFontColor"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.CampaignText")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontWeight" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontWeight" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontWeights" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontWeight"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontStyle" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontStyle" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontStyles" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontStyle"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontSize" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="multi-value">
+                                <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontSize" />
+                            </div>
+                            <div class="multi-value">
+                                <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontSizeUnit" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontSizeUnits" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontColor" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontColor" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryCampaignTextFontColor"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.WrapperStyle")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBackgroundColor" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBackgroundColor" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBackgroundColor"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPosition" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPosition" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableWrapperPositions" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPosition"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.Border")</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="multi-value">
+                                <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderInput" />
+                            </div>
+                            <div class="multi-value">
+                                <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderType" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableBorderTypes" />
+                            </div>
+                            <div class="multi-value">
+                                <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperBorderColor" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.PaddingSize")</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="style-box">
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingTop" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingTop" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingRight" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingRight" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingBottom" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingBottom" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                                <div class="style-box-row">
+                                    <div class="style-box-item">
+                                        <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingLeft" />
+                                    </div>
+                                    <div class="style-box-item">
+                                        <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryWrapperPaddingLeft" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Pixels").Text" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default number-box">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.NumberBox")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <div class="label-wrapper">
+                                <label class="control-label">@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.Border")</label>
+                            </div>
+                        </div>
+                        <div class="col-md-9">
+                            <div class="col-md-9">
+                                <div class="multi-value">
+                                    <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderInput" />
+                                </div>
+                                <div class="multi-value">
+                                    <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderType" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableBorderTypes" />
+                                </div>
+                                <div class="multi-value">
+                                    <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBorderColor" />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontWeight" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontWeight" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontWeights" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontWeight"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontStyle" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontStyle" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontStyles" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontStyle"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontSize" />
+                        </div>
+                        <div class="col-md-9">
+                            <div class="multi-value">
+                                <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontSize" />
+                            </div>
+                            <div class="multi-value">
+                                <nop-select asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontSizeUnit" asp-items="Model.SaleCampaignCategoryPageCustomization.AvailableFontSizeUnits" />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontColor" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontColor" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxFontColor"></span>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBackgroundColor" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBackgroundColor" />
+                            <span asp-validation-for="SaleCampaignCategoryPageCustomization.SaleCampaignCategoryNumberBoxBackgroundColor"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card card-default">
+                <div class="card-header">
+					<div class="card-title">
+						@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignCustomization.Preview")
+					</div>
+                </div>
+                <div class="card-body">
+                    <div class="form-group row clearfix">
+                        <div class="col-md-12">
+                            <button id="clickForCategoryPreview" class="btn bg-blue">Click for preview</button>
+                        </div>
+                    </div>
+                    <p>
+                        <div id="campaignWrapper">
+                            <div id="campaignLabel"></div>
+                            <div id="campaignText"></div>
+                        </div>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

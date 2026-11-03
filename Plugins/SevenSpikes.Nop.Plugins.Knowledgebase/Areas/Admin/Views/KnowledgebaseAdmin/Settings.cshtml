@@ -1,0 +1,219 @@
+@model KnowledgebaseSettingsModel
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Knowledgebase.Admin.Submenus.Settings");
+}
+
+<script type="text/javascript" asp-location="Footer">
+
+    $(document).ready(function () {
+        $("#@Html.IdFor(model => model.Enable)").change(showSettings);
+
+        showSettings();
+    });
+
+    function showSettings() {
+        if ($('#@Html.IdFor(model => model.Enable)').is(':checked') == true) {
+            $('.pluginSettings').show();
+        } else {
+            $('.pluginSettings').hide();
+        }
+    }
+
+    function showSiteMapWidgetZone() {
+        var enableSiteMap = $(@Html.IdFor(model => model.IncludeKnowledgeBaseInSiteMap));
+        var siteMapWidgetZone = $('.sitemap-widget-zone');
+
+        if (enableSiteMap.is(':checked') == true) {
+            siteMapWidgetZone.show();
+        } else {
+            siteMapWidgetZone.hide();
+        }
+
+        $(enableSiteMap).on('click', function () {
+            if ($(this).is(':checked') == true) {
+                siteMapWidgetZone.show();
+            } else {
+                siteMapWidgetZone.hide();
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        showSiteMapWidgetZone();
+
+        $(".reindex-btn").click(function () {
+            var headers = {};
+
+            addAntiForgeryToken(headers);
+
+            $.post("Reindex", headers);
+        });
+    });
+</script>
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.Knowledgebase.Admin.Settings")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+		<div class="form-horizontal">
+			@await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+			@await Component.InvokeAsync("StoreScopeConfiguration")
+			<div class="cards-group">
+				<div class="card card-default">
+					<div class="card-body">
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="Enable_OverrideForStore" asp-input="Enable" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="Enable" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="Enable" />
+								<span asp-validation-for="Enable"></span>
+							</div>
+						</div>
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="EnableAdministratorsOnlyAccess_OverrideForStore" asp-input="EnableAdministratorsOnlyAccess" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="EnableAdministratorsOnlyAccess" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="EnableAdministratorsOnlyAccess" />
+								<span asp-validation-for="EnableAdministratorsOnlyAccess"></span>
+							</div>
+						</div>
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="EnableCategoryPage_OverrideForStore" asp-input="EnableCategoryPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="EnableCategoryPage" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="EnableCategoryPage" />
+								<span asp-validation-for="EnableCategoryPage"></span>
+							</div>
+						</div>
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="EnableComments_OverrideForStore" asp-input="EnableComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="EnableComments" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="EnableComments" />
+								<span asp-validation-for="EnableComments"></span>
+							</div>
+						</div>
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="ShowCaptchaForComments_OverrideForStore" asp-input="ShowCaptchaForComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="ShowCaptchaForComments" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="ShowCaptchaForComments" />
+								<span asp-validation-for="ShowCaptchaForComments"></span>
+							</div>
+						</div>
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="CommentsRequireApproval_OverrideForStore" asp-input="CommentsRequireApproval" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="CommentsRequireApproval" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="CommentsRequireApproval" />
+								<span asp-validation-for="CommentsRequireApproval"></span>
+							</div>
+						</div>
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="AllowUsersToEditTheirComments_OverrideForStore" asp-input="AllowUsersToEditTheirComments" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="AllowUsersToEditTheirComments" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="AllowUsersToEditTheirComments" />
+								<span asp-validation-for="AllowUsersToEditTheirComments"></span>
+							</div>
+						</div>
+
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="ResultsPageNumberOfItemsPerPage_OverrideForStore" asp-input="ResultsPageNumberOfItemsPerPage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="ResultsPageNumberOfItemsPerPage" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="ResultsPageNumberOfItemsPerPage" />
+							</div>
+						</div>
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="NumberOfResultsInDropdown_OverrideForStore" asp-input="NumberOfResultsInDropdown" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="NumberOfResultsInDropdown" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="NumberOfResultsInDropdown" />
+							</div>
+						</div>
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="HighlightedTextChunkLength_OverrideForStore" asp-input="HighlightedTextChunkLength" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="HighlightedTextChunkLength" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="HighlightedTextChunkLength" />
+							</div>
+						</div>
+						<div class="form-group row clearfix enable-sitemap">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="IncludeKnowledgeBaseInSiteMap_OverrideForStore" asp-input="IncludeKnowledgeBaseInSiteMap" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="IncludeKnowledgeBaseInSiteMap" />
+							</div>
+							<div class="col-md-9">
+								<nop-editor asp-for="IncludeKnowledgeBaseInSiteMap" />
+							</div>
+						</div>
+						<div class="form-group row clearfix sitemap-widget-zone">
+							<div class="col-md-3">
+								<nop-override-store-checkbox asp-for="SiteMapWidgetZone_OverrideForStore" asp-input="SiteMapWidgetZone" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+								<nop-label asp-for="SiteMapWidgetZone" />
+							</div>
+							<div class="col-md-9">
+								<nop-select asp-for="SiteMapWidgetZone" asp-items="Model.SupportedWidgetZones" />
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="cards-group">
+				<div class="card card-default">
+					<div class="card-body">
+						<div class="form-group row clearfix">
+							<div class="col-md-3">
+								<div class="label-wrapper">
+									<label class="control-label" for=@T("SevenSpikes.Knowledgebase.Admin.Settings.Reindex") title="">@T("SevenSpikes.Knowledgebase.Admin.Settings.Reindex")</label>
+									<div class="ico-help" title="@T("SevenSpikes.Knowledgebase.Admin.Settings.Reindex.Hint")">
+										<i class="fa fa-question-circle"></i>
+									</div>
+								</div>
+							</div>
+							<div class="col-md-9">
+								<div id="reindex-button">
+									<button type="button" value="reindex" class="k-button reindex-btn">@T("SevenSpikes.Knowledgebase.Admin.Settings.Reindex.Button")</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+</section>
+</form>

@@ -1,0 +1,226 @@
+
+.price-match-wrapper {
+    position: relative;
+    display: inline-block;
+    margin: 10px 2px 10px 0;
+    height: 50px;
+    vertical-align: top;
+}
+.price-match-wrapper button {
+    display: inline-block;
+    padding: 0 15px 0 45px;
+    border: 0;
+    width: auto;
+     height: 45px;
+    background: #fff;
+    font-size: 14px;
+    color: #aaa;
+    opacity: 1;
+}
+.price-match-wrapper:hover button,
+.price-match-wrapper:hover:before {
+    color: #57b568;
+}
+.price-match-wrapper:before {
+    content: '\e952';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 45px;
+    height: 45px;
+    background: #fff;
+    line-height: 45px;
+    text-align: center;
+    font-family: prisma;
+    font-size: 21px;
+    color: #bbb;
+    -webkit-transition: all .3s;
+    transition: all .3s;
+    pointer-events: none;
+}
+
+.k-overlay {
+	position: fixed;
+	z-index: 1060;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000;
+	opacity: 0.5;
+}
+.priceMatchWindow {
+    position: absolute;
+    right: 0;
+    left: 0 !important;
+    z-index: 1070;
+    width: 600px;
+    max-width: 100%;
+    margin: auto;
+    border: 1px solid #ddd;
+    box-shadow: 0 0 20px rgba(0,0,0,.2);
+    background-color: #f9f9f9;
+    padding-top: 0 !important;
+}
+.priceMatchWindow .k-window-titlebar {
+    position: relative;
+    height: 65px;
+    margin: 0 !important;
+    background-color: #fff;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    float: left;
+    padding: 20px;
+    max-width: 90%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: bold;
+    font-size: 22px;
+    color: #444;
+	white-space: nowrap;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 15px;
+	right: 5px;
+	height: 100%;
+}
+.priceMatchWindow .k-window-actions a {
+	position: relative;
+    display: block;
+    width: 28px;
+    height: 28px;
+    background: #f9f9f9;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-titlebar .k-window-actions a:after {
+    content: '\e901';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-family: prisma;
+    font-size: 10px;
+    color: #bbb;
+}
+.priceMatchWindow .k-window-content {
+	padding: 20px 15px;
+}
+.priceMatchWindow .field-validation-error {
+    display: block;
+    margin: 10px 0 0 0;
+    text-align: center;
+}
+.price-match-form {
+    padding: 20px 0;
+}
+.price-match-form .title {
+	text-align: center;
+	font-size: 16px;
+}
+.price-match-form .inputs {
+    padding: 15px 20px;
+    border-bottom: 1px solid #eee;
+    text-align: center;
+}
+.price-match-form label {
+    display: block;
+    width: 100%;
+    margin: 0 0 10px;
+    text-align: center;
+    font-size: 13px;
+    color: #888;
+}
+.price-match-form .captcha-box {
+	margin: 0 0 30px;
+}
+.price-match-form .message-error {
+	margin: -20px 0 20px;
+}
+.price-match-form .buttons {
+	margin-bottom: 0;
+	text-align: center;
+}
+.save-price-match-button {
+	min-width: 140px;
+	border: none;
+	padding: 10px 30px;
+	text-align: center;
+	font-size: 15px;
+	color: #fff;
+	text-transform: uppercase;
+}
+.block-account-navigation .listbox li.price-match-requests a:before {
+    content: '\e952';
+}
+
+.price-match-requests-page .title {
+    padding: 19px;
+    border-bottom: 4px solid #f6f6f6;
+    background: #fff;
+}
+.price-match-requests-page .details {
+    padding: 20px;
+    background: #fff;
+    text-align: left;
+    line-height: 24px;
+    font-size: 13px;
+}
+.price-match-requests-page .details a {
+    color: #4ab2f1;
+}
+.price-match-requests-page .details a:hover {
+    text-decoration: underline;
+}
+.price-match-request .product-name {
+    padding: 0;
+    font-size: 15px;
+}
+.price-match-request .product-name a {
+    color: #57b568;
+}
+
+.variant-overview .price-match-wrapper {
+    margin: 10px 0 0;
+}
+.variant-overview .price-match-button {
+	display: inline-block;
+	width: auto;
+}
+
+
+@media all and (min-width: 769px) {
+
+.variant-overview .add-to-cart,
+.variant-overview .add-to-cart-panel,
+.variant-overview .add-to-wishlist,
+.variant-overview .price-match-wrapper {
+	display: inline-block;
+	vertical-align: middle;
+	margin: 0;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+
+    .price-match-wrapper {
+        float: left;
+    }
+    .priceMatchWindow {
+	    width: 800px;
+    }
+    .price-match-form .inputs {
+        text-align: left;
+    }
+    .priceMatchWindow .inputs label {
+        float: left;
+        margin: 8px 0 8px 0;
+        width: 31%;
+        width: -webkit-calc((100% - 350px)/2);
+        width: calc((100% - 350px)/2);
+        text-align: left;
+        white-space: pre-line;
+    }
+
+}

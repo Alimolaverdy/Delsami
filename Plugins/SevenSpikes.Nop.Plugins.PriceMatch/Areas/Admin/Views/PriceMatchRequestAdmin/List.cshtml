@@ -1,0 +1,189 @@
+﻿@using Nop.Services.Localization
+
+@inject ILocalizationService localizationService
+
+@model bool
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.PriceMatch.Admin.Submenus.PriceMatchRequests");
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.PriceMatch.Admin.PriceMatchRequests")
+    </h1>
+</div>
+
+<section class="content">
+    <div class="form-horizontal">
+
+        @await Html.TrialMessageAsync(Model, Plugin.Name, Plugin.UrlInStore)
+
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div id="price-match-requests-grid"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script id="commands-template" type="text/x-kendo-template">
+        <a class="k-button" href="View/#: Id#" title="@T("Admin.Common.View")">
+            <span class="k-icon k-edit"></span>
+            @T("Admin.Common.View")
+        </a>
+    </script>
+
+    <script type="text/javascript" asp-location="Footer">
+        $(document).ready(function () {
+            $("#price-match-requests-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListRequests", "PriceMatchRequestAdmin"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Id: { editable: false, type: "number" },
+                                StatusName: { editable: false, type: "string" },
+                                ProductName: { editable: false, type: "string" },
+                                CustomerName: { editable: false, type: "string" },
+                                ProductPrice: { editable: false, type: "number" },
+                                ProductPriceFormatted: { editable: false, type: "string" },
+                                CompetitorPrice: { editable: false, type: "number" },
+                                CompetitorPriceFormatted: { editable: false, type: "string" },
+                                CreatedOn: { editable: false, type: "date" }
+                            }
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+
+                        this.cancelChanges();
+                    },
+                    pageSize: "@(defaultGridPageSize)",
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: false
+                },
+                pageable: {
+                    refresh: true,
+                    pageSizes: [@(gridPageSizes)]
+                },
+                editable: {
+                    confirmation: true,
+                    mode: "inline"
+                },
+                filterable: {
+                    extra: false
+                },
+                sortable: false,
+                scrollable: false,
+                columns: [{
+                    field: "Id",
+                    title: "@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.Id")",
+                    width: 50,
+                    filterable: false
+                },{
+                    field: "StatusName",
+                    title: "@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.Status")",
+                    width: 100,
+                    filterable: {
+                        ui: statusFilter,
+                        extra: false,
+                        operators: {
+                            string: {
+                                eq: "Is equal to",
+                                neq: "Is not equal to"
+                            }
+                        }
+                    }
+                },{
+                    field: "ProductName",
+                    title: "@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProductName")",
+                    width: 300,
+                    filterable: false
+                },{
+                    field: "CustomerName",
+                    title: "@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.CustomerName")",
+                    width: 100
+                },{
+                    field: "ProductPrice",
+                    title: "@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProductPriceFormatted")",
+                    template: '#= ProductPriceFormatted #',
+                    width: 100
+                },{
+                    field: "CompetitorPrice",
+                    title: "@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.CompetitorPriceFormatted")",
+                    template: '#= CompetitorPriceFormatted #',
+                    width: 100
+                },{
+                    field: "CreatedOn",
+                    title: "@T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.CreatedOn")",
+                    template: "#= kendo.toString(kendo.parseDate(CreatedOn, 'yyyy-MM-dd'), 'MM/dd/yyyy') #",
+                    width: 100,
+                    filterable: false
+                }, {
+                    template: kendo.template($("#commands-template").html()),
+                    width: 100,
+                    filterable: false,
+                    sortable: false
+                }]
+            });
+        });
+
+        var dataSource = [
+
+            @{
+                var index = 0;
+
+                foreach (Status redirectType in (Status[])Enum.GetValues(typeof(Status)))
+                {
+                    <text>
+                    {
+                        value: @((int)redirectType),
+                        text: '@await localizationService.GetLocalizedEnumAsync(redirectType)'
+                    }
+                    </text>
+
+                    if (index != Enum.GetValues(typeof(Status)).Length - 1)
+                    {
+                        <text>,</text>
+                    }
+
+                    index++;
+                }
+            }
+        ];
+
+        function statusFilter(element) {
+
+            element.kendoDropDownList({
+                dataTextField: "text",
+                dataValueField: "value",
+                dataSource: dataSource,
+                optionLabel: "Select status..."
+            });
+        }
+    </script>
+</section>

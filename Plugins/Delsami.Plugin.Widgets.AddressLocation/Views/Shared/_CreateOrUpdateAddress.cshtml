@@ -1,0 +1,693 @@
+﻿@using Nop.Web.Components
+@using Delsami.Plugin.Widgets.AddressLocation
+
+@model AddressModel
+@inject AddressLocationSettings addressLocationSettings
+
+@{
+    var currentCityName = Html.Raw(HttpUtility.HtmlDecode(Model.City));
+    var saveMap = (bool?)ViewData["SaveMap"];
+}
+
+
+<link href="/plugins/Delsami.widgets.addresslocation/contents/style.css" rel="stylesheet" />
+
+
+
+<div class="address-search">
+    <div class="provinces d-none">
+        @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+        {
+            <div class="inputs stateprovince-inputs">
+                <select asp-items="Model.AvailableStates"
+                        id="province-id-map" data-trigger="state-select">
+                </select>
+
+                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+            </div>
+        }
+    </div>
+    <div class="cities d-none">
+        @if (Model.CityEnabled)
+        {
+            <div class="inputs city-inputs">
+                <select name="Address.CityId" id="city-id-map" onchange="updateMapAddress()" placeholder="انتخاب شهر">
+                    <option value="">@T("address.selectcity")</option>
+                </select>
+            </div>
+        }
+    </div>
+
+    <div class="address-input-container">
+        <input type="text" name="search-address" class="form-control address-input" placeholder="@T("Delsami.Plugin.Widgets.AddressLocation.SearchTermPlaceHolder")" />
+        <div class="loader"></div>
+    </div>
+
+
+</div>
+
+
+<div id="map" class="al-map-container" style="">
+    <div class="find-my-location-container">
+        <button id="find-my-location" type="button">
+            <img src="/icons/Delsami-icon-pack/GPS.svg" />
+        </button>
+    </div>
+</div>
+
+@if (addressLocationSettings.MapType == Delsami.Plugin.Widgets.AddressLocation.Enums.MapType.OpenStreetMap)
+{
+    <link href="/plugins/Delsami.widgets.addresslocation/contents/Leaflet/leaflet.css" rel="stylesheet" />
+    <script src="/plugins/Delsami.widgets.addresslocation/contents/Leaflet/leaflet.js"></script>
+}
+else
+{
+    <link rel="stylesheet" href="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.css" />
+    <script src="https://static.neshan.org/sdk/leaflet/v1.9.4/neshan-sdk/v1.0.8/index.js"></script>
+}
+
+<script asp-location="Footer">
+    //Neshan Map
+    var mapData;
+    var selectByMap = false;
+    var cityName="@currentCityName";
+
+    $(document).on('keydown', function (e) {
+        if (e.key === "Enter" || e.keyCode === 13) {
+            e.preventDefault();
+        }
+    });
+
+    $(document).ready(function () {
+
+        if(cityName)
+            setCityDropdown(cityName);
+
+        var zoomSize = 14;
+        var marker;
+        var map;
+        var currentUrl = window.location.href.toLowerCase();
+        var defaultLat = "35.699756";
+        var defaultLng = "51.338076";
+
+        var inputLat = $("input#address_attribute_@addressLocationSettings.LatitudeAddressAttributeId");
+        var inputLng = $("input#address_attribute_@addressLocationSettings.LongitudeAddressAttributeId");
+        var digiKalaAddressIdInput = $("input#address_attribute_@addressLocationSettings.DigiKalaAddressAttributeId");
+
+        if (currentUrl.includes("admin")) {
+            inputLat.parent().parent().hide();
+            inputLng.parent().parent().hide();
+            digiKalaAddressIdInput.parent().parent().hide();
+        }
+        else {
+            inputLat.parent().hide();
+            inputLng.parent().hide();
+            digiKalaAddressIdInput.parent().hide();
+        }
+
+        var currentLat = inputLat.val();
+        var currentLng = inputLng.val();
+
+        marker = InitialMap(currentLat, currentLng);
+        const input = document.querySelector('input.address-input');
+
+        L.DomEvent.disableClickPropagation(input);
+        L.DomEvent.disableScrollPropagation(input);
+
+        function InitialMap(lat, lng) {
+            //if (lat == '' || lat == undefined || lng == '' || lng == undefined ) return;
+
+            if (currentUrl.includes("opc-billing")) {
+                $("#checkout-step-shipping .al-map-container").remove();
+            }
+            else if (currentUrl.includes("opc-shipping")) {
+                $("#checkout-step-billing .al-map-container").remove();
+            }
+
+            if (currentUrl.includes("opc-billing") && $("#checkout-step-billing .al-map-container").length == 0) {
+                $("#checkout-step-billing .custom-attributes").last().after('<div id="map" class="al-map-container" style="height: 500px;"></div>');
+            }
+            else if (currentUrl.includes("opc-shipping") && $("#checkout-step-shipping .al-map-container").length == 0) {
+                $("#checkout-step-shipping .custom-attributes").last().after('<div id="map" class="al-map-container" style="height: 500px;"></div>');
+            }
+
+            var lat = !lat || lat === "" ? defaultLat : lat;
+            var lng = !lng || lng === "" ? defaultLng : lng;
+
+            const iranBounds = L.latLngBounds(
+                [24.5, 44.0],
+                [40.5, 63.5]
+            );
+    @if (addressLocationSettings.MapType == Delsami.Plugin.Widgets.AddressLocation.Enums.MapType.OpenStreetMap)
+    {
+                                                                                                        <text>
+                                                                                                                        map = L.map('map').setView([lat, lng], zoomSize)
+                                                                                                                            .on("click", UpdateMarkerLocation);
+
+
+                                                                                                                    L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                                                                                                                        attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+                                                                                                                        maxZoom: zoomSize
+                                                                                                                    }).addTo(map);
+                                                                                                        </text>
+    }
+    else
+    {
+                                                                                                        <text>
+                                                                                                                        map = L.map('map', {
+                                                                                                                            key: "@addressLocationSettings.NeshanMapApiKey",
+                                                                                                                            maptype: "neshan",
+                                                                                                                            poi: false,
+                                                                                                                            maxBounds: iranBounds,
+                                                                                                                            traffic: false,
+                                                                                                                            center: [lat, lng],
+                                                                                                                            zoom: zoomSize,
+                                                                                                                        }).setView([lat, lng], zoomSize)
+                                                                                                                            .on("click", UpdateMarkerLocation);
+                                                                                                        </text>
+
+    }
+                setTimeout(function () { map.invalidateSize(); }, 800);
+
+
+            var marker = L.marker([lat, lng], { draggable: 'true' })
+                .addTo(map)
+                .on("mouseup", UpdateMarkerLocation);
+
+            return marker;
+        }
+
+        function isInIranBounds(lat, lng) {
+            return (
+                lat >= 24.5 &&
+                lat <= 40.5 &&
+                lng >= 44.0 &&
+                lng <= 63.5
+            );
+        }
+
+
+        function UpdateMarkerLocation(e) {
+
+            if (!isInIranBounds(e.latlng.lat, e.latlng.lng)) {
+                alert('@T("Account.CustomerAddresses.latitudeValidationError")');
+                return;
+            }
+
+            selectByMap = true;
+            marker.setLatLng(e.latlng);
+            UpdateLatLong(e);
+            selectByMap = false;
+        }
+
+        function onLocationFound(e) {
+            var radius = e.accuracy;
+
+            UpdateMarkerLocation(e);
+        }
+
+        function onLocationError(e) {
+            alert(e.message);
+        }
+
+        var isReversing = false;
+
+        function UpdateLatLong(e) {
+
+            if(isReversing)
+            return;
+
+            isReversing=true;
+
+           $(".save-map").addClass('div-disabled');
+           $("#map").addClass('div-disabled');
+           $(".save-map button").text("@T("Common.Wait")");
+           $("#Address_StateProvinceId option").removeAttr("selected");
+
+            inputLng.val(e.latlng.lng);
+
+            inputLat.val(e.latlng.lat);
+
+            $.ajax({
+                url: `/AddressLocation/Reverse?lat=${e.latlng.lat}&lng=${e.latlng.lng}`,
+                method: 'GET',
+
+                success: function (data) {
+                    $("#Address_Address1").val(data.formatted_address);
+
+                    $("#BillingNewAddress_Address1").val(data.formatted_address);
+                    $("#ShippingNewAddress_Address1").val(data.formatted_address);
+
+                    mapData = data;
+
+                    if (data.state) {
+
+                        var stateProvince = data.state.replace("استان ", "");
+
+
+                        $("#Address_StateProvinceId option").filter(function () {
+                            return $(this).text() === stateProvince;
+                        }).prop('selected', true);
+                        /*
+                        $("#province-id-map option").filter(function () {
+                            return $(this).text() === stateProvince;
+                        }).prop('selected', true);
+
+                        if (!selectByMap) $("#province-id-map").trigger("change");
+                        */
+
+                        $("#BillingNewAddress_StateProvinceId option").filter(function () {
+                            return $(this).text() === stateProvince;
+                        }).prop('selected', true);
+
+                        $("#ShippingNewAddress_StateProvinceId option").filter(function () {
+                            return $(this).text() === stateProvince;
+                        }).prop('selected', true);
+
+                    }
+
+
+
+                    if ($("#Address_StateProvinceId").val() == 0) {
+                        $("#Address_StateProvinceId").removeAttr('style');
+                    }
+
+
+                    if ($("#ShippingNewAddress_StateProvinceId").val() == 0) {
+                        $("#ShippingNewAddress_StateProvinceId").removeAttr('style');
+                    }
+
+
+                    if ($("#BillingNewAddress_StateProvinceId").val() == 0) {
+                        $("#BillingNewAddress_StateProvinceId").removeAttr('style');
+                    }
+
+                    if (data.city) {
+                        $("#Address_City").val(data.city)
+                        $("#city-id-map").val(data.city)
+
+
+                        $("#BillingNewAddress_City").val(data.city)
+                        $("#ShippingNewAddress_City").val(data.city)
+                    }
+                    else {
+                        $("#Address_City").val("");
+                        $("#Address_City").removeAttr('style');
+
+                        $("#BillingNewAddress_City").val("")
+                        $("#BillingNewAddress_City").removeAttr('style');
+
+                        $("#ShippingNewAddress_City").val("")
+                        $("#ShippingNewAddress_City").removeAttr('style');
+                    }
+
+                    //$('input[name="search-address"]').val(data.formatted_address);
+                    cityName=data.city;
+                    $("#Address_StateProvinceId").trigger("change");
+
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+
+                    if (xhr.status === 400) {
+                        inputLat.val("");
+                        inputLng.val("");
+                        const message = xhr.responseJSON?.message || xhr.responseText;
+                        alert(message);
+                        return;
+                    }
+                    $(".stateprovince-inputs").show();
+                    $(".stateprovince-inputs").removeAttr('style');
+                    $("#Address_StateProvinceId").removeAttr('style');
+
+                    $(".city-inputs").show();
+                    $(".city-inputs").removeAttr('style');
+
+                    $("#Address_City").val("")
+                    $("#Address_City").removeAttr('style')
+                    $("#BillingNewAddress_City").val("")
+                    $("#ShippingNewAddress_City").val("")
+                },
+                complete: function() {
+                    isReversing = false;
+                    $(".save-map").removeClass("div-disabled");
+                    $("#map").removeClass("div-disabled");
+                    $(".save-map button").text("@T("Common.Save")");
+
+                }
+            });
+        }
+
+        function GetLatLngByAddressId(addressId) {
+
+            return $.ajax({
+                url: "Checkout/GetAddressById?addressId=" + addressId
+            });
+        }
+
+        $(document).on("click", "#find-my-location", function () {
+            map.locate({ setView: true, maxZoom: zoomSize });
+
+            map.on('locationfound', onLocationFound);
+            map.on('locationerror', onLocationError);
+        });
+
+        $("#shipping-address-select").on("change", function () {
+            setTimeout(function () { map.invalidateSize(); }, 100);
+        })
+
+        $("#show-map-container").on("click", function () {
+            $("#map").slideDown('slow');
+            $("#show-map-container").slideUp('slow');
+            $(".edit-address").slideUp('slow');;
+            $(".find-my-location-container").slideDown('slow');
+            $(".save-address-button").hide();
+            $(".address-search").show();
+            $(".save-map").show();
+            $(".address-input").slideDown('slow');
+
+        });
+
+        $(".save-map").on("click", function () {
+            if(inputLat.val())
+            {
+            $("#map").slideUp('slow');
+            $("#show-map-container").slideDown('slow');
+            $(".edit-address").slideDown('slow');
+            $(".find-my-location-container").slideUp('slow');
+            $(".save-address-button").show();
+            $(".address-search").hide();
+            $(".save-map").hide();
+            $(".address-input").slideUp('slow');
+            }
+            else
+            {
+                alert("@T("Delsami.Plugin.Widgets.AddressLocation.PleaseSelectLocation")")
+            }
+        });
+
+            // $('#state-location-select').on('change', function () {
+            //     var selectedStateProvinceId = $(this).val();
+            //     $.ajax({
+            //         url: `/AddressLocation/GetStateLocation?stateProvinceId=${selectedStateProvinceId}`,
+            //         method: 'GET',
+            //         success: function (data) {
+            //             if (data && data.latitude && data.longitude) {
+            //                 var newLatLng = L.latLng(data.latitude, data.longitude);
+            //                 map.setView(newLatLng, 10);
+            //                 marker.setLatLng(newLatLng);
+            //                 UpdateLatLong(newLatLng);
+            //             }
+            //         },
+            //         error: function (xhr, status, error) {
+            //             alert('@T("Delsami.Plugin.Widgets.AddressLocation.InvalidStateProvince")');
+            //         }
+            //     });
+            // });
+
+        let debounceTimer;
+
+        const $input = $('.address-input');
+        const $loader = $('.loader');
+
+        $('.address-input').on('input', function () {
+            clearTimeout(debounceTimer);
+
+            debounceTimer = setTimeout(function () {
+                var address = $('.address-input').val().trim();
+                if (!address) return;
+
+                $input.prop('disabled', true);
+                $loader.show();
+
+                $.ajax({
+                    url: `/AddressLocation/Geocode?address=${encodeURIComponent(address)}`,
+                    method: 'GET',
+                    success: function (data) {
+                        if (data && data.y && data.x) {
+                            var newLatLng = L.latLng(data.y, data.x);
+                            map.setView(newLatLng, 14);
+                            marker.setLatLng(newLatLng);
+                            UpdateLatLong({ latlng: newLatLng });
+                        }
+                    },
+                    complete: function () {
+                        // Always re-enable input & hide loader (even on error)
+                        $input.prop('disabled', false);
+                        $loader.hide();
+                        $input.focus();
+                    }
+                });
+            }, 1000);
+        });
+
+        $("#Address_StateProvinceId").on("change",function(){
+            setCityDropdown(cityName);
+        });
+
+        if("@saveMap"==="True")
+        {
+            $(".save-map").trigger('click');
+         }
+    });
+
+    var lastSelectedProvince;
+    var lastSelectedCity;
+
+    function updateMapAddress() {
+        let selectedProvince = $("#province-id-map :selected").text();
+        let selectedCity = $("#city-id-map :selected").text();
+
+        if (lastSelectedProvince == selectedProvince && lastSelectedCity == selectedCity)
+            return;
+
+        $('input[name="search-address"]').val((selectedProvince + ' ' + selectedCity).trim());
+
+        if (!selectByMap)
+            $('.address-input').trigger('input');
+
+        lastSelectedProvince = selectedProvince;
+        lastSelectedCity = selectedCity;
+    }
+
+    function setCityDropdown(cityname) {
+        var selectedStateProvinceId = $("#Address_StateProvinceId").val();
+
+        if (selectedStateProvinceId !== null && selectedStateProvinceId !== "0") {
+
+            $("#city-id").empty();
+
+            $.ajax({
+                url: `/AddressLocation/GetCitiesByStateProvinceId?stateProvinceId=${selectedStateProvinceId}`,
+                method: 'GET',
+                success: function (cities) {
+                    $.each(cities, function (i, item) {
+                        let option = $("<option>", { value: item.Id, text: item.Name });
+
+                        $("#city-id").append(option);
+                    });
+
+                    if(!cityname)
+                        cityname = $("#city-id option:first").text();
+
+                        $("#city-id option").filter(function () {
+                            return $(this).text() === cityname;
+                        }).prop('selected', true);
+
+                        $("#Address_City").val(cityname)
+                        $("#city-id-map").val(cityname)
+
+                        $("#BillingNewAddress_City").val(cityname)
+                        $("#ShippingNewAddress_City").val(cityname)
+                },
+                error: function (xhr, status, error) {
+                    // alert('@T("Delsami.Plugin.Widgets.AddressLocation.InvalidStateProvince")');
+                }
+            });
+        }
+    }
+
+</script>
+
+
+
+<input class="address-id" asp-for="Id" type="hidden" />
+<div class="edit-address" style="display:none">
+    <div id="show-map-container" style="display:none">
+        <button id="show-map" type="button" class="button-1">@T("Delsami.Plugin.Widgets.AddressLocation.Button.ShowMap")</button>
+    </div>
+    <div class="inputs">
+        <label asp-for="FirstName" asp-postfix=":"></label>
+        <div class="input-detail">
+            <input asp-for="FirstName" />
+            <nop-required />
+            <span asp-validation-for="FirstName"></span>
+        </div>
+    </div>
+    <div class="inputs">
+        <label asp-for="LastName" asp-postfix=":"></label>
+        <div class="input-detail">
+            <input asp-for="LastName" />
+            <nop-required />
+            <span asp-validation-for="LastName"></span>
+        </div>
+    </div>
+    <div class="inputs" style="display:none">
+        <label asp-for="Email" asp-postfix=":"></label>
+        <div class="input-detail">
+            <input asp-for="Email" value="default@email.com" />
+            <nop-required />
+            <span asp-validation-for="Email"></span>
+        </div>
+    </div>
+    @if (Model.CompanyEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="Company" asp-postfix=":"></label>
+            <div class="input-detail">
+                <input asp-for="Company" />
+                @if (Model.CompanyRequired)
+                {
+                    <nop-required />
+                }
+                <span asp-validation-for="Company"></span>
+            </div>
+        </div>
+    }
+    @if (Model.CountryEnabled)
+    {
+        <div class="inputs" style="display: none;">
+            <label asp-for="CountryId" asp-postfix=":"></label>
+            <div class="input-detail">
+                <select asp-for="CountryId" asp-items="Model.AvailableCountries"
+                        data-trigger="country-select"
+                        data-url="@(Url.RouteUrl(" GetStatesByCountryId"))"
+                        data-stateprovince="#@Html.IdFor(model => model.StateProvinceId)"
+                        data-loading="#states-loading-progress"></select>
+                <nop-required />
+                <span asp-validation-for="CountryId"></span>
+            </div>
+        </div>
+    }
+
+    @if (Model.CountryEnabled && Model.StateProvinceEnabled)
+    {
+        <div class="inputs  stateprovince-inputs">
+            <label asp-for="StateProvinceId" asp-postfix=":"></label>
+            <div class="input-detail">
+                <select asp-for="StateProvinceId" asp-items="Model.AvailableStates"
+                        data-trigger="state-select" style="pointer-events: none; background-color: #f0f0f0;">
+                </select>
+                <nop-required />
+                <span id="states-loading-progress" style="display: none;" class="please-wait">@T("Common.Wait")</span>
+                <span asp-validation-for="StateProvinceId"></span>
+            </div>
+        </div>
+    }
+    @if (Model.CountyEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="County" asp-postfix=":"></label>
+            <div class="input-detail">
+                <input asp-for="County" />
+                @if (Model.CountyRequired)
+                {
+                    <nop-required />
+                }
+                <span asp-validation-for="County"></span>
+            </div>
+        </div>
+    }
+    @if (Model.CityEnabled)
+    {
+        <div class="inputs city-inputs">
+            <label for="city-id" asp-postfix=":">@T("address.fields.city")</label>
+            <div class="input-detail">
+                <select name="Address.CityId" id="city-id"></select>
+                @if (Model.CityRequired)
+                {
+                    <nop-required />
+                }
+                @* <span asp-validation-for="CityId"></span> *@
+            </div>
+        </div>
+    }
+    @if (Model.StreetAddressEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="Address1" asp-postfix=":"></label>
+            <div class="input-detail">
+                <input asp-for="Address1" />
+                @if (Model.StreetAddressRequired)
+                {
+                    <nop-required />
+                }
+                <span asp-validation-for="Address1"></span>
+            </div>
+        </div>
+    }
+    @if (Model.StreetAddress2Enabled)
+    {
+        <div class="inputs">
+            <label asp-for="Address2" asp-postfix=":"></label>
+            <div class="input-detail">
+                <input asp-for="Address2" />
+                @if (Model.StreetAddress2Required)
+                {
+                    <nop-required />
+                }
+                <span asp-validation-for="Address2"></span>
+            </div>
+        </div>
+    }
+    @if (Model.ZipPostalCodeEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="ZipPostalCode" asp-postfix=":"></label>
+            <div class="input-detail">
+                <input asp-for="ZipPostalCode" />
+                @if (Model.ZipPostalCodeRequired)
+                {
+                    <nop-required />
+                }
+                <span asp-validation-for="ZipPostalCode"></span>
+            </div>
+        </div>
+    }
+    @if (Model.PhoneEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="PhoneNumber" asp-postfix=":"></label>
+            <div class="input-detail">
+                <input asp-for="PhoneNumber" />
+                @if (Model.PhoneRequired)
+                {
+                    <nop-required />
+                }
+                <span asp-validation-for="PhoneNumber"></span>
+            </div>
+        </div>
+    }
+    @if (Model.FaxEnabled)
+    {
+        <div class="inputs">
+            <label asp-for="FaxNumber" asp-postfix=":"></label>
+            <div class="input-detail">
+                <input asp-for="FaxNumber" />
+                @if (Model.FaxRequired)
+                {
+                    <nop-required />
+                }
+                <span asp-validation-for="FaxNumber"></span>
+            </div>
+        </div>
+    }
+    @if (Model.CustomAddressAttributes.Count > 0)
+    {
+        @await Html.PartialAsync("_AddressAttributes", Model.CustomAddressAttributes)
+    }
+</div>
+
+<div class="buttons save-map">
+    @*     @Html.ValidationMessage("latitude-Validation") *@ 
+   <button type="button" class="button-1">@T("Common.Save")</button>
+</div>

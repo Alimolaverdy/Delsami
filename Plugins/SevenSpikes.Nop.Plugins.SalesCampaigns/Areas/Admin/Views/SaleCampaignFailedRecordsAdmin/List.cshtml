@@ -1,0 +1,133 @@
+﻿@model SaleCampaignFailedRecordModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Plugins.SaleCampaigns.Admin.Submenus.FailedHistoryReports");
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="content-header clearfix">
+    <h1 class="pull-left">
+        @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords")
+    </h1>
+</div>
+
+<nop-antiforgery-token/>
+
+<section class="content">
+    <div class="form-horizontal">
+        
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="card card-default">
+                        <div class="card-header">
+							<div class="card-title">
+								@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.DescriptionList")
+							</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="form-group row clearfix">
+                                <ol>
+                                    <li>@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.DescriptionList.1")</li>
+                                    <li>@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.DescriptionList.2")</li>
+                                </ol>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-header">
+							<div class="card-title">
+								@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Campaign.List")
+							</div>
+                        </div>
+                        <div class="card-body">
+                            <div id="saleCampaignFailedRecords-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function() {
+        $("#saleCampaignFailedRecords-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("GridList", "SaleCampaignFailedRecordsAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            SaleCampaignName: { editable: false, type: "string" },
+                            ProductName: { editable: false, type: "string" },
+                            Reason: { editable: false, type: "string" },
+                            CreatedOnUtc: { editable: false, type: "date" }
+                        }
+                    }
+                },
+                requestEnd: function(e) {
+                    if (e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function(e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            scrollable: false,
+            editable: true,
+            columns: [
+                {
+                    field: "SaleCampaignName",
+                    editable: false,
+                    type: "string",
+                    title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.SaleCampaignName")"
+                }, {
+                    field: "ProductName",
+                    editable: false,
+                    type: "string",
+                    title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.ProductName")"
+                }, {
+                    field: "Reason",
+                    editable: false,
+                    type: "string",
+                    title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.Reason")"
+                }, {
+                    field: "CreatedOnUtc",
+                    editable: false,
+                    type: "date",
+                    title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.CreatedOnUtc")",
+                    template: '#= kendo.toString(CreatedOnUtc, "MM/dd/yyyy")#'
+                }
+            ]
+        });
+    });
+</script>

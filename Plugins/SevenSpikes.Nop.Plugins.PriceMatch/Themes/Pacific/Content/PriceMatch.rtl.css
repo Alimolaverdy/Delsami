@@ -1,0 +1,16 @@
+
+.priceMatchWindow .k-window-actions {
+	left: 5px;
+    right: auto;
+}
+
+@media all and (min-width: 768px) {
+
+    .price-match-request {
+        float: right;
+        margin: 0 20px 20px 0;
+    }
+    .price-match-request:nth-child(2n+1) {
+        margin-right: 0;
+    }
+}

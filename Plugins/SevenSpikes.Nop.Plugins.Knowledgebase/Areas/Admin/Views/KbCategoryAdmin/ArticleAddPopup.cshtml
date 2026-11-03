@@ -1,0 +1,192 @@
+﻿@model AddArticleModel
+@inject AdminAreaSettings adminAreaSettings
+@{
+	Layout = AdminViewLocations.AdminPopupLayoutViewPath;
+
+	var gridPageSize = adminAreaSettings.DefaultGridPageSize;
+
+	//page title
+	ViewBag.PageTitle = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.AddNew").Text;
+
+	NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Knowledgebase.Admin.Submenus.ManageCategories");
+
+	if (ViewBag.RefreshPage == true)
+	{
+        <script type="text/javascript">
+            try {window.opener.document.getElementById("@ViewBag.btnId").click();}
+            catch (e){}
+            window.close();
+        </script>
+    }
+}
+
+<form method="post">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.Knowledgebase.Admin.Entities.Article.AddNew")
+        </h1>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search card-search-popup card-popup">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <div class="form-group row clearfix">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchArticleTitle" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-editor asp-for="SearchArticleTitle" />
+                                    </div>
+                                </div>
+                                <div class="form-group row clearfix">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchAuthorId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchAuthorId" asp-items="Model.AvailableAuthors" />
+                                    </div>
+                                </div>
+                                <div class="form-group row clearfix">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchCategoryId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchCategoryId" asp-items="Model.AvailableCategories" />
+                                    </div>
+                                </div>
+                                <div class="form-group row clearfix">
+                                    <div class="col-sm-5">
+                                        <nop-label asp-for="SearchStoreId" />
+                                    </div>
+                                    <div class="col-sm-7">
+                                        <nop-select asp-for="SearchStoreId" asp-items="Model.AvailableStores" />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <button type="button" id="search-articles" class="btn btn-primary btn-search">
+                                    <i class="fa fa-search"></i>
+                                    @T("Admin.Common.Search")
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div id="articles-grid"></div>
+                        <script type="text/javascript" asp-location="Footer">
+                            $(document)
+                                .ready(function() {
+                                    $("#articles-grid")
+                                        .kendoGrid({
+                                            dataSource: {
+                                                type: "json",
+                                                transport: {
+                                                    read: {
+                                                        url: "@Html.Raw(Url.Action("List", "RelatedArticlesAdmin"))",
+                                                        type: "POST",
+                                                        dataType: "json",
+                                                        data: additionalData
+                                                    }
+                                                },
+                                                schema: {
+                                                    data: "Data",
+                                                    total: "Total",
+                                                    errors: "Errors"
+                                                },
+                                                error: function(e) {
+                                                    display_kendoui_grid_error(e);
+                                                    // Cancel the changes
+                                                    this.cancelChanges();
+                                                },
+                                                pageSize: @(gridPageSize),
+                                                serverPaging: true,
+                                                serverFiltering: true,
+                                                serverSorting: true
+                                            },
+                                            pageable: {
+                                                refresh: true
+                                            },
+                                            editable: {
+                                                confirmation: false,
+                                                mode: "inline"
+                                            },
+                                            filtarable: false,
+                                            sortable: false,
+                                            scrollable: false,
+                                            columns: [
+                                            {
+                                                field: "Id",
+                                                template: "<input type='checkbox' name='SelectedArticleIds' value='#=Id#' />",
+                                                attributes: {
+                                                    style: "text-align:center"
+                                                },
+                                                width: 50
+                                            }, {
+                                                field: "Title",
+                                                title: "@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Title")"
+                                            }, {
+                                                field: "Published",
+                                                title: "@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Published")",
+                                                width: 100,
+                                                headerAttributes: { style: "text-align:center" },
+                                                attributes: { style: "text-align:center" },
+                                                template: '# if(Published) {# <i class="fa fa-check true-icon"></i> #} else {# <i class="fa fa-times false-icon"></i> #} #'
+                                                }
+                                            ]
+                                        });
+                                });
+                        </script>
+                        <script type="text/javascript" asp-location="Footer">
+                            $(document)
+                                .ready(function() {
+                                    $('#search-articles')
+                                        .click(function() {
+                                            var grid = $('#articles-grid').data('kendoGrid');
+                                            grid.dataSource.page(1); //new search. Set page size to 1
+                                            grid.dataSource.read();
+                                            return false;
+                                        });
+                                });
+
+                            $("#@Html.IdFor(model => model.SearchArticleTitle)")
+                                .keydown(function(event) {
+                                    if (event.keyCode == 13) {
+                                        $("#search-articles").click();
+                                        return false;
+                                    }
+                                });
+
+                            function additionalData() {
+                                var data = {
+                                    SearchArticleTitle: $('#@Html.IdFor(model => model.SearchArticleTitle)').val(),
+                                    SearchCategoryId: $('#SearchCategoryId').val(),
+                                    SearchAuthorId: $('#SearchAuthorId').val(),
+                                    SearchStoreId: $('#SearchStoreId').val()
+                                };
+
+                                addAntiForgeryToken(data);
+
+                                return data;
+                            }
+                        </script>
+                    </div>
+                    <div class="card-footer">
+                        <button type="submit" name="save" class="btn bg-primary">
+                            <i class="far fa-save"></i>
+                            @T("Admin.Common.Save")
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>

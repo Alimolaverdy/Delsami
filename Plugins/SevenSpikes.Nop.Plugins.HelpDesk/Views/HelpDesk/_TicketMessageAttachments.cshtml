@@ -1,0 +1,24 @@
+﻿@model IList<MessageAttachmentModel>
+
+@inject HelpDeskSettings helpDeskSettings
+
+@{
+    var targetBlank = "_self";
+    
+    if (helpDeskSettings.PreviewAttachmentsInBrowser)
+    {
+        targetBlank = "_blank";
+    }
+}
+
+<ul>
+    @foreach (var attachment in Model)
+    {
+        string url = Url.Content("~/HelpDesk/DownloadFile?guid=") + attachment.MessageAttachmentGuid;
+        string file = attachment.Filename + attachment.Extension;
+        
+        <li>
+            <a class="attachmentLink" href="@url" target="@targetBlank">@file ( @attachment.FileSize )</a>
+        </li>
+    }
+</ul>

@@ -1,0 +1,12 @@
+{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Knowledgebase",
+  "SystemName": "SevenSpikes.Nop.Plugins.Knowledgebase",
+  "Version": "4.6",
+  "SupportedVersions": [ "4.60" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.Knowledgebase.dll",
+  "Description": "The Nop Knowledgebase plugin for nopCommerce is perfect for providing self service 24/7 support and will increase customer satisfaction and lower support costs."
+}

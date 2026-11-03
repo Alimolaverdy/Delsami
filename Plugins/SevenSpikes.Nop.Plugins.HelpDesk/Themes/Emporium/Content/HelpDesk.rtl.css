@@ -1,0 +1,83 @@
+
+.overview .submit-ticket {
+    margin: 0 5px 0 0;
+}
+.inputs .k-dropdown .k-input:after {
+    left: 10px;
+    right: auto;
+}
+.inputs .k-multiselect .k-button {
+    text-align: right;
+}
+.inputs .k-multiselect .k-button span {
+    margin-left: 10px;
+    margin-right: unset;
+}
+.inputs .k-numerictextbox .k-select {
+    border-right: 1px solid #e7e7e7;
+    border-left: none;
+}
+.ticketing-page .inputs label {
+    text-align: right;
+}
+.inputs.upload .k-upload-files .k-file {
+    text-align: right;
+}
+
+.inputs.upload .k-upload-files .k-file-name {
+    margin: 0 0 0 5px;
+}
+.inputs.upload .k-upload-files .k-upload-status {
+    left: 0;
+    right: auto;
+}
+.ticket-buttons .k-button {
+    text-align: right;
+}
+.ticket-buttons .k-button:before {
+    margin-left: 10px;
+    margin-right: unset;
+}
+.ticket-details .detail-label {
+    margin-right: unset;
+    margin-left: 5px;
+}
+.ticket-comments .ticket-comment {
+    text-align: right;
+}
+.ticket-comments .edit-comment {
+    margin-right: 8px;
+    margin-left: unset;
+    padding-right: 18px;
+    padding-left: unset;
+}
+.ticket-comments .edit-comment:before {
+    left: auto;
+    right: 0;
+}
+.k-window.confirmation-wrapper .k-window-actions {
+    right: auto;
+    left: 0;
+}
+.k-pager-nav.k-link,
+.k-pager-numbers li {
+    margin: 0 0 0 10px;
+}
+.k-pager-refresh .k-icon {
+    background-position: left center;
+    padding-left: unset;
+    padding-right: 20px;
+}
+
+
+@media all and (min-width: 1025px) {
+
+    .overview .submit-ticket-button:before {
+        margin: 0 0 0 10px;
+    }
+    .block-account-navigation .new-ticket a:after,
+    .block-account-navigation .my-tickets a:after,
+    .block-account-navigation .manage-tickets a:after {
+        transform: translate(-1px,-53%) !important;
+    }
+}

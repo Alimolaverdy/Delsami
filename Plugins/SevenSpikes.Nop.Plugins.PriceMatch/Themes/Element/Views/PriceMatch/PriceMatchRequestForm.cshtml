@@ -1,0 +1,67 @@
+﻿@model PriceMatchRequestModel
+    
+@inject CaptchaSettings captchaSettings;    
+@inject PriceMatchSettings priceMatchSettings;    
+
+<form asp-action="GetPriceMatchRequestForm" asp-controller="PriceMatch" method="post" class="price-match-form" id="price-match-request-form">
+
+    <input type="hidden" asp-for="ProductId"/>
+    <input type="hidden" asp-for="ProductPrice"/>
+    <input type="hidden" asp-for="CurrencyId"/>
+    <input type="hidden" asp-for="LanguageId"/>
+    <input type="hidden" asp-for="PriceIncludesTax"/>
+
+    <nop-antiforgery-token/>
+
+    <div class="fieldset">
+        <div class="title">
+            <strong>@T("SevenSpikes.PriceMatch.Public.PriceMatchForm.BeforeFormText")</strong>
+        </div>
+        <div class="form-fields">
+            <div class="inputs half-width">
+                <label asp-for="CustomerName" asp-postfix=":"></label>
+                <nop-editor asp-for="CustomerName" />
+                <nop-required />
+                <span asp-validation-for="CustomerName"></span>
+            </div>
+            <div class="inputs half-width">
+                <label asp-for="CustomerEmail" asp-postfix=":"></label>
+                <nop-editor asp-for="CustomerEmail" />
+                <nop-required />
+                <span asp-validation-for="CustomerEmail"></span>
+            </div>
+            <div class="inputs half-width">
+                <label asp-for="CustomerPhone" asp-postfix=":"></label>
+                <nop-editor asp-for="CustomerPhone" />
+            </div>
+            <div class="inputs half-width">
+                <label asp-for="CompetitorPrice" asp-postfix=":"></label>
+                <nop-editor asp-for="CompetitorPrice" />
+                <nop-required />
+                <span asp-validation-for="CompetitorPrice"></span>
+            </div>
+            <div class="inputs">
+                <label asp-for="CompetitorUrl" asp-postfix=":"></label>
+                <nop-editor asp-for="CompetitorUrl" />
+                <nop-required />
+                <span asp-validation-for="CompetitorUrl"></span>
+            </div>
+            <div class="inputs">
+                <label asp-for="Message" asp-postfix=":"></label>
+                <nop-textarea asp-for="Message" />
+                <nop-required />
+                <span asp-validation-for="Message"></span>
+            </div>
+        </div>
+        @if (priceMatchSettings.EnableCaptcha && captchaSettings.Enabled)
+        {
+            <div class="captcha-box">
+                <nop-captcha />
+            </div>
+        }
+        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+    </div>
+    <div class="buttons">
+        <button type="submit" name="save-info-button" class="button-1 save-price-match-button">@T("Common.Save")</button>
+    </div>
+</form>

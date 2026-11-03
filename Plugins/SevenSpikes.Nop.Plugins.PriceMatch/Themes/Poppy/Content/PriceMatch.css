@@ -1,0 +1,111 @@
+
+.price-match-wrapper {
+	display: inline-block;
+}
+.price-match-button {
+    border: 1px solid #ccc;
+    padding: 5px 10px;
+    font-size: 13px;
+}
+
+/* form container */
+
+.k-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+    bottom: 0;
+	left: 0;
+    z-index: 1060;
+	background-color: #000;
+	opacity: 0.5; /*to be matched to theme overlay*/
+}
+.priceMatchWindow {
+	position: absolute;
+	left: 0 !important;
+    right: 0;
+	z-index: 1070;
+	width: 600px;
+	max-width: 95%;
+	margin: auto;
+	box-shadow: 0 1px 5px #666; /*to be matched to theme popups*/
+	background-color: #fff;
+	padding-top: 0 !important;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+    height: 54px;
+    margin: 0 !important;
+    border-bottom: 1px solid #f2f2f2;
+	padding: 13px 20px;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    display: inline-block;
+    max-width: 90%;
+    overflow: hidden;
+    font-size: 22px;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+    font-weight: 400;
+    color: #6f6f6f;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 18px;
+	right: 18px;
+	z-index: 1;
+}
+.priceMatchWindow .k-window-actions a {
+	display: block;
+    width: 15px;
+    height: 15px;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-actions a:after {
+  content: 't';
+  font-family: icons;
+  font-size: 16px;
+  color: #727272;
+}
+.ui-dialog-titlebar button:hover {
+  opacity: 0.9;
+}
+.priceMatchWindow .k-window-content {
+	padding: 30px 5% 35px;
+}
+
+/* request form */
+
+.price-match-form {
+	text-align: center;
+}
+.price-match-form .title {
+	margin: 0 0 25px;
+    border: none;
+}
+.price-match-form .form-fields {
+    border: none;
+	padding: 0;
+}
+.price-match-form .required {
+	position: absolute;
+	top: 0; /*?*/
+	font-size: 15px;
+}
+.price-match-form .captcha-box,
+.price-match-form .message-error {
+	margin: 0 0 20px;
+}
+.price-match-form .buttons {
+	text-align: center;
+}
+.save-price-match-button {
+	min-width: 150px;
+	border: none;
+    padding: 15px 20px;
+	text-align: center;
+	font-size: 13px;
+	text-transform: uppercase;
+	color: #fff;
+}

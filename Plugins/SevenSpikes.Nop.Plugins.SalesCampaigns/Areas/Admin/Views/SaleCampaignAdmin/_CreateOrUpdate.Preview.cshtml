@@ -1,0 +1,80 @@
+﻿@model SaleCampaignModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="form-horizontal">
+    <div class="cards-group">
+        <div class="card" style="box-shadow: none; padding: 0 4px 0 34px;">
+            <div class="form-group row">
+                <div class="callout bg-gray-light">
+                    @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.PreviewTabTitle.Description")
+                </div>
+            </div>
+        </div>
+
+        <div id="preview-grid"></div>
+    </div>
+</div>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $("#preview-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("PreviewList", "SaleCampaignAdmin", new { campaignId = Model.Id }))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            ProductName: { editable: false, type: "string" },
+                            ProductPrice: { editable: false, type: "number" },
+                            ProductOldPrice: { editable: false, type: "number" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            scrollable: false,
+            editable: false,
+            columns: [{
+                field: "ProductName",
+                title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.ProductName")"
+            }, {
+                field: "ProductPrice",
+                title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.ProductPrice")"
+            }, {
+                field: "ProductOldPrice",
+                title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaignFailedRecords.ProductOldPrice")"
+            }]
+        });
+    });
+</script>

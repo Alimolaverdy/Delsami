@@ -1,0 +1,94 @@
+﻿#find-my-location {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+    #find-my-location img {
+        width: 50px;
+    }
+
+#search {
+    display: none
+}
+
+.find-my-location-container {
+    position: absolute;
+    z-index: 999;
+    margin-top: 165px;
+    margin-right: 25px;
+}
+
+#map {
+    margin-bottom: 50px;
+    height: 250px;
+    width: 100%;
+    top: 20px;
+}
+
+#show-map-container {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.edit-address {
+    margin-top: 50px;
+}
+
+.save-address-button {
+    display: none
+}
+
+.search-box {
+    visibility: hidden;
+    height: 0;
+    margin: 0;
+}
+
+.address-input-container {
+    width: 50%;
+    z-index: 9998;
+    position: absolute;
+    background: #FFF;
+    border: 0;
+    box-shadow: 0 0 1px 1px #CCC;
+    top: 20px;
+    left: 50%;
+    transform: translate(-50%,-50%);
+}
+
+.address-input {
+    width: 100%;
+}
+
+.absolute-input:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+}
+
+/* Loader (positioned inside input) */
+.loader {
+    position: absolute;
+    z-index: 9999;
+    left: 10px; /* Adjust position */
+    top: 50%;
+    transform: translateY(-50%);
+    width: 16px;
+    height: 16px;
+    border: 2px solid #f3f3f3;
+    border-top: 2px solid #3498db; /* Blue spinner */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    display: none; /* Hidden by default */
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+
+    100% {
+        transform: rotate(360deg);
+    }
+}

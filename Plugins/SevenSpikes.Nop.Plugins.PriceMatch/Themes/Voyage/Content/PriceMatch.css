@@ -1,0 +1,132 @@
+
+.price-match-button:before {
+    content: "\e93b";
+    font-size: 18px;
+}
+
+/* form container */
+
+.k-overlay {
+	position: fixed;
+	top: 0; right: 0;
+    bottom: 0; left: 0;
+    z-index: 1060;
+	background: rgba(0,0,0,.5);
+}
+.priceMatchWindow {
+	position: absolute;
+	left: 0 !important;
+    right: 0 !important;
+	z-index: 1070;
+	width: 600px;
+	max-width: 95%;
+	margin: auto auto;
+	box-shadow: 0 0 20px rgba(0,0,0,.15);
+	background-color: #fff;
+	padding: 0 !important;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+	margin-top: 0 !important;
+	padding: 25px 5% 10px;
+    text-align: left;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    display: inline-block;
+    max-width: calc(100% - 50px);
+    overflow: hidden;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+	font-family: 'DM Serif Display', serif;
+    font-size: 28px;
+    font-weight: 400;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 0; right: 0;
+    z-index: 1;
+}
+.priceMatchWindow .k-button-icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    width: 40px; height: 40px;
+    border: 1px solid #eee;
+    font-size: 0;
+}
+.priceMatchWindow .k-button-icon:after {
+    content: "\e919";
+    font-size: 14px;
+}
+.priceMatchWindow .k-button-icon:hover {
+    color: #e43d51;
+}
+.priceMatchWindow .k-window-content {
+	padding: 10px 5% 30px;
+}
+
+/* request form */
+
+.captcha-box > .captcha-box {
+	margin-bottom: 0;
+}
+.price-match-form .message-error {
+	margin: -10px 0;
+}
+.price-match-form .buttons {
+	margin-top: 25px;
+}
+.save-price-match-button {
+	width: 200px;
+    height: 50px;
+	background-color: #000;
+    padding: 0 20px;
+    font-size: 14px;
+	color: #fff;
+}
+.save-price-match-button:hover {
+	background-color: #e43d51;
+}
+
+/* requests page */
+
+.price-match-requests-list {
+	display: grid;
+    grid-gap: 25px 0;
+    max-width: 600px;
+    margin: auto;
+}
+.price-match-requests-list .section {
+    border: 1px solid #eee;
+    padding: 30px 20px;
+    text-align: center;
+}
+.price-match-requests-list .details {
+	margin-top: 15px;
+	text-align: left;
+	line-height: 24px;
+}
+.price-match-requests-list .details label {
+    margin-right: 5px;
+    white-space: nowrap;
+	color: #888;
+}
+.price-match-requests-list .details a {
+	font-weight: 600;
+}
+
+
+@media all and (min-width: 768px) {
+	.price-match-requests-list {
+		grid-template-columns: 49% 49%;
+		grid-gap: 25px 2%;
+		max-width: 900px;
+	}
+}
+@media all and (min-width: 1025px) {
+
+    .priceMatchWindow {
+	    width: 800px;
+    }
+}

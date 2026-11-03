@@ -1,0 +1,206 @@
+﻿@model SaleCampaignModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Plugins.SaleCampaigns.Admin.Submenus.ManageSaleCampaigns");
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign")
+    </h1>
+    <div class="float-right">
+        <a href="Create" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.AddNew")
+        </a>
+    </div>
+</div>
+
+<nop-antiforgery-token />
+
+<section class="content">
+    <div class="form-horizontal">
+
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    <div class="card card-default">
+                        <div class="card-header">
+							<div class="card-title">
+								@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DescriptionList")
+							</div>
+                        </div>
+                        <div class="card-body">
+                            <ol>
+                                <li>@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DescriptionList.1")</li>
+                                <li>@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.DescriptionList.2")</li>
+                                <li><strong>NOTE:</strong> All times are <strong>UTC</strong> times. Current <strong>UTC</strong> time: <strong>@DateTime.UtcNow.ToString("F")</strong></li>
+                            </ol>
+                        </div>
+                    </div>
+
+                    <div class="card card-default">
+                        <div class="card-header">
+							<div class="card-title">
+								@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Campaign.List")
+							</div>
+                        </div>
+                        <div class="card-body">
+                            <div id="campaigns-grid"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript" asp-location="Footer">
+    function toDate(value) {
+        if(value === null) {
+            return "N/A";
+        }
+        return value;
+    }
+
+    $(document).ready(function () {
+        $("#campaigns-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("GridList", "SaleCampaignAdmin"))",
+                        type: "POST",
+                        dataType: "json",
+                        data: addAntiForgeryToken
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "number" },
+                            Name: { editable: false, type: "string" },
+                            State: { editable: false, type: "string" },
+                            StateId: { editable: false, type: "number" },
+                            EntityFromDate: { editable: false, type: "date" },
+                            EntityToDate: { editable: false, type: "date" },
+                            SchedulePatternType: { editable: false, type: "string" },
+                            SchedulePatternTypeId: { editable: false, type: "number" }
+                        }
+                    }
+                },
+                requestEnd: function (e) {
+                    if (e.type == "update") {
+                        this.read();
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+                    // Cancel the changes
+                    this.cancelChanges();
+                },
+                pageSize: @(defaultGridPageSize),
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)]
+            },
+            filterable: true,
+            sortable: true,
+            scrollable: false,
+            editable: true,
+            columns: [{
+                field: "Name",
+                title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Name")",
+                width: 200
+            }, {
+                field: "State",
+                title: "@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.State")",
+                width: 100
+            }, {
+                field: "EntityFromDate",
+                title: "@T("SevenSpikes.Scheduling.Admin.Schedule.FromDate")",
+                template: '#= kendo.toString(toDate(EntityFromDate), "MM/dd/yyyy")#',
+                width: 100
+            }, {
+                field: "EntityToDate",
+                title: "@T("SevenSpikes.Scheduling.Admin.Schedule.ToDate")",
+                template: '#= kendo.toString(toDate(EntityToDate), "MM/dd/yyyy")#',
+                width: 100
+            }, {
+                field: "SchedulePatternType",
+                title: "@T("SevenSpikes.Scheduling.Admin.SchedulePattern.Type")",
+                width: 100
+            }, {
+                field: "Id",
+                title: "Action",
+                template: kendo.template($("#action-template").html()),
+                width: 250,
+                filterable: false,
+                sortable: false
+            }, {
+                field: "Id",
+                title: "Command",
+                template: kendo.template($("#command-template").html()),
+                width: 50,
+                filterable: false,
+                sortable: false
+            }]
+        });
+    });
+</script>
+
+<script id="command-template" type="text/x-kendo-template">
+    # if(StateId == 5) { #
+        <a class="k-button" href="Edit/#: Id#" title="@T("Admin.Common.Edit")">
+            <span class="k-icon k-edit"></span>
+            @T("Admin.Common.Edit")
+        </a>
+    # } else { #
+        <a class="k-button" href="View/#: Id#" title="@T("Admin.Common.View")">
+            <span class="k-icon k-i-search"></span>
+            @T("Admin.Common.View")
+        </a>
+    # } #
+</script>
+
+<script id="action-template" type="text/x-kendo-template">
+    # if(StateId == 5) { #
+        <a class="k-button" href="Schedule/#: Id#" title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.ScheduleCampaign.Description")">
+            <span class="k-icon k-i-calendar"></span>
+            @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.ScheduleCampaign.Text")
+        </a>
+    # } #
+
+    # if(StateId == 10) { #
+        <a class="k-button" href="Unschedule/#: Id#" title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.UnscheduleCampaign.Description")">
+            <span class="k-icon k-i-exception"></span>
+            @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.UnscheduleCampaign.Text")
+        </a>
+    # } #
+
+    # if(StateId != 15) { #
+        <a class="k-button" href="Start/#: Id#" title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.StartCampaign.Description")">
+            <span class="k-icon k-i-arrow-e"></span>
+            @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.StartCampaign.Text")
+        </a>
+    # } else { #
+        <a class="k-button" href="Stop/#: Id#" title="@T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.StopCampaign.Description")">
+            <span class="k-icon k-denied"></span>
+            @T("SevenSpikes.Plugins.SaleCampaigns.Admin.Entities.SaleCampaign.Action.StopCampaign.Text")
+        </a>        
+    # } #
+</script>

@@ -1,0 +1,164 @@
+﻿@model TicketAttributeAdminModel
+
+<div class="card-body">
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="AttributeControlType" />
+        </div>
+        <div class="col-md-9">
+            <nop-select asp-for="AttributeControlType" asp-items="@(await ((AttributeControlType) Model.AttributeControlType).ToSelectListAsync())" />
+            <span asp-validation-for="AttributeControlType"></span>
+        </div>
+    </div>
+
+    @(await Html.LocalizedEditorAsync<TicketAttributeAdminModel, TicketAttributeAdminLocalizedModel>("ticketattribute-localized",
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="@Model.Locales[item].Name" />
+                <span asp-validation-for="@Model.Locales[item].Name"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TextBoxPlaceholder" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="@Model.Locales[item].TextBoxPlaceholder" />
+                <span asp-validation-for="@Model.Locales[item].TextBoxPlaceholder"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Tooltip" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="@Model.Locales[item].Tooltip" />
+                <span asp-validation-for="@Model.Locales[item].Tooltip"></span>
+            </div>
+        </div>
+
+        <input type="hidden" asp-for="@Model.Locales[item].LanguageId"/>
+    </div>
+    ,
+    @<div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Name" />
+            </div>
+            <div class="col-md-9">
+                <nop-editor asp-for="Name" />
+                <span asp-validation-for="Name"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="TextBoxPlaceholder" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="TextBoxPlaceholder" />
+                <span asp-validation-for="TextBoxPlaceholder"></span>
+            </div>
+        </div>
+        <div class="form-group row">
+            <div class="col-md-3">
+                <nop-label asp-for="Tooltip" />
+            </div>
+            <div class="col-md-9">
+                <nop-textarea asp-for="Tooltip" />
+                <span asp-validation-for="Tooltip"></span>
+            </div>
+        </div>
+    </div>
+    ))
+            
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsRequired" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsRequired" />
+            <span asp-validation-for="IsRequired"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsAdminAttribute" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsAdminAttribute" />
+            <span asp-validation-for="IsAdminAttribute"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="IsFilterable" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="IsFilterable" />
+            <span asp-validation-for="IsFilterable"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-3">
+            <nop-label asp-for="DisplayOrder" />
+        </div>
+        <div class="col-md-9">
+            <nop-editor asp-for="DisplayOrder" />
+            <span asp-validation-for="DisplayOrder"></span>
+        </div>
+    </div>
+</div>
+
+@if (Model.Id > 0)
+{
+    <div class="cards-group">
+        <div class="card card-default  advanced-setting">
+            <div class="card-header">
+                <div class="card-title">
+                    @T("SevenSpikes.HelpDesk.Admin.Mappings")
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StoreMappingModel.SelectedStoreIds" />
+                    </div>
+                    <div class="col-md-9">
+                        <div class="row">
+                            <div class="col-md-4">
+                                @Html.EditorFor(model => model.StoreMappingModel.SelectedStoreIds, new { SelectList = Model.StoreMappingModel.AvailableStores })
+                                <script>
+                                    $(document).ready(function () {
+                                        var storesIdsInput = $('#@Html.IdFor(model => model.StoreMappingModel.SelectedStoreIds)').data("kendoMultiSelect");
+                                        storesIdsInput.setOptions({
+                                            autoClose: false
+                                        });
+
+                                        @if (Model.StoreMappingModel.AvailableStores.Count == 0)
+                                        {
+                                        <text>
+                                        storesIdsInput.setOptions({
+                                            enable: false,
+                                            placeholder: 'No stores available'
+                                        });
+                                        storesIdsInput._placeholder();
+                                        storesIdsInput._enable();
+                                        </text>
+                                        }
+                                    });
+                                </script>
+                            </div>
+                            <div class="col-md-8">
+                                @await Component.InvokeAsync("MultistoreDisabledWarning")
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
