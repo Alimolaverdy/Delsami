@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "LoginWithMobile",
+  "SystemName": "NopShop.Misc.LoginWithMobile",
+  "Version": "1.6",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "NopShop Team",
+  "DisplayOrder": 3,
+  "FileName": "NopShop.Plugin.Misc.LoginWithMobile.dll",
+  "Description": "This plugin for login with mobile"
+}

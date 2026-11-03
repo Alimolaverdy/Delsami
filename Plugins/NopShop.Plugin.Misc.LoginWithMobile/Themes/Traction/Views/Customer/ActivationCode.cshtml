@@ -1,0 +1,210 @@
+﻿@model ActivationCodeModel
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+@using NopShop.Plugin.Misc.LoginWithMobile.Models
+
+@inject IWebHelper webHelper
+@inject INopHtmlHelper NopHtml
+@inject LoginWithMobileSetting loginWithMobileSetting
+@{
+    bool isCalledAsHeaderPanel = !string.IsNullOrEmpty(this.Context.Request.Query["isHeaderPanel"]);
+    Layout = isCalledAsHeaderPanel ? "" : "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Login").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-login-page");
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
+
+    NopHtml.AppendCssFileParts("~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Traction/Content/Style.css");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Pavilion/Content/Script.js");
+}
+
+<div class="page login-page">
+    <div class="page-body">
+        <div class="customer-blocks">
+            <div class="returning-wrapper fieldset">
+                <div class="activation-holder">
+                    <form asp-route="ActivationCode" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                        @Html.HiddenFor(model => model.Username)
+                        @Html.HiddenFor(model => model.ReturnUrl)
+                        @Html.HiddenFor(model => model.ReferralCode)
+                        <div class="logo">
+                            <img src="/images/logo-main-notext.svg" />
+                        </div>
+                        <div class="title">
+                            @T("ZarIran.Plugin.Misc.LoginWithMobile.LoginPage.Title")
+                        </div>
+                        <div class="activation-code-description">
+                            @if (loginWithMobileSetting.EnableLoginWithOneToFive)
+                            {
+                                <span>@T("ZarIran.Plugin.Misc.LoginWithMobile.LoginPage.LoginUsing1To5")</span>
+                            }
+                            else if (!string.IsNullOrWhiteSpace(Model.MarketerUsername))
+                            {
+                                <span>@T("ZarIran.Plugin.Misc.LoginWithMobile.SendSMSToMarketerTemplate", @Model.MarketerUsername)</span>
+                            }
+                            else
+                            {
+                                <span>@T("ZarIran.Plugin.Misc.LoginWithMobile.SendSMSTemplate", @Model.Username)</span>
+                            }
+                        </div>
+                        <div class="form-fields">
+                            <div class="inputs">
+                                <input asp-for="ActivationCode" type="tel" dir="ltr" maxlength="6" class="username" autofocus="autofocus" required />
+                                <span class="inputs-icons">&#x61;</span>
+                                <span asp-validation-for="ActivationCode"></span>
+                            </div>
+                        </div>
+                        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                <nop-captcha />
+                            </div>
+                        }
+
+                        <div class="change-phonenumber">
+                            <a href="/login">@T("ZarIran.Plugin.Misc.LoginWithMobile.LoginPage.ChangeMobilePhoneNumber")</a>
+                        </div>
+
+                        <div id="timer-decription">
+                            <span id="timer">
+                                @* 00:00 *@
+                            </span>
+                            @T("ZarIran.Plugin.Misc.LoginWithMobile.LoginPage.ResendText")
+                        </div>
+                        <a id="send-activation-code-again" class="login-with-email-a lwm-display-none">@T("ZarIran.Plugin.Misc.LoginWithMobile.LoginPage.ResendButtonText")</a>
+                        <div class="buttons btn-login-holder">
+                            <input class="button-1 login-button" type="submit" value="@T("Account.Login.LoginButton")" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="countDownDate" />
+<input type="hidden" id="Minutes" value="@ViewBag.Minutes" />
+<input type="hidden" id="Seconds" value="@ViewBag.Secconds" />
+
+<script asp-location="Footer">
+
+    var timerInterval = null;
+
+    function startTimer(minutes, seconds) {
+
+        clearInterval(timerInterval);
+
+        var currentMinutes = parseInt(minutes);
+        var currentSeconds = parseInt(seconds);
+
+        $("#timer-decription").show();
+        $("#send-activation-code-again").hide();
+
+        $("#timer").text(
+            currentMinutes + ":" + (currentSeconds < 10 ? "0" : "") + currentSeconds
+        );
+
+        timerInterval = setInterval(function () {
+
+            if (currentMinutes == 0 && currentSeconds == 0) {
+                clearInterval(timerInterval);
+                $("#timer-decription").hide();
+                $("#send-activation-code-again").show();
+                return;
+            }
+
+            if (currentSeconds == 0) {
+                currentMinutes--;
+                currentSeconds = 59;
+            }
+            else {
+                currentSeconds--;
+            }
+
+            $("#timer").text(
+                currentMinutes + ":" + (currentSeconds < 10 ? "0" : "") + currentSeconds
+            );
+
+        }, 1000);
+    }
+
+    $(document).ready(function () {
+
+        startTimer($("#Minutes").val(), $("#Seconds").val());
+
+        $("#send-activation-code-again").click(function (e) {
+
+            e.preventDefault();
+
+            var postData = {
+                phonenumber: $("#Username").val(),
+                marketerUsername: '@Model.MarketerUsername',
+                returnUrl: '@Model.ReturnUrl',
+                referralCode: '@Model.ReferralCode',
+                isResend: true
+            };
+
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                url: "/GetActivationCode",
+                type: "POST",
+                data: postData,
+                dataType: "json",
+
+                success: function (data) {
+
+                    if (data.message == "success") {
+
+
+                        var form = $("form");
+
+                        if (form.data("validator")) {
+                            form.validate().resetForm();
+                        }
+
+                        $(".field-validation-error")
+                            .removeClass("field-validation-error")
+                            .addClass("field-validation-valid")
+                            .html("");
+
+                        $(".validation-summary-errors")
+                            .removeClass("validation-summary-errors")
+                            .addClass("validation-summary-valid")
+                            .html("");
+
+                        $("#ActivationCode").removeClass("input-validation-error");
+
+                        $("#Minutes").val(data.minutes);
+                        $("#Seconds").val(data.seconds);
+
+                        startTimer(data.minutes, data.seconds);
+                    }
+                    else {
+                        alert(data.message);
+                    }
+                },
+
+                error: function () {
+                    alert("خطا در ارتباط با سرور");
+                }
+            });
+
+        });
+
+    });
+
+</script>
+<style>
+    .activation-holder {
+        text-align: center;
+        width: 100%;
+    }
+</style>

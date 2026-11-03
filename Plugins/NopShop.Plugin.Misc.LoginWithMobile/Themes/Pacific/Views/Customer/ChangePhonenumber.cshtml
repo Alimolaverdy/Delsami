@@ -1,0 +1,57 @@
+﻿@model LoginMobileModel
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+@using NopShop.Plugin.Misc.LoginWithMobile.Models
+
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("تغییر شماره موبایل").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-customer-info-page");
+
+    NopHtml.AppendCssFileParts("~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Pacific/Content/Style.css");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Pacific/Content/Script.js");
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
+}
+
+<div class="page account-page change-password-page">
+    <div class="page-title">
+        <h1>@T("Account.MyAccount") - ویرایش شماره موبایل</h1>
+    </div>
+    <div class="page-body">
+        <form asp-route="ChangePhonenumber" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+            <div class="fieldset">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="activation-code-description">
+                    شماره موبایل فعال شما @Model.ActiveUserName
+                </div>
+                <div class="activation-code-description">
+                    برای تغییر آن شماره مورد نظر را وارد کرده و درخواست کد فعال سازی بدهید
+                </div>
+                <div class="form-fields">
+                    <div class="inputs login-field username">
+                        <input asp-for="Username" class="username" type="tel" dir="ltr" placeholder="09xxxxxxxxx" autofocus="autofocus" maxlength="11" />
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            <nop-captcha />
+                        </div>
+                    }
+                </div>
+                <div class="buttons center-align">
+                    <input type="submit" class="button-1 login-button" value="دریافت کد فعال سازی" />
+                </div>
+            </div>
+        </form>
+    </div>
+</div>

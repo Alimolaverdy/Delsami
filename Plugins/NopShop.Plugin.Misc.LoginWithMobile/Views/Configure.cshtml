@@ -1,0 +1,325 @@
+﻿@model ConfigurationModel
+
+@using NopShop.Plugin.Misc.LoginWithMobile.Models
+
+@{
+    Layout = "_ConfigurePlugin";
+}
+
+@await Component.InvokeAsync("StoreScopeConfiguration")
+
+<script>
+    $(document).ready(function () {
+        toggleSmsProviders();
+
+        $("#@Html.IdFor(model => model.SmsProviderId)").change(toggleSmsProviders);
+    });
+
+    function toggleSmsProviders() {
+        var selectedSmsProviderId = $("#@Html.IdFor(model => model.SmsProviderId)").val();
+        if (selectedSmsProviderId == 1) {
+            $("#pnl-farapayamak").hide();
+            $("#pnl-kavenegar").show();
+        } else if (selectedSmsProviderId == 2) {
+            $("#pnl-kavenegar").hide();
+            $("#pnl-farapayamak").show();
+        }
+    }
+</script>
+
+<form asp-controller="LoginWithMobile" asp-action="Configure" method="post">
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body" style="text-align: center">
+                <h6>لطفا بعد از تغییر برنامه را دوباره راه اندازی کنید</h6>
+            </div>
+        </div>
+    </div>
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="Enable" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="Enable" />
+                        <span asp-validation-for="Enable"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="EnableLoginWithEmail" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="EnableLoginWithEmail" />
+                        <span asp-validation-for="EnableLoginWithEmail"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="AutoGenerateEmail" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="AutoGenerateEmail" />
+                        <span asp-validation-for="AutoGenerateEmail"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="StoreUrl" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="StoreUrl" />
+                        <span asp-validation-for="StoreUrl"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="RedirectToCustomerInfo" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="RedirectToCustomerInfo" />
+                        <span asp-validation-for="RedirectToCustomerInfo"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="SmsProviderId" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-select asp-for="SmsProviderId" asp-items="Model.AvailableSmsProviders" />
+                        <span asp-validation-for="SmsProviderId"></span>
+                    </div>
+                </div>
+
+                <div id="pnl-kavenegar">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SmsToken" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SmsToken" />
+                            <span asp-validation-for="SmsToken"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SharedTemplate" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SharedTemplate" />
+                            <span asp-validation-for="SharedTemplate"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="UseDedicatedLine" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="UseDedicatedLine" />
+                            <span asp-validation-for="UseDedicatedLine"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SmsStaticNumber" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="SmsStaticNumber" />
+                            <span asp-validation-for="SmsStaticNumber"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="SmsStaticNumber" />
+                        </div>
+                        <div class="col-md-9">
+                            <label style="color: red">کد فعال سازی: {0}</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="MessageTemplate" />
+                        </div>
+                        <div class="col-md-9">
+                            <textarea asp-for="MessageTemplate" style="width: 500px; height: 100px">
+                            </textarea>
+                            <span asp-validation-for="MessageTemplate"></span>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div id="pnl-farapayamak">
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="FaraPayamakUsername" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="FaraPayamakUsername" />
+                            <span asp-validation-for="FaraPayamakUsername"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="FaraPayamakPassword" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="FaraPayamakPassword" />
+                            <span asp-validation-for="FaraPayamakPassword"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="FaraPayamakTemplateId" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="FaraPayamakTemplateId" />
+                            <span asp-validation-for="FaraPayamakTemplateId"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="FaraPayamakUseDedicatedLine" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="FaraPayamakUseDedicatedLine" />
+                            <span asp-validation-for="FaraPayamakUseDedicatedLine"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="FaraPayamakDedicatedLineNumber" />
+                        </div>
+                        <div class="col-md-9">
+                            <nop-editor asp-for="FaraPayamakDedicatedLineNumber" />
+                            <span asp-validation-for="FaraPayamakDedicatedLineNumber"></span>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                        </div>
+                        <div class="col-md-9">
+                            <label style="color: red">کد فعال سازی: {0}</label>
+                        </div>
+                    </div>
+
+                    <div class="form-group row">
+                        <div class="col-md-3">
+                            <nop-label asp-for="FaraPayamakTemplateMessage" />
+                        </div>
+                        <div class="col-md-9">
+                            <textarea asp-for="FaraPayamakTemplateMessage" style="width: 500px; height: 100px">
+                            </textarea>
+                            <span asp-validation-for="FaraPayamakTemplateMessage"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group row ">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShowCaptchaOnLoginWithMobilePage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShowCaptchaOnLoginWithMobilePage" />
+                        <span asp-validation-for="ShowCaptchaOnLoginWithMobilePage"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row ">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShowCaptchaOnActivationCodePage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShowCaptchaOnActivationCodePage" />
+                        <span asp-validation-for="ShowCaptchaOnActivationCodePage"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row ">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShowCaptchaOnChangePhoenumberPage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShowCaptchaOnChangePhoenumberPage" />
+                        <span asp-validation-for="ShowCaptchaOnChangePhoenumberPage"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row ">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ShowCaptchaOnChangePhoenumberActivationCodePage" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ShowCaptchaOnChangePhoenumberActivationCodePage" />
+                        <span asp-validation-for="ShowCaptchaOnChangePhoenumberActivationCodePage"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row ">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ActivationCodeValidityPeriod" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ActivationCodeValidityPeriod" />
+                        <span asp-validation-for="ActivationCodeValidityPeriod"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row ">
+                    <div class="col-md-3">
+                        <nop-label asp-for="ActivationCodeCountOfSend" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="ActivationCodeCountOfSend" />
+                        <span asp-validation-for="ActivationCodeCountOfSend"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="LoginDescription" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="LoginDescription" asp-template="RichEditor" />
+                        <span asp-validation-for="LoginDescription"></span>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <div class="col-md-3">
+                        <nop-label asp-for="EnableLoginWithOneToFive" />
+                    </div>
+                    <div class="col-md-9">
+                        <nop-editor asp-for="EnableLoginWithOneToFive" />
+                        <span asp-validation-for="EnableLoginWithOneToFive"></span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <input type="submit" name="save" class="btn bg-blue" value="@T("Admin.Common.Save")" />
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</form>

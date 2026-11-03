@@ -1,0 +1,168 @@
+﻿@model ActivationCodeModel
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+@using NopShop.Plugin.Misc.LoginWithMobile.Models
+
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("تغییر شماره موبایل").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-customer-info-page");
+
+    NopHtml.AppendCssFileParts("~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Emporium/Content/Style.css");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Emporium/Content/Script.js");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Emporium/Content/ChangeActivationCodeScript.js");
+
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
+}
+
+
+<div class="page-title change-password-title">
+    <h1>ویرایش شماره موبایل</h1>
+</div>
+
+<div class="page account-page change-password-page">
+    <div class="page-body">
+        <form asp-route="ActivationCode" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+            @Html.HiddenFor(model => model.Username)
+            @Html.HiddenFor(model => model.ReturnUrl)
+            <div asp-validation-summary="ModelOnly" class="message-error"></div>
+            <div class="title">
+                <strong>کد فعال سازی را وارد کنید</strong>
+            </div>
+            <div class="activation-code-description">
+                کد فعال سازی به شماره موبایل @Model.Username ارسال شده است
+            </div>
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label asp-for="ActivationCode" asp-postfix=":">کد فعال سازی</label>
+                        <input asp-for="ActivationCode" type="tel" dir="ltr" maxlength="6" class="username" autofocus="autofocus" />
+                        <span class="inputs-icons">&#x61;</span>
+                        <span asp-validation-for="ActivationCode"></span>
+                    </div>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            <nop-captcha />
+                        </div>
+                    }
+                </div>
+            </div>
+            <div id="timer-decription" class="center-align">
+                ارسال مجدد کد فعال سازی تا
+                <span id="timer">
+                    00:00
+                </span>
+                دیگر
+            </div>
+            <div class="center-align">
+                <a id="send-activation-code-again" class="login-with-email-a lwm-display-no center-align">ارسال دوباره کد فعال سازی</a>
+            </div>
+            <div class="buttons center-align btn-login-holder">
+                <input class="button-1 login-button" type="submit" value="تغییر شماره موبایل" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<input type="hidden" id="countDownDate" />
+
+<input type="hidden" id="ActivationCodeExpiredDateYear" value="@Model.ActivationCodeExpiredDate.Year" />
+<input type="hidden" id="ActivationCodeExpiredDateMonth" value="@Model.ActivationCodeExpiredDate.Month" />
+<input type="hidden" id="ActivationCodeExpiredDateDay" value="@Model.ActivationCodeExpiredDate.Day" />
+<input type="hidden" id="ActivationCodeExpiredDateHour" value="@Model.ActivationCodeExpiredDate.Hour" />
+<input type="hidden" id="ActivationCodeExpiredDateMinute" value="@Model.ActivationCodeExpiredDate.Minute" />
+<input type="hidden" id="ActivationCodeExpiredDateSecond" value="@Model.ActivationCodeExpiredDate.Second" />
+
+@*<script asp-location="Footer">
+    var temp = new Date("@Model.ActivationCodeExpiredDate.Year",
+        "@(Model.ActivationCodeExpiredDate.Month - 1)", "@Model.ActivationCodeExpiredDate.Day", "@Model.ActivationCodeExpiredDate.Hour",
+        "@Model.ActivationCodeExpiredDate.Minute", "@Model.ActivationCodeExpiredDate.Second")
+        document.getElementById("countDownDate").value = temp;
+
+        // Update the count down every 1 second
+        var x = setInterval(function () {
+            // Get today's date and time
+            var now = new Date().getTime();
+            // Find the distance between now and the count down date
+            var date = new Date(document.getElementById("countDownDate").value);
+            var distance = Date.parse(date) - now;
+            // Time calculations for days, hours, minutes and seconds
+            var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            var seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            var strMinutes = "";
+            if (minutes > -1 && minutes < 10) {
+                strMinutes = "0" + minutes;
+            } else {
+                strMinutes = minutes;
+            }
+
+            var strSeconds = "";
+            if (seconds > -1 && seconds < 10) {
+                strSeconds = "0" + seconds;
+            } else {
+                strSeconds = seconds;
+            }
+
+            var ele = document.getElementById("timer");
+            if (minutes >= 0 && strSeconds >= 0) {
+                ele.innerHTML = strMinutes + ":" + strSeconds;
+
+            }
+
+            if (ele.innerHTML == "00:00") {
+                $("#timer").hide();
+
+                $("#send-activation-code-again").addClass("lwm-display-block");
+                $("#send-activation-code-again").removeClass("lwm-display-none");
+            } else {
+                $("#timer-decription").show();
+            }
+        }, 1000);
+
+    $(document).ready(function () {
+        $("#send-activation-code-again").click(function (e) {
+            e.preventDefault();
+
+            var postData = {
+                phonenumber : $("#Username").val()
+            }
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                url: "/GetActivationCodeChange",
+                type: "POST",
+                data: postData,
+                dataType: "json",
+                success: function (data) {
+                    if (data.message == "success") {
+                        $("#countDownDate").val(data.expireDate);
+
+                        $("#timer").show();
+
+                        $("#send-activation-code-again").addClass("lwm-display-none");
+                        $("#send-activation-code-again").removeClass("lwm-display-block");
+                    }
+                    else
+                        alert(data.message);
+                },
+                error: function (jqXHR, textStatus, errorThrown) {
+                },
+                complete: function (jqXHR, textStatus) {
+                }
+            });
+
+        });
+    });
+</script>*@

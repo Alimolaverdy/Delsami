@@ -1,0 +1,28 @@
+﻿@model CustomerNavigationModel
+@{
+    var controllerName = Url.ActionContext.RouteData.Values["controller"].ToString();
+    var actionName = Url.ActionContext.RouteData.Values["action"].ToString();
+
+    var selected = false;
+    if (controllerName.Equals("customer", StringComparison.InvariantCultureIgnoreCase) &&
+        actionName.Equals("ChangePhonenumber", StringComparison.InvariantCultureIgnoreCase))
+    {
+        selected = true;
+    }
+
+    Html.AppendCssFileParts(ResourceLocation.Footer, "~/Plugins/Misc.LoginWithMobile/Themes/Emporium/Content/Style.css");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Misc.LoginWithMobile/Themes/Emporium/Content/Script.js");
+}
+<li class="change-phonenumber">
+    <a href="/ChangePhonenumber" class="@(selected ? "active" : "inactive")">تغییر شماره موبایل</a>
+</li>
+
+@if (selected)
+{
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            $(".customer-info a").addClass("inactive");
+            $(".customer-info a").removeClass("active");
+        });
+    </script>
+}

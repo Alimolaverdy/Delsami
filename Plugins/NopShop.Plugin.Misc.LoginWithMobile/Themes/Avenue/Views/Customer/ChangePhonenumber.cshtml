@@ -1,0 +1,62 @@
+﻿@model LoginMobileModel
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+@using NopShop.Plugin.Misc.LoginWithMobile.Models
+
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("تغییر شماره موبایل").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-customer-info-page");
+
+    NopHtml.AppendCssFileParts( "~/Plugins/Misc.LoginWithMobile/Themes/Avenue/Content/Style.css");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Misc.LoginWithMobile/Themes/Avenue/Content/Script.js");
+}
+
+@section AccountNavigation
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
+}
+
+<div class="page login-page">
+    <div class="page-body">
+        <div class="customer-blocks login-mobile-holder">
+            <div class="customer-block login-block login-block-left">
+            </div>
+            <div class="customer-block login-block">
+                <form class="wrapper" asp-route="ChangePhonenumber" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                    <div class="title">
+                        <strong>@T("Account.Login.ReturningCustomer")</strong>
+                    </div>
+                    <div class="activation-code-description">
+                        شماره موبایل فعال شما @Model.ActiveUserName
+                    </div>
+                    <div class="activation-code-description">
+                        برای تغییر آن شماره مورد نظر را وارد کرده و درخواست کد فعال سازی بدهید
+                    </div>
+                    <div class="form-fields">
+                        <div class="inputs">
+                            <label asp-for="Username" asp-postfix=":" class="input-name"></label>
+                            <input asp-for="Username" placeholder="09xxxxxxxxx" class="login-input username" dir="ltr" maxlength="11" />
+                            <span asp-validation-for="Username"></span>
+                        </div>
+                        @if (Model.DisplayCaptcha)
+                        {
+                            <div class="captcha-box">
+                                <nop-captcha />
+                            </div>
+                        }
+                    </div>
+                    <div class="buttons btn-active-code-holder">
+                        <input class="button-1 login-button" type="submit" value="دریافت کد فعال سازی" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

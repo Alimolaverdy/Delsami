@@ -1,0 +1,97 @@
+﻿@model LoginMobileModel
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+@using NopShop.Plugin.Misc.LoginWithMobile.Models
+@using Nop.Services.Localization
+
+@inject IWebHelper webHelper
+@inject IThemeContext themeContext
+@inject IStoreContext storeContext
+@inject ILocalizationService localizationService
+@{
+    Layout = "_ColumnsOne";
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Login").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-login-page");
+
+    NopHtml.AppendCssFileParts("~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Pacific/Content/Style.css");
+    NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Pacific/Content/Script.js");
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
+}
+<div class="page login-page">
+    <div class="page-title">
+        <h1>@T("Account.Login.Welcome")</h1>
+    </div>
+    @await Html.PartialAsync("_ExternalAuthentication.Errors")
+    <div class="page-body">
+        <div class="login-tabs">
+            <ul class="login-tabs-header">
+                <li>
+                    <a href="#returningCustomer" class="login-tabs-title login">
+                        <strong>ورود / ثبت نام</strong>
+                    </a>
+                </li>
+            </ul>
+            <div class="login-tabs-body">
+                <div id="returningCustomer" class="login-tabs-block">
+                    <div class="returning-wrapper fieldset">
+                        <form asp-route="Login"
+                              asp-route-returnurl="@Context.Request.Query["ReturnUrl"]"
+                              asp-route-referralCode="@Context.Request.Query["referralCode"]"
+                              method="post">
+                            <div asp-validation-summary="ModelOnly" class="message-error">@T("Account.Login.Unsuccessful")</div>
+
+                            @{
+                                var logoPath = $"~/Themes/{await themeContext.GetWorkingThemeNameAsync()}/Content/img/logo.png";
+                                var themeLogo = await Component.InvokeAsync("Widget", new { widgetZone = "pacific_theme_logo" });
+                            }
+                            <div class="mobile-login-logo">
+                                <a href="@Url.RouteUrl("Homepage")" class="logo">
+                                    @if (!String.IsNullOrEmpty(await themeLogo.RenderHtmlContentAsync()))
+                                    {
+                                        @themeLogo
+                                    }
+                                    else
+                                    {
+                                        string storeName = await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), x => x.Name);
+                                        <img title="" alt="@storeName" src="@Url.Content(logoPath)">
+                                    }
+                                </a>
+                            </div>
+
+                            <div class="form-fields">
+                                <div class="inputs login-field username">
+                                    <input asp-for="Username" class="username" type="tel" dir="ltr" placeholder="09xxxxxxxxx" autofocus="autofocus" maxlength="11" />
+                                    <span asp-validation-for="Username"></span>
+                                </div>
+
+                                @if (Model.DisplayCaptcha)
+                                {
+                                    <div class="captcha-box">
+                                        <nop-captcha />
+                                    </div>
+                                }
+                            </div>
+                            <div class="buttons">
+                                <input class="button-1 login-button" type="submit" value="دریافت کد فعال سازی" />
+                            </div>
+                            @if (Model.EnableLoginWithEmail)
+                            {
+                                <div class="loginWithEmail-link">
+                                    <a href="@Url.RouteUrl("Plugin.Misc.LoginWithMobile.LoginWithEmail", new { returnUrl = this.Context.Request.Query["returnUrl"] })" class="login-with-email-a">ورود با پست الکترونیکی</a>
+                                </div>
+                            }
+                            <div class="login-description-holder">
+                                @Html.Raw(Model.LoginDescription)
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

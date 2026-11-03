@@ -1,0 +1,63 @@
+﻿@model LoginMobileModel
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+@using NopShop.Plugin.Misc.LoginWithMobile.Models
+
+@inject IWebHelper webHelper
+@{
+    Layout = "_ColumnsTwo";
+
+    //title
+    NopHtml.AddTitleParts(T("تغییر شماره موبایل").Text);
+    //page class
+    Html.AppendPageCssClassParts("html-account-page");
+    Html.AppendPageCssClassParts("html-customer-info-page");
+
+    Html.AppendCssFileParts(ResourceLocation.Footer, "~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Minimal/Content/Style.css");
+    Html.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/NopShop.Misc.LoginWithMobile/Themes/Minimal/Content/Script.js");
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation", new { selectedTabId = CustomerNavigationEnum.Info })
+}
+
+
+@*<div class="page-title change-password-title">
+    <h1>ویرایش شماره موبایل</h1>
+</div>*@
+
+<div class="page account-page change-password-page">
+    <div class="page-title">
+        <h1>ویرایش شماره موبایل</h1>
+    </div>
+    <div class="page-body">
+        <form asp-route="ChangePhonenumber" asp-route-returnurl="@Context.Request.Query["ReturnUrl"]" method="post">
+            <div class="fieldset">
+                <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                <div class="activation-code-description">
+                    شماره موبایل فعال شما @Model.ActiveUserName
+                </div>
+                <div class="activation-code-description">
+                    برای تغییر آن شماره مورد نظر را وارد کرده و درخواست کد فعال سازی بدهید
+                </div>
+                <div class="form-fields">
+                    <div class="inputs">
+                        <label asp-for="Username" asp-postfix=":" class="input-name">شماره موبایل</label>
+                        <input asp-for="Username" placeholder="09xxxxxxxxx" class="login-input username" dir="ltr" maxlength="11" />
+                        <span asp-validation-for="Username"></span>
+                    </div>
+                    @if (Model.DisplayCaptcha)
+                    {
+                        <div class="captcha-box">
+                            <nop-captcha />
+                        </div>
+                    }
+                </div>
+            </div>
+            <div class="buttons center-align">
+                <input type="submit" class="button-1 change-password-button" value="دریافت کد فعال سازی" />
+            </div>
+        </form>
+    </div>
+</div>

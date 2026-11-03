@@ -1,0 +1,396 @@
+﻿@model HeaderLinksModel
+@using Nop.Core
+@using Nop.Core.Infrastructure
+@using Nop.Services.Configuration
+@using Microsoft.Extensions.Primitives
+
+@inject Nop.Core.IWebHelper webHelper
+@inject IStoreContext storeContext
+@inject ISettingService settingService
+@inject IWorkContext workContext
+
+@inject Nop.Services.Customers.ICustomerService customerService
+
+@{
+    var currentStore = await storeContext.GetCurrentStoreAsync();
+    var storeId = currentStore.Id;
+
+    //Check if the setting ShowLoginPoup is true or false.
+    bool shouldShowLoginInPopup = await settingService.GetSettingByKeyAsync("PavilionThemeSettings.ShowLoginPopup", false, storeId, true);
+
+    //Check if we should show the login popup.
+    if (shouldShowLoginInPopup)
+    {
+        var reCaptchaVersion1 = "Version1";
+
+
+        bool isReCaptchaV1EnabledOnLoginPage = (await settingService.GetSettingByKeyAsync("captchasettings.enabled", false, storeId, true) &&
+                                               await settingService.GetSettingByKeyAsync("captchasettings.showonloginpage", false, storeId, true) &&
+                                                (reCaptchaVersion1.Equals(await settingService.GetSettingByKeyAsync("captchasettings.recaptchaversion", reCaptchaVersion1, storeId, true), StringComparison.InvariantCultureIgnoreCase)));
+
+        // Since the LoginPopup is added via Ajax, reCaptcha v1 could not be loaded and won't work.
+        // So we better not show the LoginPopup if reCaptcha v1 is enabled on the login page
+        // http://stackoverflow.com/questions/23174979/google-recaptcha-doesnt-get-loaded-when-bootstrap-call-the-remote-modal
+        if (isReCaptchaV1EnabledOnLoginPage)
+        {
+            shouldShowLoginInPopup = false;
+        }
+        else
+        {
+            bool isSSLEnabled = currentStore.SslEnabled;
+            bool isSSLForcedOnAllPages = await settingService.GetSettingByKeyAsync("securitysettings.forcesslforallpages", false, storeId, true);
+
+            //Check if SSL is Enabled for Current Store and if it is forced for all pages so we do not show the Login Popup in that case.
+            bool isSSLEnabledAndNotForcedOnAllPages = isSSLEnabled && !isSSLForcedOnAllPages;
+
+            if (isSSLEnabledAndNotForcedOnAllPages)
+            {
+                shouldShowLoginInPopup = false;
+            }
+        }
+    }
+    var controllerName = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+    var actionName = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var isShoppingCartPage = controllerName.Equals("ShoppingCart", StringComparison.InvariantCultureIgnoreCase) &&
+                             actionName.Equals("CustomCart", StringComparison.InvariantCultureIgnoreCase);
+
+    var isCheckoutPage = controllerName.Equals("ZarIranCheckout", StringComparison.InvariantCultureIgnoreCase) &&
+                        actionName.Equals("OnePageCheckout", StringComparison.InvariantCultureIgnoreCase);
+}
+
+<div class="header-links">
+    <ul>
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderLinksBefore })
+        @if (Model.IsAuthenticated)
+        {
+            if (string.IsNullOrWhiteSpace(Model.CustomerName))
+            {
+                <li>
+                    <a href="@Url.RouteUrl("CustomerInfo")" class="ico-account">@workContext.GetCurrentCustomerAsync().Result.Username</a>
+                </li>
+            }
+            else
+            {
+                <li>
+                    <a href="@Url.RouteUrl("CustomerInfo")" class="ico-account">@Model.CustomerName</a>
+                </li>
+            }
+        }
+        else
+        {
+            var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
+            ? url.ToString()
+            : webHelper.GetRawUrl(Context.Request);
+
+            @*<li><a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register">@T("Account.Register")</a></li>*@
+            <li>
+                <a href="@Url.RouteUrl("Login", new { returnUrl })" class="ico-login @if (shouldShowLoginInPopup){
+                    <text>modal-login</text>
+}
+" data-loginUrl="@Url.Action("Login", "Customer")">@T("Account.Login.Welcome")</a>
+        </li>
+                }
+        @if (Model.AllowPrivateMessages)
+        {
+            var unreadMessagesCount = "0";
+            if (!String.IsNullOrEmpty(Model.UnreadPrivateMessages))
+            {
+                unreadMessagesCount = Model.UnreadPrivateMessages;
+            }
+            <li>
+                <a href="@Url.RouteUrl("PrivateMessages", new { tab = "" })" class="ico-inbox">
+                    <span class="inbox-label">@T("PrivateMessages.Inbox")</span>
+                    <span class="inbox-unread">(@unreadMessagesCount)</span>
+                </a>
+            </li>
+        }
+        @if (Model.WishlistEnabled)
+        {
+            <li>
+                <a href="@Url.RouteUrl("Wishlist")" class="ico-wishlist">
+                    <span class="wishlist-label">@T("Wishlist")</span>
+                    <span class="wishlist-qty">@T("Wishlist.HeaderQuantity", Model.WishlistItems)</span>
+                </a>
+            </li>
+        }
+        @if (Model.ShoppingCartEnabled)
+        {
+            <li id="topcartlink">
+                <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                    <span class="cart-label">@T("ShoppingCart")</span>
+                    <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                </a>
+            </li>
+        }
+
+        @await Component.InvokeAsync("Widget", new { widgetZone = PublicWidgetZones.HeaderLinksAfter })
+    </ul>
+    @if (Model.AllowPrivateMessages && !string.IsNullOrEmpty(Model.AlertMessage))
+    {
+        //new private message notification
+        <script asp-location="Footer">
+            $(document).ready(function () {
+                displayPopupNotification('@Html.Raw(JavaScriptEncoder.Default.Encode(Model.AlertMessage))', 'success', false);
+            });
+        </script>
+    }
+</div>
+@if (!isCheckoutPage)
+{
+    <div class="header-cart-mobile d-none">
+        <!-- Home -->
+        <div class="d-flex">
+            <div class="header-cart-mobile-item p-1 flex-fill-100">
+                <a href="/">
+                    <i class="bi bi-house-fill"></i>
+                    <span class="label">@T("Admin.Home")</span>
+                </a>
+            </div>
+
+            <!- Category- -->
+            <div class="header-cart-mobile-item menu-title p-1 flex-fill-100">
+                <i class="bi bi-menu-button-wide"></i>
+                <span class="label">@T("Sevenspikes.Themes.Common.Category")</span>
+            </div>
+
+            <!-- Basket -->
+            @if (Model.IsAuthenticated)
+            {
+                <div class="header-cart-mobile-item p-1 flex-fill-100">
+                    @if (Model.ShoppingCartEnabled)
+                    {
+                        <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                            <i class="bi bi-cart3"></i>
+                            <span class="cart-qty">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                            <span class="label">@T("ShoppingCart")</span>
+                        </a>
+                    }
+                </div>
+            }
+            else
+            {
+                <div class="header-cart-mobile-item p-1 flex-fill-100">
+                    @if (Model.ShoppingCartEnabled)
+                    {
+                        <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                            <i class="bi bi-cart3"></i>
+                            <span class="cart-qty-in">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                            <span class="label">@T("ShoppingCart")</span>
+                        </a>
+                    }
+                </div>
+            }
+
+            <!-- Login/Logout/Profile -->
+            @if (Model.IsAuthenticated)
+            {
+                <div class="header-cart-mobile-item p-1 flex-fill-100">
+                    <a href="@Url.RouteUrl("Logout")">
+                        <i class="bi bi-box-arrow-left"></i>
+                        <span class="label">@T("Account.Logout")</span>
+                    </a>
+                </div>
+                <div class="header-cart-mobile-item p-1 flex-fill-100">
+                    <a href="@Url.RouteUrl("CustomerInfo")" class="ico-account">
+                        <i class="bi bi-person-fill"></i>
+                        <span class="label">@T("Account.MyAccount")</span> @* @Model.CustomerName *@
+                    </a>
+                </div>
+            }
+            else
+            {
+                var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
+                ? url.ToString()
+                : webHelper.GetRawUrl(Context.Request);
+                <div class="header-cart-mobile-item p-1 flex-fill-100">
+                    <a href="@Url.RouteUrl("Login", new { returnUrl })">
+                        <i class="bi bi-person-circle"></i>
+                        <span class="label">@T("Account.Login.Welcome")</span>
+                    </a>
+                </div>
+            }
+
+
+        </div>
+
+
+
+    </div>
+}
+
+<div class="header-logout-mobile d-none">
+    <a class="phone-white-icon" href="tel:02137105">
+        <span>
+            37105 - 021
+        </span>
+    </a>
+    @*             <a href="@Url.RouteUrl("Logout")">
+    <i class="bi bi-box-arrow-left"></i>
+    <span class="label">@T("Account.Logout")</span>
+    </a> *@
+</div>
+@if (!isCheckoutPage)
+{
+    <div class="header-cart-mobile">
+        <div class="d-flex">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderLinksBefore, additionalData = Model })
+            <!-- Home -->
+            <div class="header-cart-mobile-item p-1 flex-fill-100">
+                <a href="/">
+                    <img src="/icons/ZarIran-icon-pack/home.svg" />
+                    <span class="label">خانه</span>
+                </a>
+            </div>
+
+            <div class="header-cart-mobile-item menu-title p-1 flex-fill-100">
+                <i><img src="/icons/ZarIran-icon-pack/Categories-Fill.svg" /></i>
+                <span class="label">دسته بندی</span>
+            </div>
+
+            <!-- Basket -->
+            <div class="header-cart-mobile-item p-1 flex-fill-100">
+                @if (Model.ShoppingCartEnabled)
+                {
+                    if (Model.ShoppingCartItems > 0)
+                    {
+                        <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                            <img src="/icons/ZarIran-icon-pack/Cart-Filled.svg" />
+                            <span class="cart-qty-in">@T("ShoppingCart.HeaderQuantity", Model.ShoppingCartItems)</span>
+                            <span class="label">@T("ShoppingCart")</span>
+                        </a>
+                    }
+                    else
+                    {
+                        <a href="@Url.RouteUrl("ShoppingCart")" class="ico-cart">
+                            <img src="/icons/ZarIran-icon-pack/Cart-Empty.svg" />
+                            <span class="label">@T("ShoppingCart")</span>
+                        </a>
+                    }
+
+                    @await Component.InvokeAsync(typeof(FlyoutShoppingCartViewComponent))
+
+                }
+            </div>
+
+            <!-- Login/Logout/Profile -->
+            <div class="header-cart-mobile-item p-1 flex-fill-100">
+
+                @if (Model.IsAuthenticated)
+                {
+                    <a href="@Url.RouteUrl("CustomerInfo")" class="ico-account">
+                        <img src="/icons/ZarIran-icon-pack/Profile.svg" />
+                        <span class="label">   @T("Account.Profile")</span>
+                    </a>
+
+                }
+                else
+                {
+                    var returnUrl = Context.Request.Query.TryGetValue("returnUrl", out var url) && !StringValues.IsNullOrEmpty(url)
+                    ? url.ToString()
+                    : webHelper.GetRawUrl(Context.Request);
+
+                    @if (Model.RegistrationType != UserRegistrationType.Disabled)
+                    {
+                        @* <a href="@Url.RouteUrl("Register", new { returnUrl })" class="ico-register">@T("Account.Register")</a> *@
+                    }
+                    <a href="@Url.RouteUrl("Login", new { returnUrl })" class="ico-login">
+                        <img src="/icons/ZarIran-icon-pack/Profile.svg" />
+                        <span class="label">@T("Account.Login")</span>
+                    </a>
+                }
+            </div>
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderLinksAfter, additionalData = Model })
+        </div>
+    </div>
+}
+
+
+@if (isShoppingCartPage || isCheckoutPage)
+{
+    <div class="@(isCheckoutPage ? "checkout-page" : "") header-cart-button-mobile">
+        <div class="d-flex">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderLinksBefore, additionalData = Model })
+            <!-- Home -->
+            <div class="header-cart-mobile-item p-1 flex-fill-100 checkout-buttons">
+                @if (isCheckoutPage)
+                {
+                    <div class="loading-container">@T("Checkout.PleaseWait")</div>
+                }
+                <div class="fake-buttons-container" style="@(isCheckoutPage ? "display:none" : "")">
+                    @{
+                        if (isCheckoutPage)
+                        {
+                            <button type="button" class="button-1 next-step-button continue-to-shpping-methods">@T("Checkout.ContinueToShppingMethods")</button>
+                            <button type="button" class="button-1 next-step-button continue-to-payment-methods">@T("Checkout.ContinueToPaymentMethods")</button>
+                        }
+                    }
+                    <button type="submit" class="button-1 fake-checkout-button">
+                        @(isCheckoutPage? T("Checkout.ConfirmButton").Text: T("Checkout.Button").Text)
+                    </button>
+                </div>
+            </div>
+
+            <div class="header-cart-mobile-item menu-title p-1 flex-fill-100">
+                <tr class="order-total">
+                    <td class="cart-total-left">
+                        <label></label>
+                    </td>
+                    <td class="cart-total-right">
+                        <span class="value-summary order-total-value-mobile"><strong></strong></span>
+                    </td>
+                </tr>
+            </div>
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.HeaderLinksAfter, additionalData = Model })
+        </div>
+    </div>
+
+    <script asp-location="Footer">
+        $(document).ready(function () {
+            let isNoData = jQuery('.no-data').length > 0;
+            if (isNoData) {
+                let isNoDataInterval = setInterval(function () {
+                    if (jQuery('.header-cart-button-mobile:has(.fake-checkout-button)').length > 0) {
+                        jQuery('.header-cart-button-mobile:has(.fake-checkout-button)').hide();
+                        clearInterval(isNoDataInterval);
+                    }
+                }, 100);
+            }
+
+                @if (isShoppingCartPage)
+                {
+                        <Text>
+
+                            var price = $(".order-total .value-summary").first().text();
+                            if (!price)
+                                price = $(".order-total .cart-total-right").first().text();
+
+                            if (!price)
+                                price = $($(".cart-total-row.order-total span")[0]).text();
+
+
+                            if (price) {
+                                $(".order-total-value-mobile").text(price)
+                            }
+                        </Text>
+                }
+
+                $(".fake-checkout-button").on("click", function () {
+                    @if (isShoppingCartPage)
+                    {
+                            <Text>
+                                $("button#checkout").click();
+                            </Text>
+                    }
+                    else if (isCheckoutPage)
+                    {
+                            <Text>
+                                $(".fake-buttons-container").hide();
+                                $(".order-total-value-mobile").text("@T("Checkout.RedirectToIPG")")
+                                $("button.confirm-order-next-step-button").click();
+                            </Text>
+                    }
+                });
+
+        });
+    </script>
+}

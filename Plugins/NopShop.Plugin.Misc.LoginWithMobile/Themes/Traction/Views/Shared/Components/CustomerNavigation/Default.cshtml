@@ -1,0 +1,23 @@
+﻿@using Nop.Web.Components;
+@model CustomerNavigationModel
+
+<div class="block block-account-navigation">
+    <div class="listbox">
+        <div class="activation-code-description">
+        </div>
+        <ul class="list">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AccountNavigationBefore, additionalData = Model })
+            @foreach (var item in Model.CustomerNavigationItems)
+            {
+                <li class="@item.ItemClass @(Model.SelectedTab == item.Tab ? "active" : "inactive")">
+                    <a href="@Url.RouteUrl(item.RouteName)">@(item.Title)</a>
+                </li>
+            }
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.AccountNavigationAfter, additionalData = Model })
+			
+			<li class="logout">
+                <a href="/logout">@T("Account.Logout")</a>
+            </li>
+        </ul>
+    </div>
+</div>

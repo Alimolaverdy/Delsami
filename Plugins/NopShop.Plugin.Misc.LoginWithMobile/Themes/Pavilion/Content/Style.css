@@ -1,0 +1,232 @@
+﻿.activation-holder {
+    margin: auto;
+    width: 50%;
+}
+
+    .activation-holder form {
+        width: 100% !important;
+        min-height: 315px !important;
+    }
+
+.btn-login-holder {
+    padding: 10px 13% 11px !important;
+}
+
+.login-block-left {
+    width: 25.5% !important;
+    background: unset !important;
+}
+
+
+.phonenumber-holder {
+    margin: auto;
+    width: 70%;
+    padding: 0 20px 0 20px !important;
+}
+
+    .phonenumber-holder form {
+        width: 100% !important;
+        min-height: 280px !important;
+    }
+
+    .phonenumber-holder .title {
+        width: 100% !important;
+    }
+
+.login-with-email-a {
+    color: #007bff;
+    text-align: center !important;
+}
+
+    .login-with-email-a:hover {
+        text-decoration: underline;
+        color: #007bff;
+    }
+
+.btn-active-code-holder {
+    padding: 10px 13% 11px !important;
+}
+
+#timer {
+    color: red !important;
+    font-size: 15px !important;
+}
+
+.lwm-display-no {
+    display: none !important;
+}
+
+.lwm-display-block {
+    display: block !important;
+}
+
+/*.phonenumber-holder {
+    margin: auto;
+    width: 50%;
+}*/
+
+/*.phonenumber-holder form {
+        width: 100% !important;
+        min-height: 315px !important;
+    }*/
+
+.login-with-email-a {
+    color: #007bff;
+}
+
+    .login-with-email-a:hover {
+        text-decoration: underline;
+        color: #007bff;
+    }
+
+.btn-active-code-holder {
+    padding: 10px 13% 11px !important;
+}
+
+.change-phonenumber a::after {
+    content: "\78" !important;
+    position: absolute;
+    display: inline-block;
+    top: 50%;
+    right: auto;
+    left: 23px;
+    -webkit-transform: translateY(-50%);
+    -ms-transform: translateY(-50%);
+    transform: translateY(-50%);
+    vertical-align: middle;
+    margin-right: 23px;
+    font-family: "emporium-icons";
+    font-size: 20px;
+    font-weight: normal;
+    text-transform: none;
+    color: #b7b7b7;
+    transition: all .2s ease;
+}
+
+.login-input {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+.change-password-title {
+    padding: 0 0 0 0 !important;
+}
+
+.center-align {
+    text-align: center !important;
+}
+
+.mobile-login-logo {
+    text-align: center !important;
+    margin-top: 28px !important;
+}
+
+.login-description-holder {
+    margin-top: 20px !important;
+}
+
+.activation-code-description {
+    width: 100% !important;
+    margin-top: 40px !important;
+    margin-bottom: 20px !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+    text-align: center !important;
+}
+
+#timer-decription {
+    font-weight: bold !important;
+    font-size: 16px !important;
+    text-align: center !important;
+    margin-bottom: 15px !important;
+}
+
+.activation-holder .title {
+    width: 100% !important;
+}
+
+@media all and (min-width: 450px) and (max-width: 1024px) {
+    .phonenumber-holder {
+        padding: 0 57px 0 57px !important;
+    }
+}
+
+@media all and (max-width: 1025px) {
+    .phonenumber-holder, .activation-holder {
+        width: 100% !important;
+    }
+}
+
+@media all and (max-width: 600px) {
+    .change-phonenumber-holder {
+        padding: 40px 30px !important;
+    }
+}
+
+@media all and (min-width: 601px) and (max-width: 899px) {
+    .change-phonenumber-holder {
+        padding: 40px 100px !important;
+    }
+}
+
+@media all and (min-width: 900px) and (max-width: 1025px) {
+    .change-phonenumber-holder {
+        padding: 40px 180px !important;
+    }
+}
+
+@media all and (max-width: 1023px) {
+    .side-2 {
+        margin: 0 0 0 0 !important;
+    }
+}
+
+@media all and (min-width: 1024px) {
+    .side-2 {
+        margin: 70px 0 0 0 !important;
+    }
+}
+
+@media all and (min-width: 1026px) {
+    .change-phonenumber-holder {
+        padding: 40px 200px !important;
+    }
+}
+
+@media all and (min-width: 1280px) {
+    .change-phonenumber-holder {
+        padding: 40px 340px !important;
+    }
+}
+
+.center-2, .side-2 {
+    width: 100% !important;
+}
+
+
+
+.change-phonenumber-holder {
+    max-width: unset !important;
+    width: 100% !important;
+}
+
+    .change-phonenumber-holder .title {
+        text-align: center !important;
+    }
+
+.login-page {
+    margin-top: 80px !important;
+}
+
+.login-page .page-body {
+    padding-top: 0 !important;
+}
+
+.validation-summary-errors {
+    text-align: center !important;
+}
+
+.login-with-email-a-holder {
+    width: 100% !important;
+    text-align:center !important;
+}

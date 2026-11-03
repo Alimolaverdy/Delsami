@@ -1,0 +1,84 @@
+﻿.activation-holder {
+    margin: auto;
+    width: 50%;
+}
+
+.activation-holder form {
+    width: 100% !important;
+    min-height: 315px !important;
+}
+
+.btn-login-holder {
+    padding: 10px 13% 11px !important;
+}
+
+.login-block-left {
+    width: 25.5% !important;
+    background: unset !important;
+}
+
+
+.phonenumber-holder {
+    margin: auto;
+    width: 50%;
+}
+
+.phonenumber-holder form {
+    width: 100% !important;
+    min-height: 315px !important;
+}
+
+.login-with-email-a {
+    color: #007bff;
+}
+
+.login-with-email-a:hover {
+    text-decoration: underline;
+    color: #007bff;
+}
+
+.btn-active-code-holder {
+    padding: 10px 13% 11px !important;
+}
+
+#timer {
+    color: red !important;
+    font-size: 15px !important;
+}
+
+.lwm-display-no {
+    display: none !important;
+}
+
+.lwm-display-block {
+    display: block !important;
+}
+
+.mobile-login-logo {
+    margin-bottom: 35px !important;
+}
+
+.master-wrapper-content {
+    padding-top: 0px !important;
+}
+.activation-code-description {
+    margin-top: 40px !important;
+    margin-bottom: 15px !important;
+    font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+.login-mobile-holder {
+    margin-top: 70px !important;
+}
+
+#timer-decription {
+    font-weight: bold !important;
+    font-size: 16px !important;
+}
+
+@media (min-width: 501px) {
+    .html-customer-info-page .center-2, .html-address-edit-page .center-2 {
+        max-width: 100% !important;
+    }
+}

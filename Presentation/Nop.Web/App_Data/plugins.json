@@ -90,6 +90,10 @@
     {
       "SystemName": "Delsami.Misc.SMS",
       "Version": "1"
+    },
+    {
+      "SystemName": "NopShop.Misc.LoginWithMobile",
+      "Version": "1.6"
     }
   ],
   "PluginNamesToUninstall": [],

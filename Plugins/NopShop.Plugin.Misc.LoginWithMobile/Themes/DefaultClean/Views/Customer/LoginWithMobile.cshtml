@@ -1,0 +1,113 @@
+﻿@model LoginMobileModel
+@using Nop.Core
+@using Nop.Core.Domain.Customers
+@using NopShop.Plugin.Misc.LoginWithMobile.Models
+@using NopShop.Plugin.Misc.LoginWithMobile
+@using Nop.Services.Localization
+
+@inject IWebHelper webHelper
+@inject IThemeContext themeContext
+@inject IStoreContext storeContext
+@inject ILocalizationService localizationService
+@{
+    bool isCalledAsHeaderPanel = !string.IsNullOrEmpty(this.Context.Request.Query["isHeaderPanel"]);
+    Layout = isCalledAsHeaderPanel ? "" : "_ColumnsOne";
+
+    //title
+    NopHtmlHelper.AddTitleParts(T("PageTitle.Login").Text);
+    //page class
+    NopHtmlHelper.AppendPageCssClassParts("html-login-page");
+
+    NopHtmlHelper.AppendCssFileParts("~/Plugins/Misc.LoginWithMobile/Themes/DefaultClean/Content/Style.css");
+    NopHtmlHelper.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/Misc.LoginWithMobile/Themes/DefaultClean/Content/Script.js");
+
+    //register URL with return URL (if specified)
+    var registerUrl = Url.RouteUrl("Register", new { returnUrl = this.Context.Request.Query["returnUrl"] }, webHelper.GetCurrentRequestProtocol());
+}
+
+<div class="page login-page">
+    @await Html.PartialAsync("_ExternalAuthentication.Errors")
+    <div class="page-body">
+        <div class="customer-blocks">
+            @if (Model.RegistrationType == UserRegistrationType.Disabled)
+            {
+                <div class="new-wrapper">
+                    <div class="title">
+                        @T("Account.Register")
+                    </div>
+                    <div class="text">
+                        @T("Account.Register.Result.Disabled")
+                    </div>
+                </div>
+            }
+            else if (Model.CheckoutAsGuest)
+            {
+                <div class="new-wrapper checkout-as-guest-or-register-block">
+                    <div class="title">
+                        <strong>@T("Account.Login.CheckoutAsGuestOrRegister")</strong>
+                    </div>
+                    <div class="text">
+                        @await Component.InvokeAsync("TopicBlock", new { systemName = "CheckoutAsGuestOrRegister" })
+                    </div>
+                    <div class="buttons">
+                        <input type="button" class="button-1 checkout-as-guest-button" onclick="location.href='@Url.RouteUrl("Checkout")'" value="@T("Account.Login.CheckoutAsGuest")" />
+                        <input type="button" class="button-1 register-button" onclick="location.href='@registerUrl'" value="@T("Account.Register")" />
+                    </div>
+                </div>
+            }
+            <div class="returning-wrapper fieldset">
+                <div class="phonenumber-holder">
+                    <form asp-route="Login"
+                          asp-route-returnurl="@Context.Request.Query["ReturnUrl"]"
+                          asp-route-referralCode="@Context.Request.Query["referralCode"]"
+                          method="post">
+                        @{
+                            var logoPath = $"~/Themes/{await themeContext.GetWorkingThemeNameAsync()}/Content/img/logo.png";
+                            var themeLogo = await Component.InvokeAsync("Widget", new { widgetZone = "emporium_theme_logo" });
+                        }
+
+                        <div class="mobile-login-logo">
+                            <a href="@Url.RouteUrl("Homepage")" class="logo">
+                                @if (!String.IsNullOrEmpty(themeLogo.ToString()))
+                                {
+                                    @themeLogo
+                                }
+                                else
+                                {
+                                    string storeName =await localizationService.GetLocalizedAsync(await storeContext.GetCurrentStoreAsync(), x => x.Name);
+                                    <img title="" alt="@storeName" src="@Url.Content(logoPath)">
+                                }
+                            </a>
+                        </div>
+
+                        <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                        <div class="form-fields">
+                            <div class="inputs">
+                                <label asp-for="Username" asp-postfix=":">شماره موبایل</label>
+                                <input asp-for="Username" type="tel" class="username" autofocus="autofocus" dir="ltr" placeholder="09xxxxxxxxx" maxlength="11" />
+                                <span class="inputs-icons">&#x61;</span>
+                                <span asp-validation-for="Username"></span>
+                            </div>
+                            @if (Model.DisplayCaptcha)
+                            {
+                                <div class="captcha-box">
+                                    <nop-captcha />
+                                </div>
+                            }
+                        </div>
+                        <div class="buttons btn-active-code-holder">
+                            <input class="button-1 login-button" type="submit" value="دریافت کد فعال سازی" />
+                        </div>
+                        @if (Model.EnableLoginWithEmail)
+                        {
+                            <a href="/loginWithEmail"+ @this.Context.Request.Query["returnUrl"] class="login-with-email-a">ورود با پست الکترونیکی</a>
+                        }
+                        <div class="login-description-holder">
+                            @Html.Raw(Model.LoginDescription)
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
