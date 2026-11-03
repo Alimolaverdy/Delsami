@@ -98,6 +98,10 @@
     {
       "SystemName": "Delsami.Widgets.AddressLocation",
       "Version": "1"
+    },
+    {
+      "SystemName": "Delsami.Misc.OnePageCheckout",
+      "Version": "1"
     }
   ],
   "PluginNamesToUninstall": [],

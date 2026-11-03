@@ -1,0 +1,125 @@
+﻿@model CheckoutShippingAddressModel
+@{
+    int i = 0;
+}
+<div class="checkout-data">
+    @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
+    {
+        <script>
+            $(document).ready(function () {
+                $(document).unbind('checkout_toggle_pickup_in_store');
+                $(document).on('checkout_toggle_pickup_in_store', function (e) {
+                    if (e.checked)
+                        $('#shipping-addresses-form').hide();
+                    else
+                        $('#shipping-addresses-form').show();
+                });
+            });
+        </script>
+    }
+    @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
+    {
+        <div class="shipping-addresses" id="shipping-addresses-form">
+
+            <div class="shipping-address-title">
+                <h2 class="title">@T("Checkout.BillingAddress")</h2>
+
+                <div class="buttons" id="shipping-method-buttons-container">
+                    <a asp-controller="customer" asp-action="addressadd" asp-route-returnToCheckout="true" type="button" class="button-1 shipping-method-next-step-button">
+                        <img src="/icons/Delsami-icon-pack//Plus.svg" />
+                        @T("Delsami.Plugin.Misc.OnePageCheckout.AddNewAddress")
+                    </a>
+                </div>
+            </div>
+
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressTop, additionalData = Model })
+            @if (Model.ExistingAddresses.Count > 0)
+            {
+                <div class="section select-shipping-address">
+                    @if (Model.InvalidExistingAddresses.Count > 0)
+                    {
+                        <label class="min-amount-warning">
+                            @string.Format(T("Checkout.Addresses.Invalid").Text, Model.InvalidExistingAddresses.Count)
+                        </label>
+                    }
+                    <div class="address-list-container">
+
+
+                        @foreach (var address in Model.ExistingAddresses.Reverse())
+                        {
+                            var addressLine = "";
+                            if (address.StreetAddressEnabled && !string.IsNullOrEmpty(address.Address1))
+                            {
+                                addressLine += address.Address1;
+                            }
+                            if (address.CityEnabled && !string.IsNullOrEmpty(address.City))
+                            {
+                                addressLine += ", " + address.City;
+                            }
+                            if (address.CountyEnabled && !string.IsNullOrEmpty(address.County))
+                            {
+                                addressLine += ", " + address.County;
+                            }
+                            if (address.StateProvinceEnabled && !string.IsNullOrEmpty(address.StateProvinceName))
+                            {
+                                addressLine += ", " + address.StateProvinceName;
+                            }
+                            if (address.ZipPostalCodeEnabled && !string.IsNullOrEmpty(address.ZipPostalCode))
+                            {
+                                addressLine += " " + address.ZipPostalCode;
+                            }
+                            if (address.CountryEnabled && !string.IsNullOrWhiteSpace(address.CountryName))
+                            {
+                                addressLine += ", " + address.CountryName;
+                            }
+
+                            <label class="address">
+                                <div class="address-detail">
+                                    <div class="address-title">
+                                        <input name="shipping_address_id" type="radio" class="" value="@(address.Id)" checked="@(i==0)" onclick="changeAddress(this);" />
+                                        @((address.FirstName + ' ' + @address.LastName).Trim())
+                                    </div>
+                                    <div class="address-line">@(addressLine)</div>
+                                </div>
+                                <div class="buttons">
+                                    <a class="button button-cirlce-blue-image" href="/customer/addressedit/@(address.Id)">
+                                        <img src="/icons/Delsami-icon-pack/Group-1.svg" />
+                                    </a>
+                                </div>
+                            </label>
+
+                            i++;
+
+                        }
+                    </div>
+                </div>
+
+            }
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressMiddle, additionalData = Model })
+            <div class="section new-shipping-address d-none" id="shipping-new-address-form">
+                <div class="enter-address">
+                    <div asp-validation-summary="ModelOnly" class="message-error"></div>
+                    @{
+                        var dataDictAddress = new ViewDataDictionary(ViewData);
+                        dataDictAddress.TemplateInfo.HtmlFieldPrefix = "ShippingNewAddress";
+                        @await Html.PartialAsync("_CreateOrUpdateAddress", Model.ShippingNewAddress, dataDictAddress)
+                    }
+                </div>
+            </div>
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingAddressBottom, additionalData = Model })
+        </div>
+    }
+</div>
+<script>
+    $(document).ready(function () {
+        Shipping.save();
+        $("input[name='shipping_address_id']").on("click", function () {
+            Shipping.save();
+        });
+    });
+
+    function changeAddress(el) {
+        Shipping.newAddress(el.value, el.value);
+    }
+
+</script>

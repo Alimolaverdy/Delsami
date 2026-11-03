@@ -1,0 +1,511 @@
+﻿    @model OnePageCheckoutModel
+@using Nop.Core
+@using Nop.Services.Customers
+@inject IWebHelper webHelper
+@inject IWorkContext workContext
+@inject ICustomerService _customerService
+@inject ISettingService settingService
+@{
+    Layout = "_ColumnsOne";
+
+    var storeLocation = webHelper.GetStoreLocation();
+
+    //title
+    NopHtml.AddTitleParts(T("PageTitle.Checkout").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-checkout-page");
+    var bwdkEnabled = settingService.GetSettingByKey<bool>("digikalashoppingsettings.enabled");
+    var restrictedRoles = settingService.GetSettingByKey<string>("digikalashoppingsettings.SelectedRestrictRoleIds")
+                                    ?.Split("-")
+                                     ?.Select(a => int.Parse(a))
+                                     .ToList() ?? new(); ;
+
+    var customer = await workContext.GetCurrentCustomerAsync();
+    var customerRoleIds = await _customerService.GetCustomerRoleIdsAsync(customer);
+
+    var isRestricted = customerRoleIds.Any(x => restrictedRoles.Contains(x));
+}
+
+@* <link href="~/Plugins/Delsami.Misc.OnePageCheckout/Style/vpn-warning.css" rel="stylesheet" asp-append-version="true" /> *@
+<script src="~/js/public.accordion.js" asp-location="Footer"></script>
+<script src="~/Plugins/Delsami.Misc.OnePageCheckout/js/public.onepagecheckout.js" asp-location="Footer"></script>
+
+<div class="page checkout-page">
+    <div class="page-title">
+        @*<div id="vpn-warning">
+        <h5 class="alert-heading">@T("Delsami.Plugin.Misc.OnePageCheckout.VPNAlertTitle")⚠️ ‌‌VPN فعال است !⚠️</h5>
+        <h5 class="alert-heading">@T("Delsami.Plugin.Misc.OnePageCheckout.VPNAlertTitle")</h5>
+        <p>@T("Delsami.Plugin.Misc.OnePageCheckout.VPNAlertDescription")</p>
+        </div>
+
+        <script asp-location="Footer">
+        $(document).ready(function () {
+
+        var ipAddress = "";
+
+        $.ajax({
+        url: "https://api.ipify.org?format=json",
+        type: 'GET',
+        success: function (result) {
+        ipAddress = result.ip;
+
+        $.ajax({
+        url: "/Plugins/OnePageCheckout/CheckUserVpn?ipAddress=" + ipAddress,
+        type: 'GET',
+        success: function (result) {
+        if (result.isVpn) {
+        $('#vpn-warning').show();
+        }
+        },
+        error: function (xhr, status, error) {
+        console.log("Error checking VPN status:", error);
+        }
+        });
+        },
+        error: function (xhr, status, error) {
+        }
+        });
+
+
+
+        });
+        </script>
+        *@
+        <h1>@T("Checkout")</h1>
+    </div>
+    <div class="page-body checkout-data">
+        <div class="row">
+            <div class="col-12 col-md-8">
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpcContentBefore, additionalData = Model })
+                <ol class="opc" id="checkout-steps">
+                    <li id="opc-billing" class="tab-section allow">
+                        <div id="checkout-step-billing" class="step a-item">
+                            <form id="co-billing-form" action="" method="post">
+                                <div id="checkout-billing-load">
+                                    @await Html.PartialAsync("~/Plugins/Delsami.Misc.OnePageCheckout/Views/DelsamiCheckout/OpcBillingAddress.cshtml", Model.BillingAddress)
+                                    @*billing address content will be loaded here*@
+                                </div>
+                            </form>
+                            <script asp-location="Footer">
+                                ``
+                                Billing.init('#co-billing-form', '@(storeLocation)DelsamiCheckout/OpcSaveBilling/',
+                                @(Model.DisableBillingAddressCheckoutStep.ToString().ToLowerInvariant()),
+                                @((await _customerService.IsGuestAsync(await workContext.GetCurrentCustomerAsync())).ToString().ToLowerInvariant()));
+                                if ($("#billing-address-select").length > 0) {
+                                    Billing.newAddress(!$('#billing-address-select').val());
+                                }
+                            </script>
+                            <div class="buttons" id="billing-buttons-container" style="display:none">
+                                <button id="edit-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
+
+                                <button id="delete-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.deleteAddress('@(storeLocation)checkout/DeleteEditBillingAddress/'); return false;">@T("Common.Delete")</button>
+
+                                <button id="save-billing-address-button" type="button" class="button-1" style="display: none" onclick="Billing.saveEditAddress('@(storeLocation)checkout/SaveEditBillingAddress/'); return false;">@T("Common.Save")</button>
+
+                                <button type="button" name="save" class="button-1 new-address-next-step-button" onclick="Billing.save()">@T("Common.Continue")</button>
+
+                                <span class="please-wait" id="billing-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                            </div>
+                        </div>
+                    </li>
+                    @if (Model.BillingAddress.ExistingAddresses.Any())
+                    {
+                        if (Model.ShippingRequired)
+                        {
+                            <li id="opc-shipping" class="tab-section">
+                                <div id="checkout-step-shipping" class="step a-item">
+                                    @if (bwdkEnabled && !isRestricted)
+                                    {
+                                        <script src="https://digifycdn.com/front-statics/digify-bwdk-ui-kit/widget-sdk.min.js" Data-digify-widget async></script>
+
+                                        <div class="cart">
+                                            <digify-clickable-box id="widget"></digify-clickable-box>
+                                        </div>
+                                        <script>
+                                                                                       (() => {
+
+                                                const widgetElement = document.getElementById("widget");
+
+                                                // Prevent duplicate event registration
+                                                if (widgetElement && !widgetElement.dataset.orderEventBound) {
+
+                                                    widgetElement.dataset.orderEventBound = "true";
+
+                                                    widgetElement.addEventListener("click", async () => {
+
+                                                        // Prevent double submission
+                                                        if (widgetElement.dataset.submitting === "true")
+                                                            return;
+
+                                                        widgetElement.dataset.submitting = "true";
+
+                                                        try {
+                                                            const response = await fetch(
+                                                                "/DigiKalaShopping/CreateOrder"
+                                                            );
+
+                                                            if (!response.ok) {
+                                                                alert("خطا در ثبت سفارش با دیجی کالا");
+                                                                return;
+                                                            }
+
+                                                            const dataJson = await response.json();
+
+                                                            if (!dataJson.isSuccess) {
+                                                                alert(dataJson.message);
+                                                                return;
+                                                            }
+
+                                                            window.location.href = dataJson.data;
+
+                                                        } catch (error) {
+
+                                                            console.error("CreateOrder error:", error);
+                                                            alert("خطایی در ارتباط با سرور رخ داد");
+
+                                                        } finally {
+
+                                                            delete widgetElement.dataset.submitting;
+
+                                                        }
+                                                    });
+                                                }
+
+                                                // Initialize Digify Widget
+                                                const initWidget = () => {
+
+                                                    const widget = window.DigifyWidget?.default;
+
+                                                    if (!widget?.init) {
+                                                        console.error("Digify widget SDK failed to load");
+                                                        return;
+                                                    }
+
+                                                    widget.init();
+                                                };
+
+                                                if (window.DigifyWidget?.default?.init) {
+
+                                                    initWidget();
+
+                                                } else {
+
+                                                    const sdkScript = document.querySelector(
+                                                        "script[data-digify-widget]"
+                                                    );
+
+                                                    if (sdkScript) {
+                                                        sdkScript.addEventListener(
+                                                            "load",
+                                                            initWidget,
+                                                            { once: true }
+                                                        );
+                                                    }
+                                                }
+
+                                            })();
+
+                                        </script>
+                                    }
+                                    <form action="" id="co-shipping-form" method="post">
+                                        <div id="checkout-shipping-load">
+                                            @*shipping address content will be loaded here*@
+                                        </div>
+                                    </form>
+                                    <script asp-location="Footer">
+                                        Shipping.init('#co-shipping-form', '@(storeLocation)DelsamiCheckout/OpcSaveShipping/');
+                                        if ($(".select-shipping-address .address-list-container .address").length > 0) {
+                                            Shipping.newAddress($('.select-shipping-address .address-list-container .address input[name="shipping_address_id"]').val(), @Model.BillingAddress.BillingNewAddress.Id);
+                                        }
+                                    </script>
+                                    <div class="buttons" id="shipping-buttons-container" style="display:none">
+                                        @if (!Model.DisableBillingAddressCheckoutStep)
+                                        {
+                                            <p class="back-link">
+                                                <a href="#" onclick="Checkout.back(); return false; "><small>&laquo; </small>@T("Common.Back")</a>
+                                            </p>
+                                        }
+
+                                        <button id="edit-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.editAddress('@(storeLocation)checkout/GetAddressById/'); return false;">@T("Common.Edit")</button>
+
+                                        <button id="delete-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.deleteAddress('@(storeLocation)checkout/DeleteEditShippingAddress/'); return false;">@T("Common.Delete")</button>
+
+                                        <button id="save-shipping-address-button" type="button" class="button-1" style="display: none" onclick="Shipping.saveEditAddress('@(storeLocation)checkout/SaveEditShippingAddress/'); return false;">@T("Common.Save")</button>
+
+                                        <button type="button" class="button-1 new-address-next-step-button" onclick="Shipping.save()">@T("Common.Continue")</button>
+                                        <span id="shipping-please-wait" class="please-wait" style="display: none;"> @T("Common.LoadingNextStep")</span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li id="opc-shipping_method" class="tab-section">
+
+
+                                <div class="choosed-address-container">
+                                    <h2 class="title">@T("Address")</h2>
+                                    <div class="choosed-address">
+                                    </div>
+                                </div>
+
+                                <div>
+                                    <h2 class="title">@T("Checkout.ShippingMethod")</h2>
+                                </div>
+                                <div id="checkout-step-shipping-method" class="step a-item">
+                                    <form id="co-shipping-method-form" action="" method="post">
+                                        <div id="checkout-shipping-method-load">
+                                            @*shipping methods content will be loaded here*@
+                                        </div>
+                                        <script asp-location="Footer">
+                                            var localized_data = {
+                                                NotAvailableMethodsError: "@T("ShippingMethod.NotAvailableMethodsError")",
+                                                SpecifyMethodError: "@T("ShippingMethod.SpecifyMethodError")"
+                                            };
+                                            ShippingMethod.init('#co-shipping-method-form', '@(storeLocation)DelsamiCheckout/OpcSaveShippingMethod/', localized_data);
+                                        </script>
+                                        <div class="buttons" id="shipping-method-buttons-container" style="display:none">
+                                            <p class="back-link">
+                                                <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a>
+                                            </p>
+                                            <button type="button" class="button-1 shipping-method-next-step-button" onclick="ShippingMethod.save()">@T("Common.Continue")</button>
+                                            <span id="shipping-method-please-wait" class="please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                                        </div>
+                                    </form>
+                                </div>
+                            </li>
+                        }
+                        <li id="opc-payment_method" class="tab-section">
+                            <div>
+                                <h2 class="title">@T("Checkout.PaymentMethod")</h2>
+                            </div>
+                            <div id="checkout-step-payment-method" class="step a-item">
+                                <form action="" id="co-payment-method-form" method="post">
+                                    <div id="checkout-payment-method-load">
+                                        @*payment methods content will be loaded here*@ Payment is not required
+                                    </div>
+                                </form>
+                                <script asp-location="Footer">
+                                    var localized_data = {
+                                        NotAvailableMethodsError: "@T("PaymentMethod.NotAvailableMethodsError")",
+                                        SpecifyMethodError: "@T("PaymentMethod.SpecifyMethodError")"
+                                    };
+                                    PaymentMethod.init('#co-payment-method-form', '@(storeLocation)DelsamiCheckout/OpcSavePaymentMethod/', localized_data);
+                                </script>
+                                <div class="buttons" id="payment-method-buttons-container" style="display:none">
+                                    <p class="back-link">
+                                        <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a>
+                                    </p>
+                                    <button type="button" name="save" class="button-1 payment-method-next-step-button" onclick="PaymentMethod.save()">@T("Common.Continue")</button>
+                                    <span class="please-wait" id="payment-method-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li id="opc-payment_info" class="tab-section" style="display:none">
+                            <div>
+                                <h2 class="title">@T("Checkout.PaymentInfo")</h2>
+                            </div>
+                            <div id="checkout-step-payment-info" class="step a-item">
+                                <form action="" id="co-payment-info-form" method="post">
+                                    <div id="checkout-payment-info-load">
+                                        @*payment info content will be loaded here*@ Payment is not required
+                                    </div>
+                                </form>
+                                <script asp-location="Footer">
+                                    PaymentInfo.init('#co-payment-info-form', '@(storeLocation)DelsamiCheckout/OpcSavePaymentInfo/');
+                                </script>
+                                <div class="buttons" id="payment-info-buttons-container">
+                                    <p class="back-link">
+                                        <a href="#" onclick="Checkout.back(); return false;"><small>&laquo; </small>@T("Common.Back")</a>
+                                    </p>
+                                    <button type="button" class="button-1 payment-info-next-step-button" onclick="PaymentInfo.save()">@T("Common.Continue")</button>
+                                    <span class="please-wait" id="payment-info-please-wait" style="display: none;">@T("Common.LoadingNextStep")</span>
+                                </div>
+                            </div>
+                        </li>
+                        <li id="opc-confirm_order" class="tab-section d-none">
+                            <div>
+                                <h2 class="title">@T("Checkout.ConfirmOrder")</h2>
+                            </div>
+                            <div id="checkout-step-confirm-order" class="step a-item">
+                                <div id="checkout-confirm-order-load">
+                                    @*confirm order content will be loaded here*@
+                                </div>
+                                <script asp-location="Footer">
+                                    ConfirmOrder.init('@(storeLocation)DelsamiCheckout/OpcConfirmOrder/', '@Url.RouteUrl("CheckoutCompleted")', @Model.DisplayCaptcha.ToString().ToLowerInvariant(), @Model.IsReCaptchaV3.ToString().ToLowerInvariant(), '@Model.ReCaptchaPublicKey');
+                                </script>
+
+                            </div>
+                        </li>
+                    }
+                </ol>
+                @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpcContentAfter, additionalData = Model })
+                <div id="global-loader">
+                    <div class="loader-spinner"></div>
+                </div>
+            </div>
+            <div class="col-12 col-md-4">
+                <div class="order-info-confirm">
+                    @await Component.InvokeAsync(typeof(OrderTotalsViewComponent), new { isEditable = false })
+
+                    <div class="buttons d-none d-xl-block" id="confirm-order-buttons-container">
+                        <p class="back-link d-none">
+                            <a href="@Url.RouteUrl("ShoppingCart")"><small>&laquo; </small>@T("Common.Back")</a>
+                        </p>
+                        <button type="button" class="button-1 next-step-button continue-to-shpping-methods">@T("Checkout.ContinueToShppingMethods")</button>
+                        <button type="button" class="button-1 next-step-button continue-to-payment-methods">@T("Checkout.ContinueToPaymentMethods")</button>
+                        <button type="button" class="button-1 confirm-order-next-step-button">@T("Checkout.ConfirmButton")</button>
+                        <span class="please-wait" id="confirm-order-please-wait" style="display: none;">@T("Checkout.SubmittingOrder")</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script asp-location="Footer">
+            $(".search-box").css('visibility','hidden');
+            $(".search-box").css('height','0px');
+            $(".search-box").css('margin','0');
+
+            Accordion.init('checkout-steps', '.step-title', true);
+            Accordion.openSection('#opc-billing');
+            Checkout.init('@(storeLocation)cart/');
+            if (Billing.disableBillingAddressCheckoutStep) {
+                Accordion.hideSection('#opc-billing');
+                Billing.save();
+            }
+
+            $(document).ready(function () {
+                $(".confirm-order-next-step-button").on("click", function () {
+
+                    // $.ajax({
+                    //     url: "https://api.ipify.org?format=json",
+                    //     type: 'GET',
+                    //     timeout: 1000, // 1 ثانیه
+                    //     success: function (result) {
+                    //         ipAddress = result.ip;
+
+                    // var selectedRadioButton = $("input[name='deliveryDateTimesRadioGroup']:checked");
+                    // if (!selectedRadioButton.val()) {
+                    //     alert('@T("Resanehlab.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.MustBeSelectedAtLeastOne")');
+                    //     return false;
+                    // }
+                    // else {
+                    //     var shippingMethodCapacityId = selectedRadioButton.parent().attr("data-shippingmethod-capacity-id");
+                    //     var deliveryDateOnUtc = selectedRadioButton.parent().attr("data-deliverydate-on-utc");
+                    //     var deliveryTime = selectedRadioButton.parent().attr("data-delivery-time");
+                    //     var availableDeliveryTimeRangeId = selectedRadioButton.parent().attr("data-available-delivery-time-range-id");
+                    //     var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+                    //     var elem = this;
+
+                    //     $.ajax({
+                    //         url: '@Url.Action("CheckAvailabilityForSelectedDateTime", "DeliveryScheduling")',
+                    //         data: { shippingMethodCapacityId: shippingMethodCapacityId, deliveryDateOnUtc: deliveryDateOnUtc, availableDeliveryTimeRangeId: availableDeliveryTimeRangeId, deliveryTime: deliveryTime, selectedShippingOption: selectedShippingOption },
+                    //         type: 'post',
+                    //         success: function (data) {
+                    //             if (data.Success) {
+                    //                 // $(elem).data('onclick').call(elem, event || window.event);
+                    //                 ConfirmOrder.save();
+                    //             }
+                    //             else {
+                    //                 alert('@T("Resanehlab.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.NoLongerAvailable")');
+                    //                 return false;
+                    //             }
+                    //         },
+                    //         complete: {},
+                    //         error: function (data) {
+                    //             alert('Error happend!');
+                    //             return false;
+                    //         },
+                    //     });
+                    // }
+
+                    ConfirmOrder.save();
+
+                    // $.ajax({
+                    //     url: "https://api.ipify.org?format=json",
+                    //     type: 'GET',
+                    //     timeout: 1000, // 1 ثانیه
+                    //     success: function (result) {
+                    //         ipAddress = result.ip;
+
+
+                    //         $.ajax({
+                    //             url: "/Plugins/OnePageCheckout/CheckUserVpn?ipAddress=" + ipAddress,
+                    //             type: 'GET',
+                    //             success: function (result) {
+                    //                 if (result.isVpn) {
+                    //                     alert("@T("Delsami.Plugin.Misc.OnePageCheckout.VPNAlertDescription")");
+                    //                     var price = $(".order-total .cart-total-right").text();
+                    //                     $(".order-total-value-mobile").text(price)
+                    //                     $(".fake-checkout-button").show();
+
+                    //                 }
+                    //                 else {
+                    //                     ConfirmOrder.save();
+                    //                 }
+                    //             },
+                    //             error: function (xhr, status, error) {
+                    //                 console.log("Error checking VPN status:", error);
+                    //             }
+                    //         });
+                    //     },
+                    //     error: function (xhr, status, error) {
+                    //         ConfirmOrder.save();
+                    //     }
+                    // });
+
+                });
+
+                let ajaxTimeout = null;
+                let activeAjaxRequests = 0;
+
+                $(document).on({
+                    ajaxStart: function (event, xhr, settings) {
+                        const url = settings?.url?.toLowerCase() || "";
+
+                        // مسیرهایی که نمی‌خوای لودر نمایش بده
+                        if (url.includes("/catalog/searchtermautocomplete")) {
+                            return;
+                        }
+
+                        activeAjaxRequests++;
+                        clearTimeout(ajaxTimeout);
+
+                        // نمایش لودر
+                        $("#global-loader").css("display", "flex");
+
+                        // 🔒 قفل کردن اسکرول
+                        $("body").css({
+                            "overflow": "hidden",
+                            "height": "100vh"
+                        });
+                    },
+
+                    ajaxStop: function (event, xhr, settings) {
+                        const url = settings?.url?.toLowerCase() || "";
+                        if (url.includes("/catalog/searchtermautocomplete")) {
+                            return;
+                        }
+
+                        activeAjaxRequests--;
+
+                        if (activeAjaxRequests <= 0) {
+                            ajaxTimeout = setTimeout(function () {
+                                if (activeAjaxRequests <= 0) {
+                                    // پنهان کردن لودر
+                                    $("#global-loader").hide();
+
+                                    // 🔓 فعال کردن دوباره اسکرول
+                                    $("body").css({
+                                        "overflow": "",
+                                        "height": ""
+                                    });
+                                }
+                            }, 800); // تأخیر ۱ ثانیه برای جلوگیری از پرش لودر
+                        }
+                    }
+                });
+            });
+
+
+        </script>
+    </div>
+</div>
+

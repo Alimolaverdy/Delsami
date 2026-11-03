@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "one page checkout",
+  "SystemName": "Delsami.Misc.OnePageCheckout",
+  "Version": "1",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "AliMolaverdi",
+  "DisplayOrder": 3,
+  "FileName": "Delsami.Plugin.Misc.OnePageCheckout.dll",
+  "Description": "one page checkout"
+}

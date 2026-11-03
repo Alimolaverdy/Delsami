@@ -1,0 +1,107 @@
+﻿@model CheckoutShippingMethodModel
+@inject IShippingService shippingService
+@{
+    var shippingMethods = await shippingService.GetAllShippingMethodsAsync();
+}
+
+<div class="checkout-data">
+    @if (Model.DisplayPickupInStore && Model.PickupPointsModel.AllowPickupInStore)
+    {
+        @await Html.PartialAsync("_PickupPoints", Model.PickupPointsModel)
+        <script>
+            $(document).ready(function () {
+                $(document).unbind('checkout_toggle_pickup_in_store');
+                $(document).on('checkout_toggle_pickup_in_store', function (e) {
+                    if (e.checked)
+                        $('#shipping-methods-form').hide();
+                    else
+                        $('#shipping-methods-form').show();
+                });
+            });
+        </script>
+    }
+    @if (Model.PickupPointsModel == null || !Model.PickupPointsModel.PickupInStoreOnly)
+    {
+        <div class="section shipping-method" id="shipping-methods-form">
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodTop, additionalData = Model })
+            @if (Model.Warnings.Count == 0)
+            {
+                <ul class="method-list">
+                    @for (var i = 0; i < Model.ShippingMethods.Count; i++)
+                    {
+                        var shippingMethod = Model.ShippingMethods[i];
+                        var shippingMethodById = shippingMethods.FirstOrDefault(f => f.Name == shippingMethod.Name);
+
+                        <li>
+                            <div class="method-container">
+                                <label for="shippingoption_@(i)">
+
+                                    <input id="shippingoption_@(i)" type="radio" class="d-none shipping-method-@(shippingMethodById.Id)" name="shippingoption" value="@(shippingMethod.Name)___@(shippingMethod.ShippingRateComputationMethodSystemName)" checked="@shippingMethod.Selected" />
+                                        <div class="method-name">
+                                            @shippingMethod.Name
+                                        </div>
+                                        @if(shippingMethod.Rate == 0) {
+                                            <div class="method-fee">
+                                                @T("shipping.shippingfee.sorent")
+                                            </div>
+                                        } else{
+                                            <div class="method-fee">
+                                                @shippingMethod.Fee
+                                            </div>
+                                        }
+                                </label>
+                            </div>
+                        </li>
+                    }
+                </ul>
+                <div class="method-descriptions">
+                    @for (var i = 0; i < Model.ShippingMethods.Count; i++)
+                    {
+                        var shippingMethod = Model.ShippingMethods[i];
+
+                        @if (!string.IsNullOrEmpty(shippingMethod.Description))
+                        {
+                            <div class="method-description d-none" data-method-id="@(shippingMethod.Name)___@(shippingMethod.ShippingOption.ShippingRateComputationMethodSystemName)">
+                                @Html.Raw(shippingMethod.Description)
+                            </div>
+                        }
+                    }
+                </div>
+                if (Model.NotifyCustomerAboutShippingFromMultipleLocations)
+                {
+                    <div class="multiple-locations">
+                        @T("Checkout.ShippingMethod.ShippingFromMultipleLocations")
+                    </div>
+                }
+            }
+            else
+            {
+                <div class="message-error">
+                    <ul>
+                        @foreach (var warning in Model.Warnings)
+                        {
+                            <li>@warning</li>
+                        }
+                    </ul>
+                </div>
+            }
+            @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutShippingMethodBottom, additionalData = Model })
+        </div>
+    }
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        ShippingMethod.save();
+
+        $('.method-descriptions .method-description[data-method-id="' + $("input[name='shippingoption']:checked").val() + '"]').removeClass('d-none');
+
+        $("input[name='shippingoption']").on("change", function () {
+            ShippingMethod.save();
+
+            $('.method-descriptions .method-description').addClass('d-none');
+            $('.method-descriptions .method-description[data-method-id="' + $(this).val() + '"]').removeClass('d-none');
+        });
+    });
+</script>

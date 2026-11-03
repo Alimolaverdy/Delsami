@@ -1,0 +1,117 @@
+﻿@model CheckoutPaymentMethodModel
+
+<div class="checkout-data">
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodTop, additionalData = Model })
+    <div class="section payment-method">
+        @if (Model.DisplayRewardPoints && Model.PaymentMethods.Count > 0)
+        {
+            <div class="use-reward-points">
+                    <div class="rewardpoints-title">
+                        @T("account.rewardpoints")
+                    </div>
+                    <div class="rewardpoints-points">
+                        @Model.RewardPointsToUseAmount
+                    </div>
+                    <div class="Delsami-toggle">
+                        <label class="toggle" asp-for="UseRewardPoints">
+                            @if (Model.RewardPointsEnoughToPayForOrder)
+                            {
+                                <input id="UseRewardPoints" asp-for="UseRewardPoints" type="checkbox" aria-checked="false" onclick="PaymentMethod.toggleUseRewardPoints(this)" />
+                            } else {
+                                <input id="UseRewardPoints" asp-for="UseRewardPoints" type="checkbox" aria-checked="false" />
+                            }
+                            <span class="track">
+                                <span class="knob" aria-hidden="true"></span>
+                            </span>
+                        </label>
+                    </div>
+                    @*Model.RewardPointsBalance, Model.RewardPointsToUseAmount*@
+                
+                
+                
+                @*
+                    @if (Model.RewardPointsEnoughToPayForOrder)
+                    {
+                    <script>
+                    $(document).ready(function () {
+                    setTimeout(
+                    function () {
+                    $("#UseRewardPoints").trigger("click");
+                    }, 3000);
+
+                    PaymentMethod.toggleUseRewardPoints($('#@Html.IdFor(model => model.UseRewardPoints)'));
+                    });
+                    </script>
+                    }
+                *@
+            </div>
+            <script>
+                $(document).ready(function () {
+                    setTimeout(
+                        function () {
+                            $("#UseRewardPoints").trigger("click");
+                        }, 700);
+                });
+            </script>
+        }
+        @if (Model.PaymentMethods.Count > 0)
+        {
+            <ul class="method-list" id="payment-method-block">
+                @for (var i = 0; i < Model.PaymentMethods.Count; i++)
+                {
+                    var paymentMethod = Model.PaymentMethods.ToArray()[i];
+
+                    if (i == 0)
+                        paymentMethod.Selected = true;
+                    else
+                        paymentMethod.Selected = false;
+
+                    var paymentMethodName = paymentMethod.Name;
+                    if (!string.IsNullOrEmpty(paymentMethod.Fee))
+                    {
+                        paymentMethodName = T("Checkout.SelectPaymentMethod.MethodAndFee", paymentMethodName, paymentMethod.Fee).Text;
+                    }
+                    <li>
+                        <label class="method-name">
+                            <div>
+                                <input id="paymentmethod_@(i)" type="radio" name="paymentmethod" value="@(paymentMethod.PaymentMethodSystemName)" checked="@paymentMethod.Selected" />
+                            </div>
+                            @if (!string.IsNullOrEmpty(paymentMethod.LogoUrl))
+                            {
+                                <div class="payment-logo">
+                                    <label for="paymentmethod_@(i)">
+                                        <img src="@paymentMethod.LogoUrl" alt="@paymentMethodName" />
+                                    </label>
+                                </div>
+                            }
+                            <div class="payment-details">
+                                <div class="payment-name">
+                                    @paymentMethodName
+                                </div>
+                                <div class="payment-description">
+                                    @paymentMethod.Description
+                                </div>
+                            </div>
+                        </label>
+                    </li>
+                }
+            </ul>
+        }
+        else
+        {
+            <div class="message-error">
+                @T("Checkout.NoPaymentMethods")
+            </div>
+        }
+    </div>
+    @await Component.InvokeAsync(typeof(WidgetViewComponent), new { widgetZone = PublicWidgetZones.OpCheckoutPaymentMethodBottom, additionalData = Model })
+</div>
+<script>
+    $(document).ready(function () {
+        PaymentMethod.save();
+
+        $("input[name='paymentmethod'], #UseRewardPoints ").on("change", function () {
+            PaymentMethod.save();
+        });
+    });
+</script>

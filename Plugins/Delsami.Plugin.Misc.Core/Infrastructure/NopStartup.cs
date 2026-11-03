@@ -34,6 +34,7 @@ namespace Delsami.Plugin.Misc.Core.Infrastructure
             services.AddScoped<IReservedStockQuantityHistoryService, ReservedStockQuantityHistoryService>();
             services.AddScoped<IDelsamiCustomerService, DelsamiCustomerService>();
             services.AddScoped<IEnumHelper, EnumHelper>();
+            services.AddScoped<ICustomerProfileValidationService, CustomerProfileValidationService>();
 
         }
     }
