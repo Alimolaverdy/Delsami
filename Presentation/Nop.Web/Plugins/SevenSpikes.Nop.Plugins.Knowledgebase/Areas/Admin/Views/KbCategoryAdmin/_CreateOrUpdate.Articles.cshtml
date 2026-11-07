@@ -1,0 +1,120 @@
+@model CategoryAdminModel
+
+@if (Model.Id > 0)
+{
+    <div id="articles-grid"></div>
+
+    <script type="text/javascript" asp-location="Footer">
+        $(document).ready(function () {
+            $("#articles-grid").kendoGrid({
+                dataSource: {
+                    type: "json",
+                    transport: {
+                        read: {
+                            url: "@Html.Raw(Url.Action("ListArticlesForCategory", "ArticleToCategoryAdmin", new {categoryId = Model.Id}))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        update: {
+                            url: "@Html.Raw(Url.Action("Edit", "ArticleToCategoryAdmin"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        },
+                        destroy: {
+                            url: "@Html.Raw(Url.Action("Delete", "ArticleToCategoryAdmin"))",
+                            type: "POST",
+                            dataType: "json",
+                            data: addAntiForgeryToken
+                        }
+                    },
+                    schema: {
+                        data: "Data",
+                        total: "Total",
+                        errors: "Errors",
+                        model: {
+                            id: "Id",
+                            fields: {
+                                Title: { editable: false, type: "string" },
+                                DisplayOrder: { editable: true, type: "number" },
+                                Id: { editable: false, type: "number" }
+                            }
+                        }
+                    },
+                    requestEnd: function (e) {
+                        if (e.type == "create" || e.type == "update") {
+                            this.read();
+                        }
+                    },
+                    error: function (e) {
+                        display_kendoui_grid_error(e);
+                        // Cancel the changes
+                        this.cancelChanges();
+                    },
+                    serverPaging: true,
+                    serverFiltering: true,
+                    serverSorting: true
+                },
+                pageable: {
+                    refresh: true,
+                    numeric: false,
+                    previousNext: false,
+                    info: false
+                },
+                editable: {
+                    confirmation: false,
+                    mode: "inline"
+                },
+                scrollable: false,
+                columns: [{
+                    field: "Title",
+                    title: "@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Title")",
+                    width: 200,
+                }, {
+                    field: "DisplayOrder",
+                    title: "@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.DisplayOrder")",
+                    width: 200,
+                    //integer format
+                    format: "{0:0}"
+                }, {
+                    command: [{
+                        name: "edit",
+                        text: "@T("Admin.Common.Edit")"
+                    }, {
+                        name: "destroy",
+                        text: "@T("Admin.Common.Delete")"
+                    }],
+                    width: 200
+                }]
+            });
+        });
+    </script>
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <input type="submit" id="btnAddNewArticle" name="btnAddNewArticle" value="@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Category.AddNew")" onclick="javascript: OpenWindow('@Url.Action("AvailableArticlesForCategory", "ArticleToCategoryAdmin", new {categoryId = Model.Id, btnId = "btnRefreshArticle"})', 800, 800, true); return false;" class="k-button" />
+                <input type="submit" id="btnRefreshArticle" name="btnRefreshArticle" style="display: none" />
+                <script type="text/javascript">
+                    $(document)
+                        .ready(function () {
+                            $('#btnRefreshArticle')
+                                .click(function () {
+                                    //refresh grid
+                                    var optionsGrid = $("#articles-grid").data('kendoGrid');
+                                    optionsGrid.dataSource.read();
+
+                                    //return false to don't reload a page
+                                    return false;
+                                });
+                        });
+                </script>
+            </div>
+
+        </div>
+    </div>
+}
+else
+{
+    @T("SevenSpikes.Knowledgebase.Admin.Entities.Category.SaveBeforeEdit")
+}

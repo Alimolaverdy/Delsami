@@ -1,0 +1,21 @@
+﻿@model decimal
+
+@{
+    var inputFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
+}
+
+<input id="@inputFieldName" name="@inputFieldName" />
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $("#@inputFieldName").kendoNumericTextBox(
+            {
+                format: "#.00",
+                value: "@(Model)",
+                step: 0.01,
+                min: 0.00,
+                max: 0.99
+            }
+        );
+    });
+</script>

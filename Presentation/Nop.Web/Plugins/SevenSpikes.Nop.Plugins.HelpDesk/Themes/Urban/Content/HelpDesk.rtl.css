@@ -1,0 +1,360 @@
+﻿* {
+	direction: rtl;
+}
+.ticketing-page .k-button {
+	border-radius: !important 0;
+}
+.tickets-table-panel.k-grid .k-hierarchy-cell .k-i-collapse {
+    -webkit-transform: rotate(90deg);
+    transform: rotate(90deg);
+}
+.view-ticket-page .ticket-buttons .show-reply-button {
+    border: 1px solid #d7d7d7 !important;
+}
+.view-ticket-page .ticket-buttons .show-reply-button:hover,
+.view-ticket-page .ticket-buttons .tb-right .k-button:hover {
+    border: 1px solid #333 !important;
+}
+.overview .submit-ticket::before {
+    display: none;
+}
+.overview .submit-ticket::after {
+    border-left: 1px solid #8a8a8a;
+    border-right: 1px solid #494949;
+    content: "";
+    display: inline-block;
+    height: 40px;
+    right: 0;
+    margin: -20px 0 0;
+    position: absolute;
+    top: 50%;
+    width: 2px;
+}
+
+@media all and (max-width: 768px) {
+}
+.ticketing-page .k-widget.k-multiselect .k-multiselect-wrap {
+	border-radius: !important 0;
+}
+ul#TicketModelTicketProductIds_taglist .k-button,
+    .product-tag-list .k-button,
+    #TicketProducts_taglist .k-button {
+	border-radius: !important 0;
+}
+.ticketing-page input[type=checkbox] + label,
+.ticketing-page input[type=radio] + label {
+	padding: 6px 22px 6px 6px;
+}
+.ticketing-page .k-multiselect .k-loading {
+	left: auto;
+	right: auto;
+	margin-right: -25px;
+	margin-left: 0;
+}
+.ticketing-page .k-editor-toolbar li {
+	float: right;
+}
+.ticketing-page span.k-editor-dropdown.k-group-start.k-group-end {
+	margin: 5px 10px 5px 20px;
+}
+.ticketing-page span.k-dropdown-wrap.k-state-default {
+	text-align: right;
+}
+.ticketing-page span.k-dropdown-wrap.k-state-default .k-icon:before {
+	right: 0;
+	left: auto;
+}
+.k-widget.k-tooltip {
+	border-radius: !important 0;
+}
+.k-widget.k-tooltip dl {
+	text-align: right;
+}
+.k-widget.k-tooltip dt,
+    .k-widget.k-tooltip dd {
+	float: right;
+}
+.k-widget.k-tooltip dt {
+	margin: 0 0 10px 5px;
+}
+.tickets-table-panel .ticketDueIn:after {
+	left: 0;
+	right: 0;
+}
+.tickets-table-panel a.view-ticket.k-button {
+	padding-right: 22px;
+	padding-left: 0;
+}
+.tickets-table-panel a.view-ticket.k-button:before {
+	right: 0;
+	left: auto;
+}
+.tickets-table-panel .ticket-info-panel .k-tabstrip-items {
+	text-align: right;
+}
+.tickets-table-panel .ticket-info-panel .tab-box {
+	text-align: right;
+}
+.tickets-table-panel .ticket-info-panel .tab-box:before {
+	right: -20px;
+	left: auto;
+}
+.tickets-table-panel .ticket-info-panel .row-label {
+	margin-left: 10px;
+	margin-right: 0;
+}
+.tickets-table-panel .k-pager-wrap .k-icon.k-i-reload {
+	padding-right: 27px;
+	padding-left: 0;
+}
+.tickets-table-panel .k-pager-wrap .k-icon.k-i-reload:before {
+	right: 0;
+	left: auto;
+}
+.new-ticket-page .support-info {
+	padding: 20px 50px 20px 20px;
+	text-align: right;
+}
+.new-ticket-page .support-info:before {
+	right: 15px;
+	left: auto;
+}
+.products-multiselect {
+	margin: -1px !important 0 0;
+}
+.products-multiselect .k-popup.k-list-container {
+	border-radius: !important 0;
+}
+.products-multiselect .k-popup .k-list .k-item {
+	border-radius: !important 0;
+}
+.products-multiselect .k-item .item-wrapper > div:first-child {
+	margin-left: 20px !important;
+	margin-right: 0;
+}
+.products-multiselect h3 {
+	margin: 0 !important 5px 0;
+}
+.k-widget.k-window .k-window-titlebar .k-window-actions {
+	left: 8px;
+	right: auto;
+}
+.k-upload-files {
+	text-align: right;
+}
+.view-ticket-page .ticket-information,
+.view-ticket-notes-page .ticket-information {
+	text-align: right;
+}
+.view-ticket-page .ticket-title:before {
+	right: 0;
+	left: auto;
+}
+.view-ticket-page .ticket-buttons .k-button {
+	border-right: 0;
+}
+.view-ticket-page .ticket-buttons .k-button:last-child {
+    border-right-color: transparent;
+}
+
+.view-ticket-page .detail-label {
+	padding-left: 10px;
+	padding-right: 0;
+	text-align: left;
+}
+.view-ticket-page .detail-value {
+	padding-right: 10px;
+	padding-left: 0;
+	text-align: right;
+}
+.view-ticket-page .edit-comment {
+	margin-right: 10px;
+	margin-left: 0;
+}
+.ticketing-page .attachmentLink {
+	padding: 3px 20px 3px 0;
+}
+.ticketing-page .attachmentLink:before {
+	right: 0;
+	left: auto;
+}
+.my-tickets-page .filter-item,
+.manage-tickets-page .filter-item {
+	text-align: right;
+}
+.my-tickets-page .filter-label,
+.manage-tickets-page .filter-label {
+	text-align: right;
+}
+.my-tickets-page .k-numeric-wrap,
+.manage-tickets-page .k-numeric-wrap {
+	border-radius: !important 0;
+}
+.my-tickets-page input.filter-input,
+.manage-tickets-page input.filter-input {
+	border-radius: !important 0;
+}
+
+#status-list-list,
+#departments-list-list,
+#subject-field-list,
+#product-field-list,
+#TicketDepartmentId-list,
+#TicketOwnerId-list,
+#staff-list-list,
+#customer-property-field-list,
+.grid-totalPages-list,
+.grid-owners-list {
+	border-radius: !important 0;
+}
+#status-list-list .k-list .k-item,
+#departments-list-list .k-list .k-item,
+#subject-field-list .k-list .k-item,
+#product-field-list .k-list .k-item,
+#TicketDepartmentId-list .k-list .k-item,
+#TicketOwnerId-list .k-list .k-item,
+#staff-list-list .k-list .k-item,
+#customer-property-field-list .k-list .k-item,
+.grid-totalPages-list .k-list .k-item,
+.grid-owners-list .k-list .k-item {
+	border-radius: !important 0;
+}
+.my-tickets-page span.subject-field,
+.manage-tickets-page span.subject-field {
+	border-radius: !important 0;
+}
+.my-tickets-page input.subject-field,
+.manage-tickets-page input.subject-field {
+	border-radius: !important 0;
+}
+.manage-tickets-page .tickets-table-panel a.k-button.k-grid-edit:before {
+	right: 0;
+	left: auto;
+}
+
+.k-picker-wrap .k-select, .k-numeric-wrap .k-select, .k-dropdown-wrap .k-select {
+    right: auto;
+    left: 0;
+}
+
+.k-textbox, .k-autocomplete, .k-dropdown-wrap, .k-picker-wrap, .k-numeric-wrap {
+    padding: 0 0 0 1.9em;
+}
+.k-textbox, .k-autocomplete {
+    padding: 0;
+}
+
+@media all and (min-width: 769px) {
+	.k-upload-files {
+		margin: -20px 30px 0 0;
+	}
+	.view-ticket-notes-page .ticket-buttons {
+		text-align: left;
+	}
+	.view-ticket-page .details-list {
+		float: right;
+	}
+	.view-ticket-page .ticket-comment,
+    .view-ticket-notes-page .ticket-comment {
+		text-align: right;
+	}
+	.view-ticket-page .comment-header .left,
+    .view-ticket-notes-page .comment-header .left {
+		float: right;
+	}
+	.view-ticket-page .comment-header .right,
+    .view-ticket-notes-page .comment-header .right {
+		float: left;
+	}
+	.view-ticket-page .k-upload-files {
+		margin: 0 25px 0 0;
+	}
+	.my-tickets-page .filter-item {
+		float: right;
+		text-align: right;
+	}
+	.manage-tickets-page .main-filter-list .filter-item {
+		float: right;
+		text-align: right;
+	}
+	.manage-tickets-page .main-filter-list .filter-item:last-child {
+		margin-right: 2%;
+		margin-left: 0;
+	}
+	.manage-tickets-page .attribute-filter-list .filter-item {
+		float: right;
+		text-align: right;
+	}
+}
+@media all and (max-width: 540px) {
+
+    .products-multiselect {
+        right: 10% !important;
+        left: auto;
+    }
+}
+
+@media all and (min-width: 541px) {
+
+    #TicketModelTicketProductIds-list .k-item .item-wrapper > div:first-child {
+        float: right !important;
+    }
+
+    #TicketModelTicketProductIds-list .k-item .item-wrapper > div:last-child {
+        margin-right: 140px !important;
+        margin-left: 0;
+        width: auto !important;
+    }
+}
+
+@media all and (min-width: 541px) and (max-width: 980px) {
+
+    .products-multiselect {
+        right: 50% !important;
+        left: auto;
+        margin-right: -220px !important;
+        margin-left: 0;
+    }
+}
+
+@media all and (min-width: 881px) {
+
+    .view-ticket-page .tb-left {
+        float: right;
+    }
+
+    .view-ticket-page .tb-right {
+        float: left;
+    }
+}
+
+@media all and (min-width: 1025px) {
+	.ticketing-page .field-validation-error {
+		margin-right: 210px;
+		margin-left: 0;
+	}
+}
+.ui-datepicker-prev {
+	right: 0;
+	left: auto;
+	background: url('images/arrow-pager-left.png') center no-repeat;
+}
+.ui-datepicker-next {
+	left: 0;
+	right: auto;
+	background: url('images/arrow-pager-right.png') center no-repeat;
+}
+.ui-datepicker th:first-child {
+	border-right: 1px solid #c2c2c2;
+	border-left: 0;
+}
+.ui-datepicker th:last-child {
+	border-left: 1px solid #c2c2c2;
+	border-right: 0;
+}
+.ui-datepicker-header a.ui-datepicker-next {
+	background: url(images/arrow-pager-right.png) no-repeat center;
+}
+.ui-datepicker-header a.ui-datepicker-prev {
+	background: url(images/arrow-pager-left.png) no-repeat center;
+}

@@ -1,0 +1,291 @@
+.overview .submit-ticket-button {
+    padding: 15px 50px 15px 35px;
+}
+
+ul#TicketModelTicketProductIds_taglist li.k-button,
+#TicketProducts_taglist li.k-button,
+ul#product-field_taglist li.k-button,
+#customer-field_taglist li.k-button {
+    margin: 0 0 5px 5px;
+    padding: 0 0 0 20px;
+    text-align: right;
+}
+
+ul#TicketModelTicketProductIds_taglist span.k-icon.k-delete,
+#TicketProducts_taglist span.k-icon.k-delete,
+ul#product-field_taglist span.k-icon.k-delete,
+#customer-field_taglist span.k-icon.k-delete {
+    left: 2px;
+    right: auto !important;
+}
+
+.k-autocomplete .k-loading, .k-multiselect .k-loading {
+    left: 15px;
+    right: auto !important;
+}
+
+.k-widget.k-tooltip {
+    text-align: right;
+}
+
+.k-webkit .k-editor-toolbar,
+.k-ff .k-editor-toolbar,
+.k-ie9 .k-editor-toolbar {
+    text-align: right;
+}
+
+span.k-dropdown-wrap.k-state-default .k-input {
+    padding: 10px 10px 10px 20px;
+    text-align: right;
+}
+
+span.k-dropdown-wrap.k-state-default .k-input:after {
+    left: 0;
+    right: auto !important;
+}
+
+.inputs.upload .k-icon {
+    float: right;
+}
+
+.inputs.upload .k-file-name,
+.inputs.upload .k-file-size {
+    float: right;
+    text-align: right;
+}
+
+.k-window-titlebar .k-window-actions {
+    left: 10px;
+    right: auto !important;
+}
+
+.k-window-titlebar .k-window-action .k-icon:before {
+    right: auto !important;
+    left: 0;
+}
+
+.k-window.confirmation-wrapper .k-window-titlebar {
+    padding: 12px 12px 12px 36px;
+}
+
+.k-window.confirmation-wrapper .k-window-titlebar .k-window-actions {
+    left: 14px;
+    right: auto !important;
+}
+
+.k-edit-field input[type='checkbox'] {
+    right: 0;
+    left: auto !important;
+}
+
+.k-edit-field input[type='checkbox'] ~ label {
+    padding: 9px 25px 9px 9px;
+    text-align: right;
+}
+
+.k-edit-field input[type='checkbox'] ~ label:before {
+    right: 0;
+    left: auto !important;
+}
+
+.k-edit-field input[type='checkbox']:checked ~ label:after {
+    right: 3px;
+    left: auto !important;
+}
+
+.ticket-buttons .k-button {
+    padding: 7px 20px 7px 7px;
+}
+
+button.ticket-info-button.k-button:before {
+    right: -5px;
+    left: auto !important;
+}
+
+.ticket-buttons .tb-right .k-button:before {
+    right: 0;
+    left: auto !important;
+}
+
+.ticket-buttons .tb-right .k-button.mark-resolved-button:before {
+    right: 5px;
+    left: auto !important;
+}
+
+#ticket-details {
+    text-align: right;
+}
+
+#ticket-details .detail-label {
+    margin-left: 5px;
+    margin-right: auto !important;
+}
+
+.ticket-comments .ticket-comment {
+    text-align: right;
+}
+
+.ticket-comments .comment-header .left {
+    float: right;
+}
+
+.ticket-comments .comment-header .right {
+    float: left;
+}
+
+.ticket-comments .comment-header .edit-comment {
+    padding-right: 24px;
+    padding-left: auto !important;
+    margin-right: 10px;
+    margin-left: auto !important;
+}
+
+.ticket-comments .comment-header .edit-comment:before {
+    right: 7px;
+    left: auto !important;
+}
+
+.view-ticket-notes-page .ticket-buttons .k-button.show-add-note:before {
+    right: 0;
+    left: auto !important;
+}
+
+.view-ticket-notes-page .ticket-buttons .k-button.return-to-ticket:before {
+    right: 0;
+    left: auto !important;
+}
+
+.edit-ticket-page span.k-dropdown-wrap.k-state-default .k-input {
+    padding: 0 20px 0 35px;
+}
+
+.edit-ticket-page span.k-dropdown-wrap.k-state-default .k-input:after {
+    left: 20px;
+    right: auto !important;
+}
+
+.my-tickets-page span.k-numeric-wrap.k-state-default,
+.manage-tickets-page span.k-numeric-wrap.k-state-default {
+    padding: 0 0 0 35px;
+}
+
+.my-tickets-page span.k-dropdown-wrap.k-state-default .k-input,
+.manage-tickets-page span.k-dropdown-wrap.k-state-default .k-input {
+    padding: 10px 20px 10px 30px;
+}
+
+.k-grid table td {
+    border-width: 1px 0 1px 1px !important;
+}
+
+.k-grid table td:first-child {
+    border-right-width: 1px !important;
+    border-left-width: initial !important;
+}
+
+.k-grid-header .k-header {
+    border-right: 0 !important;
+    border-left: none !important;
+}
+
+.k-grid-header .k-header:first-child {
+    border-left: none !important;
+    border-right: 1px solid #f0f0f0 !important;
+}
+
+a.view-ticket.k-button:before {
+    right: auto !important;
+    left: 0;
+}
+
+a.k-button.k-grid-edit:before {
+    right: auto !important;
+    left: 0;
+}
+
+a.k-button.k-grid-update:before {
+    border-width: 0 0 3px 3px;
+    right: 7px;
+    left: auto !important;
+}
+
+a.k-button.k-grid-cancel:before {
+    right: auto !important;
+    left: 0;
+}
+
+.ticket-info-panel .row-label {
+    margin: 0 0 0 5px;
+}
+
+.k-pager-wrap.k-grid-pager.k-widget span.k-input {
+    padding: 0 10px 0 25px;
+}
+
+span.k-pager-info.k-label {
+    margin: 12px 12px 12px 36px;
+}
+
+span.k-icon.k-i-reload {
+    padding: 12px 20px 12px 12px;
+}
+
+.tickets-table-panel .ticketDueIn:after {
+    left: auto !important;
+    right: 0;
+}
+
+.inputs.upload .k-upload-status {
+    left: 0;
+    right: auto;
+}
+.k-numeric-wrap .k-select {
+    left: 0;
+    right: auto;
+}
+
+
+
+@media all and (min-width:768px) {
+
+    .my-tickets-page .filter-item,
+    .manage-tickets-page .filter-item {
+        float: right;
+        margin: 0 3% 3% 0;
+        text-align: right;
+    }
+
+    .my-tickets-page .filter-item:nth-child(2n+1),
+    .manage-tickets-page .filter-item:nth-child(2n+1) {
+        margin-right: 0;
+        margin-left: auto !important;
+    }
+
+    .view-ticket-notes-page .ticket-comments .comment-body {
+        float: left;
+    }
+
+    .view-ticket-notes-page .ticket-comments .comment-header {
+        padding: 0 0 0 6%;
+        float: right;
+        text-align: left;
+    }
+}
+
+@media all and (min-width:769px) and (max-width:1024px), (min-width:1200px) {
+
+    #ticket-details .details-list {
+        margin: 0 2% 0 0;
+        float: right;
+    }
+}
+
+@media all and (min-width: 1200px) {
+
+    .inputs.upload .k-widget.k-upload .k-dropzone {
+        text-align: right;
+    }
+    .new-ticket-page .captcha-box {
+        text-align: right;
+    }
+}

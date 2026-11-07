@@ -1,0 +1,6 @@
+﻿
+.social-feed .video-thumbnail:after,
+.feeds-page .video-thumbnail:after {
+    right: auto;
+    left: 10px;
+}

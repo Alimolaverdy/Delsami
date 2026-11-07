@@ -1,0 +1,54 @@
+﻿@model TicketDepartmentAdminModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "ticket-department-staff-grid",
+        UrlRead = new DataUrl("StaffList", "HelpDeskTicketDepartmentAdmin", new RouteValueDictionary { ["ticketDepartmentId"] = Model.Id }),
+        UrlDelete = new DataUrl("StaffDelete", "HelpDeskTicketDepartmentAdmin", null),
+        Length = defaultGridPageSize,
+        LengthMenu = gridPageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(TicketDepartmentGridStaffAdminModel.StaffName))
+            {
+                Title = T("SevenSpikes.HelpDesk.Admin.TicketDepartment.Staff.StaffName").Text
+            },
+            new ColumnProperty(nameof(TicketDepartmentGridStaffAdminModel.StaffEmail))
+            {
+                Title = T("SevenSpikes.HelpDesk.Admin.TicketDepartment.Staff.StaffEmail").Text
+            },
+            new ColumnProperty(nameof(TicketDepartmentGridStaffAdminModel.Id))
+            {
+                Width = "100",
+                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+            }
+        }
+    })
+</div>
+<div class="card-footer">
+    <button type="submit" id="btnAddNewStaff" onclick="javascript:OpenWindow('@Url.Action("StaffPopup", "HelpDeskTicketDepartmentAdmin", new { ticketDepartmentId = Model.Id, btnId = "btnRefresh", formId = "ticketdepartmentstaff-form" })', 800, 800, true); return false;" class="btn btn-primary">
+        @T("SevenSpikes.HelpDesk.Admin.TicketDepartment.Staff.AddNew")
+    </button>
+</div>
+<input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+<script type="text/javascript">
+
+    $(document).ready(function () {
+        $('#btnRefresh').click(function (e) {
+            e.preventDefault();
+            var grid = $("#ticket-department-staff-grid").DataTable();
+            grid.ajax.reload();
+
+             //don't reload the page 
+            return false;
+        });
+    });
+</script>

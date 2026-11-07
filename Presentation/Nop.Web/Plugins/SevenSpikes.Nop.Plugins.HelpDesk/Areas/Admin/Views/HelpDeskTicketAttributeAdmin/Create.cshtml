@@ -1,0 +1,32 @@
+﻿@model TicketAttributeAdminModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    //page title
+    ViewBag.PageTitle = T("SevenSpikes.HelpDesk.Admin.TicketAttribute.AddNew").Text;
+}
+
+<form method="post" id="ticketattribute-form">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.HelpDesk.Admin.TicketAttribute.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("SevenSpikes.HelpDesk.Admin.TicketDepartment.BackToList").Text, "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+
+</form>

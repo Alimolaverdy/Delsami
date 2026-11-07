@@ -1,0 +1,328 @@
+﻿@model HelpDeskSettingsModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.HelpDesk.Admin.Submenus.Settings");
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.HelpDesk.Admin.Settings")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableHelpDesk_OverrideForStore" asp-input="EnableHelpDesk" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableHelpDesk" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableHelpDesk" />
+                                <span asp-validation-for="EnableHelpDesk"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableCaptcha_OverrideForStore" asp-input="EnableCaptcha" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableCaptcha" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableCaptcha" />
+                                <span asp-validation-for="EnableCaptcha"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsProductFieldRequired_OverrideForStore" asp-input="IsProductFieldRequired" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsProductFieldRequired" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsProductFieldRequired" />
+                                <span asp-validation-for="IsProductFieldRequired"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowStaffSignature_OverrideForStore" asp-input="ShowStaffSignature" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowStaffSignature" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowStaffSignature" />
+                                <span asp-validation-for="ShowStaffSignature"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ShowDeadlineWorkingHoursAndWorkingDayOnNewTicketsPage_OverrideForStore" asp-input="ShowDeadlineWorkingHoursAndWorkingDayOnNewTicketsPage" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ShowDeadlineWorkingHoursAndWorkingDayOnNewTicketsPage" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ShowDeadlineWorkingHoursAndWorkingDayOnNewTicketsPage" />
+                                <span asp-validation-for="ShowDeadlineWorkingHoursAndWorkingDayOnNewTicketsPage"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="WorkingWeekDays_OverrideForStore" asp-input="WorkingWeekDays" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="WorkingWeekDays" />
+                            </div>
+                            <div class="col-md-9" style="position: relative;" id="choose-working-days">
+                                <ul style="list-style: outside none none; padding: 0px; margin: 0px;">
+                                    @for (int i = 0; i < Model.AvailableWorkingWeekDays.Count; i++)
+                                    {
+                                        <li>
+                                            <input id="workingDay_@i" type="checkbox" name="@(Html.NameFor(model => model.WorkingWeekDays))" value="@i" checked="@Model.AvailableWorkingWeekDays[i].Selected" />
+                                            <label for="workingDay_@i">@Model.AvailableWorkingWeekDays[i].Text</label>
+                                        </li>
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="WorkingStartHour_OverrideForStore" asp-input="WorkingStartHour" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="WorkingStartHour" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="WorkingStartHour" />
+                                <span asp-validation-for="WorkingStartHour"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="WorkingEndHour_OverrideForStore" asp-input="WorkingEndHour" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="WorkingEndHour" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="WorkingEndHour" />
+                                <span asp-validation-for="WorkingEndHour"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DefaultSelectedStatus_OverrideForStore" asp-input="DefaultSelectedStatus" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DefaultSelectedStatus" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="DefaultSelectedStatus" asp-items="Model.AvailableStatus" />
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MaxTicketProducts_OverrideForStore" asp-input="MaxTicketProducts" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MaxTicketProducts" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaxTicketProducts" />
+                                <span asp-validation-for="MaxTicketProducts"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MinimumProductSearchKeywordLength_OverrideForStore" asp-input="MinimumProductSearchKeywordLength" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MinimumProductSearchKeywordLength" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MinimumProductSearchKeywordLength" />
+                                <span asp-validation-for="MinimumProductSearchKeywordLength"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="PreviewAttachmentsInBrowser_OverrideForStore" asp-input="PreviewAttachmentsInBrowser" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="PreviewAttachmentsInBrowser" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PreviewAttachmentsInBrowser" />
+                                <span asp-validation-for="PreviewAttachmentsInBrowser"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ResponseDeadline_OverrideForStore" asp-input="ResponseDeadline" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ResponseDeadline" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ResponseDeadline" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Hours").Text" />
+                                <span asp-validation-for="ResponseDeadline"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="CloseAutomaticallyAfterXDays_OverrideForStore" asp-input="CloseAutomaticallyAfterXDays" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="CloseAutomaticallyAfterXDays" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="CloseAutomaticallyAfterXDays" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.Days").Text" />
+                                <span asp-validation-for="CloseAutomaticallyAfterXDays"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="WidgetZone_OverrideForStore" asp-input="WidgetZone" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="WidgetZone" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="WidgetZone" asp-items="Model.AvailableWidgetZones" />
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="ProductPageWidgetZone_OverrideForStore" asp-input="ProductPageWidgetZone" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="ProductPageWidgetZone" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="ProductPageWidgetZone" asp-items="Model.AvailableWidgetZonesForProductPage" />
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="OrderPageWidgetZone_OverrideForStore" asp-input="OrderPageWidgetZone" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="OrderPageWidgetZone" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="OrderPageWidgetZone" asp-items="Model.AvailableWidgetZonesForOrderPage" />
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DefaultEmailAccountId_OverrideForStore" asp-input="DefaultEmailAccountId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DefaultEmailAccountId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="DefaultEmailAccountId" asp-items="Model.AvailableEmailAccounts" />
+                                <a href="@Url.Action("Create", "EmailAccount")" class="btn bg-blue margin-t-5"><i class="fa fa-plus-square"></i>@T("Admin.Configuration.EmailAccounts.AddNew")</a>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailOnSubmitTicket_OverrideForStore" asp-input="SendEmailOnSubmitTicket" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailOnSubmitTicket" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailOnSubmitTicket" />
+                                <span asp-validation-for="SendEmailOnSubmitTicket"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailToStoreOwnerOnSubmitTicket_OverrideForStore" asp-input="SendEmailToStoreOwnerOnSubmitTicket" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailToStoreOwnerOnSubmitTicket" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailToStoreOwnerOnSubmitTicket" />
+                                <span asp-validation-for="SendEmailToStoreOwnerOnSubmitTicket"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailToTicketDepartmentStaffOnSubmitTicket_OverrideForStore" asp-input="SendEmailToTicketDepartmentStaffOnSubmitTicket" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailToTicketDepartmentStaffOnSubmitTicket" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailToTicketDepartmentStaffOnSubmitTicket" />
+                                <span asp-validation-for="SendEmailToTicketDepartmentStaffOnSubmitTicket"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailToTicketAssignee_OverrideForStore" asp-input="SendEmailToTicketAssignee" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailToTicketAssignee" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailToTicketAssignee" />
+                                <span asp-validation-for="SendEmailToTicketAssignee"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailOnReply_OverrideForStore" asp-input="SendEmailOnReply" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailOnReply" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailOnReply" />
+                                <span asp-validation-for="SendEmailOnReply"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailOnClosingTicketAutomatically_OverrideForStore" asp-input="SendEmailOnClosingTicketAutomatically" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailOnClosingTicketAutomatically" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailOnClosingTicketAutomatically" />
+                                <span asp-validation-for="SendEmailOnClosingTicketAutomatically"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MaximumSizeOfFileToAttach_OverrideForStore" asp-input="MaximumSizeOfFileToAttach" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MaximumSizeOfFileToAttach" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaximumSizeOfFileToAttach" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.MegaBytes").Text" />
+                                <span asp-validation-for="MaximumSizeOfFileToAttach"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="MaximumSizeOfTheAttachedFiles_OverrideForStore" asp-input="MaximumSizeOfTheAttachedFiles" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="MaximumSizeOfTheAttachedFiles" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="MaximumSizeOfTheAttachedFiles" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.MegaBytes").Text" />
+                                <span asp-validation-for="MaximumSizeOfTheAttachedFiles"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script type="text/javascript">
+    $(document).ready(function() {
+        var workingWeekDays = '@(Html.IdFor(model => model.WorkingWeekDays_OverrideForStore))';
+
+        $('#' + workingWeekDays).change(function() {
+            customFieldOverrideChangedShowOverlay(workingWeekDays, '#choose-working-days');
+        });
+        customFieldOverrideChangedShowOverlay(workingWeekDays, '#choose-working-days');
+
+        $('.store-scope-configuration .checkbox input').change(function() {
+            customFieldOverrideChangedShowOverlay(workingWeekDays, '#choose-working-days');
+        });
+    });
+
+    function customFieldOverrideChangedShowOverlay(overrideSelector, parentOfOverlaySelector) {
+        if ($('#' + overrideSelector).length == 0) {
+            return;
+        }
+
+        if ($('#' + overrideSelector).is(':checked') == true) {
+            $('.overlay-for-' + overrideSelector).remove();
+        } else {
+            $(parentOfOverlaySelector).append('<div class="custom-fields-overlay overlay-for-' + overrideSelector + '"></div>');
+        }
+    }
+</script>

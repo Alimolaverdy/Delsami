@@ -1,0 +1,46 @@
+@model ArticleAdminModel
+
+@{
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Knowledgebase.Admin.Submenus.ManageArticles");
+}
+
+<div asp-validation-summary="All"></div>
+<input type="hidden" asp-for="@Model.Id" />
+
+<input type="hidden" data-val="true" data-val-number="The field Id must be a number." id="Id" name="Id" value="@Model.Id" />
+<input type="hidden" id="selected-tab-name" name="selected-tab-name" value="@(Html.GetSelectedTabName())">
+
+<section class="content">
+    <div class="form-horizontal">
+        @if (Url.ActionContext.RouteData.Values["action"].ToString().ToLower() == "create")
+        {
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore, String.Format("Trial message for: {0}", "Article"))
+        }
+        else
+        {
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        }
+
+        <nop-tabs id="knowledgebase-article-edit">
+            <nop-tab asp-name="tab-article" asp-default="true" asp-title="@T("SevenSpikes.Knowledgebase.Admin.Article")">
+                @await Html.PartialAsync(AdminViews.GeneralSettingsTab, Model)
+                @if (Model.Id > 0)
+                {
+                    @await Html.PartialAsync(AdminViews.LimitedToStoresTab, Model)
+                }
+            </nop-tab>
+            <nop-tab asp-name="tab-seo" asp-title="@T("SevenSpikes.Knowledgebase.Admin.Article.SEO")">
+                @await Html.PartialAsync(AdminViews.SEOTab, Model)
+            </nop-tab>
+            @if (!Model.IsPopup)
+            {
+                <nop-tab asp-name="tab-categories" class="advanced-setting" asp-title="@T("SevenSpikes.Knowledgebase.Admin.Article.Categories")">
+                    @await Html.PartialAsync(AdminViews.CategoriesTab, Model)
+                </nop-tab>
+            }
+            <nop-tab asp-name="tab-related-articles" class="advanced-setting" asp-title="@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.RelatedArticles")">
+                @await Html.PartialAsync(AdminViews.RelatedArticlesTab, Model)
+            </nop-tab>
+        </nop-tabs>
+    </div>
+</section>

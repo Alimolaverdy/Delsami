@@ -1,0 +1,258 @@
+﻿@model int
+
+@inject IWorkContext workContext
+@inject IGenericAttributeService genericAttributeService
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    const string helpDeskBlockAttributeName = "CustomerPage.SS.HelpDesk";
+    var hideHelpDeskBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), helpDeskBlockAttributeName, defaultValue: true);
+
+}
+
+<nop-panel asp-name="customer-help-desk" asp-icon="fa fa-link" asp-title="@T("SevenSpikes.Admin.HelpDesk.CustomerTabs.Tickets")" asp-hide-block-attribute-name="@helpDeskBlockAttributeName" asp-hide="@hideHelpDeskBlock" asp-advanced="false">
+    <div class="card-body">
+        <div class="card card-default">
+            <div class="cards-body">
+                <div id="managetickets-grid" class="tickets-table-panel"></div>
+            </div>
+        </div>
+    </div>
+</nop-panel>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document)
+        .ready(function() {
+            $("#managetickets-grid")
+                .kendoGrid({
+                    dataSource: {
+                        type: "json",
+                        transport: {
+                            read: {
+                                url: "@Html.Raw(Url.Action("ManageTicketsList", "HelpDeskPluginAdmin", new {customerId = Model}))",
+                                type: "POST",
+                                dataType: "json",
+                                data: addAntiForgeryToken
+                            }
+                        },
+                        schema: {
+                            data: "Data",
+                            total: "Total",
+                            errors: "Errors",
+                            model: {
+                                id: "Id",
+                                fields: {
+                                    Id: { editable: false, type: "number" },
+                                    Subject: { editable: false, type: "string" },
+                                    CreatedOnUtc: { editable: false, type: "date" },
+                                    LastCustomerAnswerUtc: { editable: false, type: "date" },
+                                    LastStaffAnswerUtc: { editable: false, type: "date" },
+                                    TicketStatus: { editable: false, type: "string" },
+                                    TicketDueIn: { editable: false, type: "string" }
+                                }
+                            }
+                        },
+                        error: function(e) {
+                            display_kendoui_grid_error(e);
+
+                            this.cancelChanges();
+                        },
+                        pageSize: "@(defaultGridPageSize)",
+                        serverPaging: true,
+                        serverFiltering: true,
+                        serverSorting: true
+                    },
+                    pageable: {
+                        refresh: true,
+                        pageSizes: [@(gridPageSizes)]
+                    },
+                    editable: {
+                        confirmation: false,
+                        mode: "inline"
+                    },
+                    filterable: true,
+                    sortable: true,
+                    scrollable: false,
+                    detailTemplate: kendo.template($("#ticket-information").html()),
+                    detailInit: detailInit,
+                    dataBound: onDataBound,
+                    cancel: function() {
+                        $("#managetickets-grid").data("kendoGrid").refresh();
+                    },
+                    columns: [
+                        {
+                            field: "Id",
+                            title: "@T("SevenSpikes.HelpDesk.Public.ManageTickets.Ticket")",
+                            width: 50,
+                            template: "<div style='text-align:center'>\\##= Id #</div>",
+                            headerAttributes: {
+                                style: "text-align: center;"
+                            },
+                            filterable: false
+                        }, {
+                            field: "Subject",
+                            title: "@T("SevenSpikes.HelpDesk.Public.Ticket.Subject")",
+                            width: 170,
+                            filterable: false
+                        }, {
+                            field: "TicketStatus",
+                            template: "#= TicketStatusName #",
+                            title: "@T("SevenSpikes.HelpDesk.Public.Ticket.TicketStatus")",
+                            width: 150,
+                            filterable: false
+                        }, {
+                            field: "TicketOwnerName",
+                            title: "@T("SevenSpikes.HelpDesk.Public.Ticket.TicketOwner")",
+                            width: 130,
+                            filterable: false,
+                            sortable: false
+                        }, {
+                            field: "TicketDueIn",
+                            template:
+                                "#= isNaN(TicketDueIn) || TicketDueIn.length == 0 ? TicketDueIn : TicketDueIn + ' h' #",
+                            title: "@T("SevenSpikes.HelpDesk.Public.Ticket.TicketDueIn")",
+                            width: 60,
+                            attributes: { "class": "ticketDueIn" },
+                            filterable: false,
+                            sortable: false
+                        },
+                        {
+                            title: "@T("Admin.Common.View")",
+                            template: function(dataItem) {
+                                var template = '<a class="view-ticket k-button" href="@Url.RouteUrl("HelpDeskViewTicket", new { id = "0" })/" title="@T("Admin.Common.View")">@T("Admin.Common.View")</a>';
+
+                                return template.replace('/0/', '/' + dataItem.id);
+                            },
+                            width: 50,
+                            filterable: false,
+                            sortable: false
+                        }
+                    ]
+                });
+
+            $('#managetickets-grid').data('kendoGrid').table.css('table-layout', 'fixed');
+        });
+
+    function onDataBound() {
+        var grid = $("#managetickets-grid").data("kendoGrid");
+
+        grid.tbody.find('>tr')
+            .each(function() {
+                var dataItem = grid.dataItem(this);
+
+                if (dataItem.TicketDueIn != null && dataItem.TicketDueIn.length > 0) {
+                    var className = "";
+
+                    if (isNaN(dataItem.TicketDueIn)) {
+                        className = "overdue";
+                    } else {
+                        var hoursToExpire = parseInt(dataItem.TicketDueIn);
+
+                        if (hoursToExpire < 12) {
+                            className = "almost-overdue";
+                        } else {
+                            className = "not-overdue";
+                        }
+                    }
+
+                    $(this).children(".ticketDueIn").addClass(className);
+                }
+            });
+    }
+
+    function detailInit(e) {
+        var detailRow = e.detailRow;
+
+        detailRow.find(".tabstrip")
+            .kendoTabStrip({
+                animation: {
+                    open: { effects: "fadeIn" }
+                }
+            });
+    }
+
+    function prettyDate(date) {
+        if (date != null && date.length > 0) {
+            var lastChar = date.slice(-1).toLowerCase();
+
+            if (lastChar === "z") {
+                date = date.substring(0, date.length - 1);
+            }
+        }
+
+        return date;
+    }
+</script>
+
+<script type="text/x-kendo-template" id="ticket-information">
+    <div class="ticket-info-panel tabstrip">
+        <ul class="tabs-list">
+            <li class="tab-item k-state-active">
+                <span class="tab-text">@T("SevenSpikes.HelpDesk.Public.ManageTickets.TicketInfo")</span>
+            </li>
+        </ul>
+        <div class="tab-box-wrapper">
+            <ul id="ticket-details-template" class="tab-box">
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.TicketId"):</label>
+                    <span class="row-text">#= Id #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.Product"):</label>
+                    <span class="row-text">#= AllProducts #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.Department"):</label>
+                    <span class="row-text">#= TicketDepartmentName #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.Customer"):</label>
+                    <span><a class="row-text" href="@Url.RouteUrl("HelpDeskManageTickets")?customerId=#= CustomerId #">#= CustomerName # ( Id: #= CustomerId # )</a></span>
+                </li>
+
+                # if (AssignedBy !== 0) { #
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.AssignedBy"):</label>
+                    <span class="row-text">#= AssignedByName # ( Id: #= AssignedBy # )</span>
+                </li>
+                # } #
+
+                # if (TicketStatus == 10 || TicketStatus == 15) { #
+                # var closedBy = ""; #
+
+                # if (TicketStatus == 10) { #
+                # closedBy += ClosedByName #
+                # closedBy += (ClosedBy != 0) ? " ( Id: " + ClosedBy + " )" : "" #
+                # } else { #
+                # closedBy = "@T("SevenSpikes.HelpDesk.Public.Ticket.ClosedBy.System")" #
+                # } #
+
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.ClosedBy"):</label>
+                    <span class="row-text">#= closedBy #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.ClosedOnUtc"):</label>
+                    <span class="row-text">#= prettyDate(kendo.toString(kendo.parseDate(ClosedOnUtc), "u")) #</span>
+                </li>
+                # } #
+
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.CreatedOnUtc"):</label>
+                    <span class="row-text">#= prettyDate(kendo.toString(kendo.parseDate(CreatedOnUtc), "u")) #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.LastCustomerAnswerUtc"):</label>
+                    <span class="row-text">#= prettyDate(kendo.toString(kendo.parseDate(LastCustomerAnswerUtc), "u")) #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.LastStaffAnswerUtc"):</label>
+                    <span class="row-text">#= prettyDate(kendo.toString(kendo.parseDate(LastStaffAnswerUtc), "u")) #</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>

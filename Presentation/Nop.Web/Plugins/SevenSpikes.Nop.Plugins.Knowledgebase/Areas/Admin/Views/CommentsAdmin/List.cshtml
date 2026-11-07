@@ -1,0 +1,88 @@
+@model int
+@inject AdminAreaSettings adminAreaSettings
+@{
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Knowledgebase.Admin.Submenus.ManageComments");
+
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Knowledgebase.Admin.Entities.Comment")
+    </h1>
+</div>
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync((bool)ViewBag.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "knowledgebase-comments-grid",
+                        UrlRead = new DataUrl("List", "CommentsAdmin", null),
+                        UrlUpdate = new DataUrl("Edit", "CommentsAdmin", null),
+                        UrlDelete = new DataUrl("Delete", "CommentsAdmin", null),
+                        Length = defaultGridPageSize,
+                        LengthMenu = gridPageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(CommentAdminModel.Text))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Comment.Text").Text
+                            },
+                            new ColumnProperty(nameof(CommentAdminModel.Author))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Comment.Author").Text
+                            },
+                            new ColumnProperty(nameof(CommentAdminModel.Date))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Comment.CreationDate").Text
+                            },
+                            new ColumnProperty(nameof(CommentAdminModel.Approved))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Comment.Approved").Text,
+                                Render = new RenderCustom("renderIsApproved"),
+                                Width = "100",
+                                Editable = true,
+                                EditType = EditType.Checkbox
+                            },
+                            new ColumnProperty(nameof(CommentAdminModel.Id))
+                            {
+                                Width = "100",
+                                Render = new RenderButtonsInlineEdit()
+                            },
+                            new ColumnProperty(nameof(CommentAdminModel.Id))
+                            {
+                                Width = "100",
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                            }
+                        }
+                    })
+
+                    <script>
+
+                        function renderIsApproved(data, type, row, meta) {
+
+                            if (row.Approved) {
+
+                                return '<i class="fa fa-check true-icon"></i>';
+                            }
+                            else {
+
+                                return '<i class="fa fa-times false-icon"></i>';
+                            }
+                        }
+                        
+                    </script>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

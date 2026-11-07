@@ -1,0 +1,91 @@
+﻿@model TicketAttributeAdminModel
+
+@inject AdminAreaSettings adminAreaSettings
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+}
+
+<div class="card-body">
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "ticket-attribute-values-grid",
+        UrlRead = new DataUrl("ValueList", "HelpDeskTicketAttributeAdmin", new RouteValueDictionary { ["ticketAttributeId"] = Model.Id }),
+        UrlDelete = new DataUrl("ValueDelete", "HelpDeskTicketAttributeAdmin", null),
+        Length = defaultGridPageSize,
+        LengthMenu = gridPageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(TicketAttributeValueAdminModel.Name))
+            {
+                Title = T("SevenSpikes.HelpDesk.Admin.TicketAttribute.Values.Name").Text
+            },
+            new ColumnProperty(nameof(TicketAttributeValueAdminModel.IsPreSelected))
+            {
+                Title = T("SevenSpikes.HelpDesk.Admin.TicketAttribute.Values.IsPreSelected").Text,
+                Render = new RenderCustom("renderIsPreSelected")
+            },
+            new ColumnProperty(nameof(TicketAttributeValueAdminModel.DisplayOrder))
+            {
+                Title = T("SevenSpikes.HelpDesk.Admin.TicketDepartment.DisplayOrder").Text,
+                Width = "120"
+            },
+            new ColumnProperty(nameof(TicketAttributeValueAdminModel.Id))
+            {
+                Width = "100",
+                Render = new RenderCustom("renderEditButton")
+            },
+            new ColumnProperty(nameof(TicketAttributeValueAdminModel.Id))
+            {
+                Width = "100",
+                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+            }
+        }
+    })
+</div>
+<div class="card-footer">
+    <button type="submit" id="btnAddNewValue" onclick="javascript:OpenWindow('@Url.Action("ValueCreatePopup", "HelpDeskTicketAttributeAdmin", new { ticketAttributeId = Model.Id, btnId = "btnRefresh", formId = "ticketattribute-form" })', 800, 800, true); return false;" class="btn btn-primary">
+        @T("SevenSpikes.HelpDesk.Admin.TicketAttribute.Values.AddNew")
+    </button>
+</div>
+
+<input type="submit" id="btnRefresh" name="btnRefresh" style="display: none" />
+<script>
+
+    function renderIsPreSelected(data, type, row, meta) {
+
+        if (row.IsPreSelected) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+		return '<button class="btn btn-default" onclick="OpenWindow(\'@Url.Content("~/Admin/HelpDeskTicketAttributeAdmin/ValueEditPopup/")' + data + '?btnId=btnRefresh&formId=ticketattribute-form\', 800, 700, true);return false;" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</button>';
+    }
+        //return `<input type="submit" value="@T("Admin.Common.Edit")" onclick="javascript: OpenWindow('@Url.Content("~/Admin/HelpDeskTicketAttributeAdmin/ValueEditPopup/")` + data + `?btnId=btnRefresh&formId=ticketattribute-form', 800, 350, true); return false;" class="k-button" />`;
+    
+</script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#btnRefresh').click(function (e) {
+            //refresh grid
+            e.preventDefault();
+            var valuesGrid = $("#ticket-attribute-values-grid").DataTable();
+            valuesGrid.ajax.reload();
+
+            //return false to don't reload a page
+            return false;
+        });
+    });
+</script>

@@ -1,0 +1,37 @@
+﻿@model TicketDepartmentAdminModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    //page title
+    ViewBag.PageTitle = T("SevenSpikes.HelpDesk.Admin.TicketDepartment.EditDepartmentDetails").Text;
+}
+
+<form method="post" id="ticketattribute-form">
+    <nop-antiforgery-token/>
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.HelpDesk.Admin.TicketDepartment.EditDepartmentDetails")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("SevenSpikes.HelpDesk.Admin.TicketDepartment.BackToList").Text, "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="ticketdepartment-delete" class="btn bg-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+
+    @await Html.PartialAsync("_CreateOrUpdate", Model)
+</form>
+
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="ticketdepartment-delete" />

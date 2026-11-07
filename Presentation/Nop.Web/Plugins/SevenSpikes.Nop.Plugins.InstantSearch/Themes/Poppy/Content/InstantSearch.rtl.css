@@ -1,0 +1,28 @@
+﻿
+span.search-box-text {
+	float: right;
+}
+input.instant-search-busy {
+    /*background: url(ajax-loader-small.gif) no-repeat left 15px center !important;*/
+}
+.search-box-content select {
+    text-align: right;
+}
+.instant-search-item .detail {
+	margin-right: 15px;
+    margin-left: 0;
+}
+
+@media all and (max-width: 1024px) {
+
+    .search-box-content select {
+        right: auto;
+        left: 0;
+    } 
+}
+@media all and (min-width: 1025px) {
+
+    .search-box-content select {
+        float: left;
+    }
+}

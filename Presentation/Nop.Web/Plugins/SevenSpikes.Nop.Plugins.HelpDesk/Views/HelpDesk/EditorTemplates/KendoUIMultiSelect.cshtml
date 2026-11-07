@@ -1,0 +1,72 @@
+﻿@model dynamic
+
+@inject HelpDeskSettings helpDeskSettings
+
+@{
+    var maxTicketProducts = helpDeskSettings.MaxTicketProducts;
+    var minCharactersMultiSelect = helpDeskSettings.MinimumProductSearchKeywordLength;
+
+    var inputFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
+    var inputFieldNameWithoutDot = inputFieldName.Replace(".", "");
+
+    bool shouldCheckProducts = true;
+    string values = "[]";
+    var selectList = Model as IList<SelectListItem>;
+
+    var autoSelectedProducts = ViewData["AutoSelectedProducts"] as IList<SelectListItem>;
+    
+    if (selectList != null)
+    {
+        shouldCheckProducts = false;
+        values = Html.ToLocalDatabase(selectList, "ProductId", "ProductName").ToString();
+    }
+    else if (autoSelectedProducts != null && autoSelectedProducts.Count > 0)
+    {
+        values = Html.ToLocalDatabase(autoSelectedProducts, "ProductId", "ProductName").ToString();
+    }
+}
+
+<select id="@inputFieldNameWithoutDot" name="@inputFieldName"></select>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $("#@inputFieldNameWithoutDot").kendoMultiSelect({
+            placeholder: "@T("SevenSpikes.HelpDesk.Public.KendoUIMultiSelect.SelectProductPlaceHolder")",
+            minLength: @minCharactersMultiSelect,
+            maxSelectedItems: @maxTicketProducts,
+            dataValueField: "ProductId",
+            dataTextField: "ProductName",
+            autoBind: false,
+            itemTemplate: kendo.template($("#item-template").html()),
+            select: onSelect,
+            dataBound: onDataBound,
+            dataSource: {
+                serverFiltering: true,
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("GetAllProducts", "HelpDesk"))",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json",
+                        data: function () {
+                            return {
+                                sc: "@shouldCheckProducts"
+                            };
+                        }
+                    },
+                    parameterMap: function (data, operation) {
+                        if (operation != "read") {
+                            return data;
+                        } else {
+                            //for some reasons only such "Filter" data be parsed
+                            return JSON.stringify(data);
+                        }
+                    }
+                }
+            },
+            value: @Html.Raw(values)
+        }).data("kendoMultiSelect").tagList.addClass('product-tag-list');
+    });
+</script>
+
+@await Html.PartialAsync("_MultiSelectTemplate")

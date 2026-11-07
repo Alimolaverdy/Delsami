@@ -1,0 +1,938 @@
+
+/* SUBMIT TICKETS BUTTONS */
+
+.overview .submit-ticket {
+    display: inline-block;
+    margin: 0 0 0 5px;
+}
+.overview .submit-ticket-button {
+    display: block;
+    position: relative;
+    z-index: 2;
+    width: 45px;
+    height: 45px;
+    line-height: 45px;
+    border: none;
+    border-radius: 3px;
+    font-weight: bold;
+    color: #8c8c8c;
+    font-size: 0;
+    cursor: pointer;
+    text-transform: uppercase;
+    text-align: center;
+    background-color: #f1f1f1;
+    transition: all .1s ease;
+}
+.overview .submit-ticket-button:before {
+    content: "\e90d";
+    display: inline-block;
+    vertical-align: bottom;
+    color: #8c8c8c;
+    font-size: 20px;
+    text-transform: none;
+    font-weight: normal;
+    line-height: 45px;
+    transform: rotate(45deg);
+}
+.overview .submit-ticket-button:hover {
+    background-color: #eaeaea;
+}
+.order-details-page .submit-ticket {
+    margin: 5px 0 0;
+}
+.order-details-page .submit-ticket-button {
+    border: none;
+    background-color: transparent;
+    text-decoration: underline;
+}
+
+/* KENDO RESET */
+
+.k-animation-container { /*will affect InstantSearch*/
+    box-sizing: border-box !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: #fff;
+    box-shadow: 0 0 15px rgba(0,0,0,.15);
+    border-radius: 0 0 3px 3px;
+}
+.k-list-container { /*will affect InstantSearch*/
+    box-sizing: border-box;
+    position: static !important;
+    border: none !important;
+    border-radius: 0 0 3px 3px !important;
+    box-shadow: none !important;
+    background: #fff !important;
+}
+.k-list-scroller { /*will affect InstantSearch*/
+    height: 100% !important;
+    overflow-y: scroll;
+}
+.k-dropdown-wrap { /*may affect AjaxFiltersPro*/
+    border-radius: 0;
+    box-shadow: none !important;
+}
+.k-upload-sync { 
+    border-radius: 0 !important;
+    background: none !important;
+}
+.k-upload-button {
+    border: none !important;
+    border-radius: 0 !important;
+    background: none !important;
+    padding: 0 !important;
+}
+.k-popup.k-tooltip {
+    display: none !important; /*hidden, it's not working properly on mobile devices anyway*/
+    border: none !important;
+    background: none !important;
+}
+.k-grid-pager * {
+    box-sizing: border-box;
+    opacity: 1;
+}
+
+/* INSTANT SEARCH RESET */
+
+span.search-box-text {
+    box-shadow: none !important;
+}
+span.search-box-text .k-icon {
+    display: none !important;
+}
+.instantSearch.k-animation-container * {
+    box-sizing: border-box !important;
+}
+.instantSearch .k-list-container {
+    border: none !important; /*theme specific, border may cause problems with InstantSearch when scrolling inside results*/
+}
+.instantSearch .k-item.k-state-hover {
+    background: none !important;
+}
+
+
+/* KENDO FORM ELEMENTS, all pages */
+
+.inputs input:not([type]) {
+    width: 100%;
+    height: 45px;
+    color: #8c8c8c;
+    border: 1px solid #e7e7e7;
+    border-radius: 3px;
+}
+.inputs .k-dropdown,
+.inputs .k-multiselect,
+.inputs .k-numerictextbox,
+.inputs .subject-field {
+    width: 100% !important;
+    max-width: 100%;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    background: none;
+	vertical-align: middle;
+}
+.inputs .k-dropdown-wrap,
+.inputs .k-multiselect-wrap,
+.inputs .k-numeric-wrap {
+    border: none !important;
+    border-radius: 0 !important;
+    background: none !important;
+}
+.inputs .k-dropdown .k-input,
+.inputs .k-multiselect .k-input,
+.inputs .k-numerictextbox .k-input,
+.inputs .subject-field .k-input {
+    width: 100% !important;
+	height: 45px;
+	border: 1px solid #e7e7e7;
+    background: #fff;
+	padding: 0 20px;
+	font-size: 15px; /*reset zeroing*/
+    line-height: 45px;
+    text-indent: 0;
+    color: #8c8c8c;
+}
+
+.inputs .k-dropdown .k-input:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    right: 10px;
+    bottom: 0;
+    width: 6px;
+    background: url('images/arrow-down.png') center no-repeat;
+}
+.inputs .k-dropdown .k-select {
+    display: none;
+}
+
+.inputs .k-multiselect .k-loading {
+    display: none;
+}
+.inputs .k-multiselect .k-hidden {
+    display: none !important;
+}
+.inputs .k-multiselect .k-button {
+    display: block;
+    border: none;
+    background: none;
+    padding: 7px 10px;
+    text-align: left;
+    font-size: 13px; /*reset zeroing*/
+    color: #000;
+}
+.inputs .k-multiselect .k-button span {
+    display: inline-block;
+    max-width: 90%;
+    margin-right: 10px;
+    overflow: hidden;
+    vertical-align: middle;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
+
+.inputs .k-numerictextbox .k-select {
+    display: block !important;
+    width: 45px;
+    border-left: 1px solid #e7e7e7;
+}
+.inputs .k-numerictextbox .k-link {
+    height: 18px;
+    margin-top: 3px;
+    line-height: normal;
+    background: none !important;
+}
+.inputs .k-numerictextbox .k-icon {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.inputs .k-numerictextbox .k-icon.k-i-arrow-60-up {
+    background: url('images/arrow-up.png') center 10px no-repeat !important;
+}
+.inputs .k-numerictextbox .k-icon.k-i-arrow-60-down {
+    background: url('images/arrow-down.png') center 2px no-repeat !important;
+}
+
+.inputs .k-clear-value {
+    display: none !important;
+}
+
+.inputs #date-from,
+.inputs #date-to {
+    width: 100%;
+    max-width: 100%;
+	height: 45px;
+	border: 1px solid #e7e7e7;
+	padding: 0 10px;
+}
+
+.buttons .k-button {
+    min-width: 100px;
+    height: 40px;
+    border: none !important;
+    border-radius: 3px;
+    background: #eebe00;
+    padding: 0 25px;
+    font-size: 13px;
+    font-weight: 700;
+    line-height: 40px;
+    color: #fff;
+}
+.buttons .k-button:hover {
+    background-color: #e8af00;
+}
+.buttons .k-button + .k-button {
+    background: #f1f1f1;
+    color: #8c8c8c;
+}
+.buttons .k-button + .k-button:hover {
+    background-color: #eaeaea;
+}
+
+#TicketModelTicketProductIds-list, .dropdown-wrapper .k-list-container,
+/*#TicketProducts-list, #TicketDepartmentId-list, #TicketOwnerId-list*/
+#product-field-list, #subject-field-list, #customer-field-list {
+    border-color: #e7e7e7 !important;
+    box-shadow: none !important;
+    font-size: 15px !important;
+}
+#TicketModelTicketProductIds-list .k-item, .dropdown-wrapper .k-list .k-item,
+/*#TicketProducts-list .k-item, #TicketDepartmentId-list .k-item, #TicketOwnerId-list .k-item*/
+#product-field-list .k-item, #subject-field-list .k-item, #customer-field-list .k-item {
+    background: #fff;
+    padding: 10px 20px;
+    font-size: 15px;
+    color: #8c8c8c;
+}
+#TicketModelTicketProductIds-list .k-state-hover, .dropdown-wrapper .k-item.k-state-hover,
+/*#TicketProducts-list .k-state-hover, #TicketDepartmentId-list .k-state-hover, #TicketOwnerId-list .k-state-hover*/
+#product-field-list .k-state-hover, #subject-field-list .k-state-hover, #customer-field-list .k-state-hover {
+    background: #f9f9f9;
+    cursor: pointer;
+}
+#TicketModelTicketProductIds-list .k-state-focused, .dropdown-wrapper .k-item.k-state-selected,
+/*#TicketProducts-list .k-state-focused, #TicketDepartmentId-list .k-state-focused, #TicketOwnerId-list .k-state-focused*/
+#product-field-list .k-state-focused, #subject-field-list .k-state-focused, #customer-field-list .k-state-focused {
+    background: #f9f9f9;
+    cursor: pointer;
+}
+#TicketModelTicketProductIds-list .k-nodata, .dropdown-wrapper .k-nodata,
+/*#TicketProducts-list .k-nodata, #TicketDepartmentId-list .k-nodata, #TicketOwnerId-list .k-nodata*/
+#product-field-list .k-nodata, #subject-field-list .k-nodata, #customer-field-list .k-nodata {
+    padding: 10px 20px;
+}
+.dropdown-wrapper .k-list-optionlabel {
+    display: none;
+}
+
+/* COMMON STYLES */
+
+.ticketing-page .page-body {  
+    max-width: 740px;
+    margin: 0 auto;
+    border-radius: 3px;
+    border: 1px solid #eeeeee;
+    background-color: #fff;
+    padding: 20px;
+}
+.manage-tickets-page .page-body {
+    max-width: 1000px;
+}
+.ticketing-page .label-wrapper {
+    float: none;
+}
+.ticketing-page .inputs label {
+    display: inline-block;
+    max-width: calc(100% - 10px);
+    width: auto;
+    font-size: 15px;
+    margin: 0 0 8px;
+    font-weight: bold;
+    color: #444444;
+    text-align: left;
+    white-space: normal;
+}
+
+/* NEW TICKET PAGE */
+
+.working-days-wrapper {
+    margin: 0 0 40px;
+    font-size: 15px;
+    color: #8c8c8c;
+}
+.working-days-wrapper .details {
+    margin: 0 0 5px;
+}
+
+table.k-editor {
+    display: inline-table;
+    width: 100%;
+    border-collapse: collapse;
+    border-color: #e7e7e7;
+    background: #fff;
+    white-space: normal;
+}
+table.k-editor .k-editor-toolbar {
+    background-color: #f9f9f9;
+}
+table.k-editor .k-dropdown {
+    width: auto !important;
+    min-width: 100px;
+    margin: 0;
+}
+table.k-editor .k-dropdown .k-input {
+    height: 27px;
+    background: #fff;
+    line-height: 27px;
+}
+table.k-editor .k-dropdown select {
+    /*display: block !important;*/ /*native select instead of Kendo select*/
+    height: 24px;
+}
+.dropdown-wrapper.paragraph-select {
+    /*display: none !important;*/ /*native dropdown instead of Kendo dropdown*/
+}
+table.k-editor .k-tool {
+    border-radius: 0 !important;
+    border-color: #e7e7e7 !important;
+    background: #fff;
+}
+table.k-editor .k-tool.k-state-hover,
+table.k-editor .k-tool.k-state-selected {
+    border-color: #999 !important;
+    background: #999;
+}
+.k-popup .k-tool[title="Table Wizard"],
+.k-editor .k-tool[aria-label="Table Wizard"],
+.k-editor .k-tool[aria-label="Copy format"],
+.k-editor .k-tool[aria-label="Apply format"] {
+    display: none !important;
+}
+.k-editor .k-tool-group.k-state-disabled,
+.k-editor .k-tool.k-state-disabled {
+    display: none;
+}
+.k-popup.k-ct-popup {
+    border-color: #ccc;
+    box-shadow: none;
+    background: #fff;
+}
+.k-popup.k-ct-popup .k-ct-cell {
+    border-color: #ccc;
+    opacity: 1;
+}
+.k-popup.k-ct-popup .k-state-selected {
+    background: #eee;
+}
+table.k-editor .k-editable-area {
+    border-color: #e7e7e7;
+}
+
+.inputs.upload {
+    text-align: center;
+}
+.inputs.upload .k-upload-button span {
+    display: block;
+    border: none;
+    border-radius: 2px;
+    background: #ddd;
+    padding: 8px 16px;
+    font-size: 13px; /*reset zeroing*/
+    line-height: 1;
+    color: #000;
+}
+.inputs.upload .k-upload-files {
+    max-width: 350px; 
+    margin: 20px auto 0 !important
+}
+.inputs.upload .k-upload-files .k-file {
+    text-align: left;
+}
+.inputs.upload .k-upload-files .k-file-name {
+    margin: 0 5px 0 0;
+    padding: 0;
+    font-size: 14px; /*reset zeroing*/
+}
+.inputs.upload .k-upload-files .k-file-size {
+    margin: 0;
+    padding: 0;
+    /*font-size: 14px;*/ /*reset zeroing*/
+}
+.inputs.upload .k-upload-files .k-icon {
+    display: none;
+}
+.inputs.upload .k-upload-files .k-button {
+    border: none;
+    border-radius: 0;
+}
+.inputs.upload .k-upload-files .k-delete,
+.inputs.upload .k-upload-files .k-i-close {
+    display: block; /*reset*/
+}
+.inputs.upload .k-upload-files .k-upload-status {
+    top: 50%; right: 0;
+    margin-top: -9px;
+}
+
+
+/* VIEW TICKET PAGE */
+
+.ticket-information {
+    margin: 0 0 20px;
+}
+.ticket-information .ticket-title {
+    margin: 0 0 10px;
+    font-size: 18px;
+    font-weight: normal;
+}
+.ticket-information .ticket-date {
+    color: #8c8c8c;
+}
+.ticket .ticket-buttons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 6px 6px;
+    margin: 0 -5px;
+    font-size: 0;
+}
+.ticket-buttons .k-button {
+    display: inline-block;
+    padding: 0 18px;
+    height: 45px;
+    line-height: 45px;
+    font-size: 13px;
+    color: #8c8c8c;
+    text-transform: uppercase;
+    font-weight: 700;
+    background: #f1f1f1;
+    border: none;
+    border-radius: 3px;
+    text-align: left;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    transition: all .2s ease;
+}
+.ticket-buttons .k-button:hover {
+    background: #eaeaea;
+}
+.ticket-buttons .k-button:before {
+    display: inline-block;
+    vertical-align: bottom;
+    margin-right: 10px;
+    color: #8c8c8c;
+    font-size: 17px;
+    text-transform: none;
+    font-weight: normal;
+}
+.ticket-buttons .ticket-info-button:before {
+    content: "\54";
+}
+.ticket-buttons .show-reply-button:before {
+    content: "\4f";
+}
+.ticket-buttons .mark-resolved-button:before {
+    content: "\30";
+}
+.ticket-buttons .notes-button:before {
+    content: "\33";
+}
+.ticket-buttons .edit-ticket-button:before {
+    content: "\4c";
+}
+.ticket-buttons .delete-ticket-button:before {
+    content: "\4d";
+}
+.ticket-buttons .show-add-note:before {
+    content: "\33";
+}
+.ticket-buttons .return-to-ticket-button:before {
+    content: "\4f";
+}
+
+.ticket-details {
+    display: none;
+    margin: 25px 0 0;
+    text-align: left;
+    color: #8c8c8c;
+    font-size: 14px;
+}
+.ticket-details ul + ul {
+    margin-top: 25px;
+}
+.ticket-details li + li {
+    margin-top: 5px;
+}
+.ticket-details .detail-label {
+    margin-right: 5px;
+}
+.ticket-details .detail-value {
+    color: #444;
+}
+
+.ticket-reply-form,
+.add-notes-form {
+    display: none;
+    margin: 30px 0 0;
+}
+.ticket-reply-form .buttons,
+.add-notes-form .buttons {
+    margin: 25px 0 0;
+}
+
+.ticket-comments {
+    margin: 30px 0 0;
+}
+.ticket-comments .ticket-comment {
+    border: 1px solid #e7e7e7;
+    border-radius: 3px;
+    text-align: left;
+}
+.ticket-comments .comment-header {
+    background: #f1f1f1;
+    padding: 15px;
+    font-size: 13px;
+    color: #444;
+}
+.ticket-comments .left + .right {
+    margin: 10px 0 0;
+}
+.ticket-comments .comment-header a {
+    text-decoration: underline;
+}
+.ticket-comments .edit-comment {
+    position: relative;
+    margin-left: 8px;
+    padding-left: 18px;
+}
+.ticket-comments .edit-comment:before {
+    content: "\4c";
+    position: absolute;
+    top: 1px;
+    bottom: 0;
+    left: 0;
+    width: 24px;
+}
+.ticket-comments .comment-body {
+    padding: 20px;
+}
+.ticket-comments .attachment-content {
+    border-top: 1px dashed #ddd;
+    padding: 20px;
+}
+.ticket-comments .attachment-content li + li {
+    margin: 5px 0 0;
+}
+.ticket-comments .attachment-content a {
+    text-decoration: underline;
+}
+
+
+/* POPUP WINDOW */
+
+.k-window.confirmation-wrapper {
+    width: 350px;
+    max-width: 95%;
+    border: none;
+    border-radius: 0;
+    box-shadow: 0 1px 5px #666; /*theme specific*/
+    background-color: #fff;
+    padding-top: 0 !important;
+}
+.k-window.confirmation-wrapper .k-window-titlebar {
+    position: relative;
+    height: auto;
+    margin: 0 !important;
+    border-bottom: 1px solid #ccc;
+    background: #eee;
+    padding: 12px;
+    line-height: 1;
+}
+.k-window.confirmation-wrapper .k-window-title {
+    position: static !important;
+    font-size: 12px;
+    font-weight: bold;
+	text-transform: uppercase;
+}
+.k-window.confirmation-wrapper .k-window-actions {
+    top: 0;
+    right: 0;
+    font-size: 0;
+}
+.k-window.confirmation-wrapper .k-window-content {
+    padding: 20px 15px;
+}
+.k-window.confirmation-wrapper .message {
+    margin: 0 0 20px;
+}
+.k-window.confirmation-wrapper button {
+    min-width: 50px;
+    border: 1px solid #ccc;
+    border-radius: 0;
+    padding: 8px 12px;
+    font-size: 13px;
+    line-height: 1;
+}
+.k-window.confirmation-wrapper .km-touch-scrollbar {
+    display: none !important;
+}
+
+
+/* MY TICKETS & MANAGE TICKETS */
+
+.grid-filters {
+    margin: 0 0 60px;
+}
+.grid-filters .filter-list {
+    margin: 0 0 25px;
+}
+
+.tickets-table-panel {
+    overflow-x: auto;
+}
+.tickets-table-panel table {
+    border-collapse: collapse !important;
+    width: calc(100% - 1px);
+    font-size: 13px;
+}
+.tickets-table-panel th {
+    background: #f1f1f1;
+    border: 1px solid #dfdfdf !important;
+    padding: 15px 10px !important;
+}
+.tickets-table-panel th .k-link {
+    line-height: 1;
+}
+.tickets-table-panel th .k-icon {
+    display: none;
+}
+.tickets-table-panel td {
+    border: 1px solid #e7e7e7 !important;
+    padding: 15px 10px;
+    line-height: normal;
+    color: #8c8c8c;
+}
+.tickets-table-panel td .k-button {
+    width: 24px;
+    height: 24px;
+    margin: auto;
+    padding: 0;
+    border: 0;
+    font-size: 0;
+    line-height: 1;
+}
+.tickets-table-panel .view-ticket {
+    display: block;
+    background: none !important;
+}
+.tickets-table-panel .view-ticket:after {
+    content: "\65";
+    font-size: 20px;
+    color: #8c8c8c;
+}
+.tickets-table-panel .k-grid-edit {
+    display: block;
+    background: url('images/icon-assign.png') center no-repeat;
+}
+.tickets-table-panel .k-grid-update {
+    background: url('images/icon-check.png') center no-repeat;
+}
+.tickets-table-panel .k-grid-cancel {
+    background: url('images/icon-cancel.png') center no-repeat;
+}
+.tickets-table-panel .k-button .k-icon {
+    display: none;
+}
+.tickets-table-panel .ticketDueIn {
+    position: relative;
+    text-align: center;
+}
+.tickets-table-panel .ticketDueIn:after {
+    content: "";
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 5px;
+}
+.tickets-table-panel .not-overdue:after {
+    background: #79cf8b;
+}
+.tickets-table-panel .almost-overdue:after {
+    background: #ffdf58;
+}
+.tickets-table-panel .overdue:after {
+    background: #f4565a;
+}
+
+.k-grid .k-dropdown-wrap {
+    border-color: #e7e7e7;
+    background: none;
+}
+.k-grid .k-dropdown-wrap .k-input {
+    line-height: normal;
+    color: #8c8c8c;
+}
+.k-grid .k-dropdown-wrap .k-icon {
+    margin: 3px 0;
+}
+
+.k-hierarchy-col {
+    width: 32px !important;
+}
+.k-hierarchy-cell .k-icon {
+    display: block;
+    margin: auto;
+    background: url('images/expand.png') center no-repeat;
+}
+
+.ticket-info-panel {
+    background: none !important;
+    padding: 5px 10px;
+}
+.ticket-info-panel .k-item {
+    margin: 0 0 10px;
+    border: none;
+    background: none;
+}
+.ticket-info-panel .k-loading {
+    display: none;
+}
+.ticket-info-panel .k-link {
+    padding: 0;
+    font-size: 16px;
+    font-weight: bold;
+}
+.ticket-info-panel .k-content {
+    padding: 0 2px;
+    line-height: 20px;
+    color: #8c8c8c;
+}
+.ticket-info-panel .k-content span {
+    color: #444;
+}
+
+.k-grid-pager {
+    margin: 20px 0 0;
+    border: none;
+    background: none;
+    padding: 0;
+    text-align: center;
+    font-size: 0;
+}
+.k-pager-nav.k-link,
+.k-pager-numbers li {
+    width: 32px;
+	height: 32px;
+    margin: 0 10px 0 0;
+    border-radius: 0;
+    background: none !important;
+	text-align: center;
+}
+.k-pager-nav .k-icon,
+.k-pager-numbers span,
+.k-pager-numbers a {
+    width: 100%;
+	height: 100%;
+    margin: 0 !important;
+    border: 1px solid #ddd;
+    border-radius: 2px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer !important;
+}
+.k-pager-nav .k-i-arrow-end-left {
+    background-image: url('images/pager-first.png');
+}
+.k-pager-nav .k-i-arrow-60-left {
+    background-image: url('images/pager-prev.png');
+}
+.k-pager-nav .k-i-arrow-end-right {
+    background-image: url('images/pager-last.png');
+}
+.k-pager-nav .k-i-arrow-60-right {
+    background-image: url('images/pager-next.png');
+}
+.k-pager-numbers span,
+.k-pager-numbers a {  
+    background: none !important;
+    font-size: 12px; /*reset zeroing*/
+    line-height: 30px;
+    color: #000 !important;
+}
+.k-pager-nav .k-icon:hover,
+.k-pager-numbers span:hover,
+.k-pager-numbers a:hover {
+    background-color: #eee !important;
+}
+.k-pager-numbers .k-state-selected {
+    border-color: #d7d7d7 !important;
+    background: #f9f9f9 !important;
+    cursor: default !important;
+}
+.k-pager-numbers .k-current-page {
+    display: none !important; /*doubled element*/
+}
+.k-pager-sizes .k-dropdown {
+    width: auto !important;
+    margin: 0 5px !important;
+    border-radius: 0;
+    background: none;
+}
+.k-pager-sizes .k-dropdown-wrap {
+    display: none;
+}
+.k-pager-sizes .k-dropdown select {
+    display: block !important; /*native select instead of Kendo select*/
+    height: 32px;
+}
+.k-group.grid-totalPages-list {
+    display: none !important; /*native dropdown instead of Kendo dropdown*/
+}
+.k-pager-sizes, .k-pager-info {
+    font-size: 13px; /*reset zeroing*/
+    line-height: 32px;
+    color: #8c8c8c;
+}
+.k-pager-refresh .k-icon {
+    width: auto;
+    min-height: 32px;
+    background: url('images/icon-refresh.png') left center no-repeat;
+    padding-left: 20px;
+    font-size: 13px; /*reset zeroing*/
+    line-height: 32px;
+}
+
+
+
+@media all and (min-width: 481px) {
+
+    .ticketing-page .page-body {  
+        padding: 50px;
+    }
+}
+
+@media all and (min-width: 768px) {
+
+.ticketing-page .page-body {  
+    padding: 50px 65px;
+}
+.grid-filters .filter-list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 20px 20px;
+}
+.grid-filters .filter-list .inputs {
+    margin: 0;
+}
+.tickets-table-panel {
+    overflow-x: visible;
+}
+
+}
+
+@media all and (min-width: 1025px) {
+
+.block-account-navigation .new-ticket a:after,
+.block-account-navigation .my-tickets a:after,
+.block-account-navigation .manage-tickets a:after {
+    font-size: 22px !important;
+    transform: translate(1px,-53%) !important;
+}
+.block-account-navigation .new-ticket a:after {
+    content: "\e90d";
+}
+.block-account-navigation .my-tickets a:after {
+    content: "\e90e";
+}
+.block-account-navigation .manage-tickets a:after {
+    content: "\e90f";
+}
+
+}
+
+@media all and (min-width: 1281px) {
+
+.overview .submit-ticket {
+    display: block;
+    width: 100%;
+    margin: 3px 0 0;
+}
+.overview .submit-ticket-button {
+    width: 100%;
+    font-size: 13px;
+}
+.overview .submit-ticket-button:before {
+    margin: 0 10px 0 0;
+}
+.view-ticket-page .ticket-buttons {
+    grid-template-columns: 1fr 1fr 1fr;
+}
+.manage-tickets-page .filter-list {
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+}

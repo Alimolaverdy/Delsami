@@ -1,0 +1,51 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings>
+  <Setting Name="PriceMatchSettings.IsEnabled">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.IsPriceMatchEnabledForGuests">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.AdditionalDiscountAmount">
+    <Value>2</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.AdditionalDiscountEndDateInDays">
+    <Value>7</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.DefaultEmailAccountId">
+    <Value>1</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.SendEmailToVendorOnNewRequest">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.IncludeStoreOwnerInBccOnNewRequest">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.SendEmailOnDenyRequest">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.EnableCaptcha">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.AutoApprovePriceMatchRequests">
+    <Value>false</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.MaximumPriceIntervalFromOriginalPrice">
+    <Value>10</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.SendEmailToVendorOnNewAutoApprovedRequest">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.IncludeStoreOwnerInBccOnNewAutoApprovedRequest">
+    <Value>true</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.WidgetZone">
+    <Value>productdetails_inside_overview_buttons_after</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.GroupedProductsWidgetZone">
+    <Value>productdetails_add_info</Value>
+  </Setting>
+  <Setting Name="PriceMatchSettings.AccountNavigationWidgetZone">
+    <Value>account_navigation_after</Value>
+  </Setting>
+</Settings>

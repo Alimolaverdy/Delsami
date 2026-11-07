@@ -1,0 +1,26 @@
+﻿@model TicketAttributeAdminModel
+
+@{
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.HelpDesk.Admin.Submenus.TicketAttributes");
+}
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore, "The trial is limited to only 1 ticket attribute.")
+
+        <nop-tabs id="nop-help-desk-ticket-attribute">
+            <nop-tab asp-name="tab-general-settings" asp-default="true" asp-title="@T("SevenSpikes.HelpDesk.Admin.TicketAttribute.InfoTab")">
+                @await Html.PartialAsync("TicketAttributeSettings", Model)
+            </nop-tab>
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-staff-settings" asp-title="@T("SevenSpikes.HelpDesk.Admin.TicketAttribute.ValuesTab")">
+                    @await Html.PartialAsync("ValuesList", Model)
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</section>

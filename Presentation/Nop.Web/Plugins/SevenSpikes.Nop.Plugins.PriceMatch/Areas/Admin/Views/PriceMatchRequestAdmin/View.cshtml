@@ -1,0 +1,267 @@
+﻿@model PriceMatchRequestViewAdminModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.PriceMatch.Admin.Submenus.PriceMatchRequests");
+
+    //page title
+    ViewBag.PageTitle = T("SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.Title").Text;
+}
+
+<form method="post" id="view-price-match-request-form">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Common.View")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.BackToList") + ")", "List")</small>
+        </h1>
+
+        @if (Model.PriceMatchRequest.Status == Status.Pending)
+        {
+            <div class="float-right">
+                <input type="submit" asp-action="Approve" asp-controller="PriceMatchRequestAdmin" name="Approve" id="approve" class="btn bg-primary" value="@T("SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.Button.Approve")" />
+                <input type="submit" asp-action="Deny" asp-controller="PriceMatchRequestAdmin" name="Deny" id="deny" class="btn bg-danger" value="@T("SevenSpikes.PriceMatch.Admin.PriceMatchRequest.View.Button.Deny")" />
+            </div>
+        }
+    </div>
+
+    @await Html.TrialMessageAsync(Model.PriceMatchRequest.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+    
+    <div asp-validation-summary="All"></div>
+    <input type="hidden" asp-for="PriceMatchRequest.Id"/>
+    
+    <section class="content">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.CreatedOn" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequest.CreatedOn</div>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.Status" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequest.StatusName</div>
+                            </div>
+                        </div>
+
+                        @if (Model.PriceMatchRequest.Status != Status.Pending)
+                        {
+                            <div class="form-group row clearfix">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="PriceMatchRequest.ProcessedBy" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">
+                                        @if (Model.PriceMatchRequest.ProcessedBy == 0)
+                                        {
+                                            @T("SevenSpikes.PriceMatch.Common.PriceMatchRequest.ProcessedBy.AutoApproved")
+                                        }
+                                        else
+                                        {
+                                            <a href="@Url.Content("~/Admin/Product/Edit/" + Model.PriceMatchRequest.ProcessedBy)" target="_blank">@Model.PriceMatchRequest.ProcessedByName</a>
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row clearfix">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="PriceMatchRequest.ProcessedOn" />
+                                </div>
+                                <div class="col-md-9">
+                                    <div class="form-text-row">@Model.PriceMatchRequest.ProcessedOn</div>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.StoreName" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequest.StoreName</div>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.ProductName" />
+                            </div>
+                            <div class="col-md-9">
+                                <a href="@Url.Content("~/Admin/Product/Edit/" + Model.PriceMatchRequest.ProductId)" target="_blank">@Model.PriceMatchRequest.ProductName</a>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.CustomerName" />
+                            </div>
+                            <div class="col-md-9">
+                                <a href="@Url.Content("~/Admin/Customer/Edit/" + Model.PriceMatchRequest.CustomerId)" target="_blank">@Model.PriceMatchRequest.CustomerName</a>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.CustomerEmail" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequest.CustomerEmail</div>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.CustomerPhone" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequest.CustomerPhone</div>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.Message"/>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequest.Message</div>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.ProductPriceFormatted"/>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequest.ProductPriceFormatted</div>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.CompetitorPriceFormatted"/>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequest.CompetitorPriceFormatted</div>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.CompetitorUrl"/>
+                            </div>
+                            <div class="col-md-9">
+                                <a href="@Url.Content(Model.PriceMatchRequest.CompetitorUrl)" target="_blank">@Model.PriceMatchRequest.CompetitorUrl</a>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequestDiscount.PriceDifferenceFormatted"/>
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.PriceMatchRequestDiscount.PriceDifferenceFormatted ( @Model.PriceMatchRequestDiscount.PriceDifferencePercentage % )</div>
+                            </div>
+                        </div>
+                        
+                        @if (Model.PriceMatchRequest.Status == Status.Approved)
+                        {
+                            <div class="form-group row clearfix">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="PriceMatchRequestDiscount.DiscountName"/>
+                                </div>
+                                <div class="col-md-9">
+                                    <a href="@Url.Content("~/Admin/Discount/Edit/" + Model.PriceMatchRequest.DiscountId)" target="_blank">@Model.PriceMatchRequestDiscount.DiscountName</a>
+                                    @T("SevenSpikes.PriceMatch.Common.PriceMatchRequestDiscount.DiscountUsedTimes", Model.PriceMatchRequestDiscount.DiscountUsedTimes)              
+                                </div>
+                            </div>
+                        }
+
+                        @if (Model.PriceMatchRequest.Status != Status.Denied)
+                        {
+                            <div class="form-group row clearfix">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="PriceMatchRequestDiscount.DiscountAmount"/>
+                                </div>
+                                <div class="col-md-9">
+                                    @if (Model.PriceMatchRequest.Status == Status.Pending)
+                                    {
+                                        <nop-editor asp-for="PriceMatchRequestDiscount.DiscountAmount" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.PercentageEscaped").Text" />
+                                    }
+                                    else if (Model.PriceMatchRequest.Status == Status.Approved)
+                                    {
+                                        <div class="form-text-row">@(Model.PriceMatchRequestDiscount.DiscountAmount) %</div>
+                                    }                 
+                                </div>
+                            </div>
+                            <div class="form-group row clearfix">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="PriceMatchRequestDiscount.DiscountEndDate"/>
+                                </div>
+                                <div class="col-md-9">
+                                    @if (Model.PriceMatchRequest.Status == Status.Pending)
+                                    {
+                                        <nop-editor asp-for="PriceMatchRequestDiscount.DiscountEndDate" />
+                                    }
+                                    else if (Model.PriceMatchRequest.Status == Status.Approved)
+                                    {
+                                        <div class="form-text-row">@(Model.PriceMatchRequestDiscount.DiscountEndDate)</div>
+                                    }                 
+                                </div>
+                            </div>
+                            <div class="form-group row clearfix">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="PriceMatchRequestDiscount.DiscountLimitationTimes"/>
+                                </div>
+                                <div class="col-md-9">
+                                    @if (Model.PriceMatchRequest.Status == Status.Pending)
+                                    {
+                                        <nop-editor asp-for="PriceMatchRequestDiscount.DiscountLimitationTimes" />
+                                    }
+                                    else if (Model.PriceMatchRequest.Status == Status.Approved)
+                                    {
+                                        <div class="form-text-row">@(Model.PriceMatchRequestDiscount.DiscountLimitationTimes)</div>
+                                    }                 
+                                </div>
+                            </div>
+                            <div class="form-group row clearfix">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="PriceMatchRequestDiscount.MaximumDiscountedQuantity"/>
+                                </div>
+                                <div class="col-md-9">
+                                    @if (Model.PriceMatchRequest.Status == Status.Pending)
+                                    {
+                                        <nop-editor asp-for="PriceMatchRequestDiscount.MaximumDiscountedQuantity" />
+                                    }
+                                    else if (Model.PriceMatchRequest.Status == Status.Approved)
+                                    {
+                                        <div class="form-text-row">@(Model.PriceMatchRequestDiscount.MaximumDiscountedQuantity)</div>
+                                    }                 
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PriceMatchRequest.AdditionalInformation"/>
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PriceMatchRequest.AdditionalInformation" asp-template="RichEditor" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+<script type="text/javascript">
+    $(document).on("click", "#approve, #deny", function (e) {
+
+        if (!confirm('@T("Admin.Common.AreYouSure")')) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+    });
+</script>

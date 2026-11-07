@@ -1,0 +1,276 @@
+﻿
+.social-feed .post-buttons {
+    text-align: right;
+}
+.social-feed .post-link-btn:before {
+    content: 'p';
+    font-family: icons;
+    font-size: 8px;
+    color: #fff;
+    text-transform: none;
+    margin-right: 10px;
+}
+.social-feed .post-link-btn:after {
+    display: none;
+}
+.instagram-feed .post-item {
+    float: right;
+}
+
+@media all and (min-width: 701px) {
+
+    .instagram-feed .post-item {
+        margin-left: unset;
+        margin-right: 1px;
+    }
+}
+
+@media all and (min-width: 1366px) {
+
+    .footer-upper .instagram-feed {
+        float: right;
+    }
+    .footer-upper .instagram-feed + .footer-newsletter {
+        float: left;
+    }
+}
+
+@media all and (min-width: 1566px) {
+
+    .footer-upper .instagram-feed + .footer-newsletter {
+        margin-right: unset;
+        margin-left: 45px;
+    }
+}
+
+@media all and (min-width: 1766px) {
+
+    .footer-upper .instagram-feed + .footer-newsletter {
+        margin-right: unset;
+        margin-left: 75px;
+    }
+}
+
+@media all and (min-width: 1900px) {
+
+    .footer-upper .instagram-feed + .footer-newsletter {
+        margin-right: unset;
+        margin-left: 105px;
+    }
+}
+
+.twitter-feed .slick-arrow.slick-prev {
+    left: unset;
+    right: 0;
+}
+.twitter-feed .slick-arrow.slick-next {
+    right: unset;
+    left: 0;
+}
+
+@media all and (min-width: 1366px) {
+
+    .footer-upper .twitter-feed:first-child {
+        float: right;
+    }
+    .footer-upper .instagram-feed + .twitter-feed {
+        float: left;
+    }
+    .footer-upper .twitter-feed:first-child + .footer-newsletter {
+        float: left;
+    }
+}
+
+@media all and (min-width: 1566px) {
+
+    .footer-upper .instagram-feed + .twitter-feed {
+        margin-left: unset;
+        margin-right: 5%;
+    }
+    .footer-upper .twitter-feed:first-child {
+        margin-left: unset;
+        margin-right: 7.5%;
+    }
+    .footer-upper .twitter-feed:first-child + .footer-newsletter {
+        margin-right: unset;
+        margin-left: 7.5%;
+    }
+}
+
+@media all and (min-width: 1766px) {
+
+    .footer-upper .instagram-feed + .twitter-feed {
+        margin-right: unset;
+        margin-left: 6%;
+    }
+}
+
+@media all and (min-width: 1366px) {
+
+    .footer-fgp-feeds-wrap .google-feed:first-child {
+        float: right;
+    }
+    .footer-fgp-feeds-wrap .google-feed:first-child + .pinterest-feed {
+        float: left;
+    }
+    .footer-fgp-feeds-wrap.with-facebook .pinterest-feed:first-child,
+    .footer-fgp-feeds-wrap.with-facebook.no-pinterest .google-feed:first-child {
+        float: right;
+    }
+    .footer-fgp-feeds-wrap.with-facebook .pinterest-feed:first-child + .facebook-feed,
+    .footer-fgp-feeds-wrap.with-facebook.no-pinterest .google-feed:first-child + .facebook-feed {
+        float: left;
+    }
+}
+
+@media all and (min-width: 1601px) {
+
+    .footer-fgp-feeds-wrap.with-facebook .pinterest-feed:first-child + .facebook-feed,
+    .footer-fgp-feeds-wrap.with-facebook.no-pinterest .google-feed:first-child + .facebook-feed {
+        margin-left: unset;
+        margin-right: 8%;
+    }
+}
+
+@media all and (min-width: 1801px) {
+
+    .footer-fgp-feeds-wrap.with-facebook .pinterest-feed:first-child + .facebook-feed,
+    .footer-fgp-feeds-wrap.with-facebook.no-pinterest .google-feed:first-child + .facebook-feed {
+        margin-left: unset;
+        margin-right: 10.5%;
+    }
+}
+
+.facebook-feed .post-item {
+    text-align: right;
+}
+.facebook-feed .avatar-link {
+    float: right;
+}
+.facebook-feed .author-date-wrap {
+    margin: 0 57px 0 0;
+}
+
+@media all and (min-width: 551px) {
+
+    .facebook-feed:only-child .post-item {
+        margin: 18px 18px 0 0;
+    }
+}
+
+.google-feed .post-item {
+    float: right;
+}
+.google-feed .post-head {
+    text-align: right;
+}
+.google-feed .avatar-wrap {
+    float: right;
+}
+.google-feed .author-date-wrap {
+    margin: 0 37px 0 0;
+}
+.google-feed p.post-description {
+    text-align: right;
+}
+.pinterest-feed .post-item {
+    float: right;
+}
+.pinterest-feed .post-info-wrap {
+    text-align: right;
+}
+.pinterest-feed .author-board-wrap {
+    margin-left: unset;
+    margin-right: 5px;
+}
+
+.social-feed .ss-content {
+    left: -16px;
+    right: 0;
+}
+.social-feed .ss-scroll {
+    right: unset !important;
+    left: 1px !important;
+}
+
+@media all and (min-width: 1025px) {
+
+    .social-feed .ss-container:after {
+        right: unset;
+        left: 1px;
+    }
+}
+
+.feeds-page .author-info {
+    margin-left: unset;
+    margin-right: 12px;
+}
+.feeds-page .post-date-wrap {
+    padding: 0 17px 0 0;
+}
+.feeds-page .post-date-wrap:before {
+    left: unset;
+    right: 0;
+}
+.feeds-page .post-link-btn {
+    padding: 11px 17px 11px 40px;
+}
+.body-rtl .feeds-page .post-link-btn:before {
+    content: 'p';
+    font-family: icons;
+    font-size: 8px;
+    color: #fff;
+    text-transform: none;
+    margin-right: 10px;
+}
+.body-rtl .feeds-page .post-link-btn:after {
+    font-family: icons;
+    position: absolute;
+    top: 50%;
+    left: 13px;
+    color: #fff;
+    text-transform: none;
+}
+.body-rtl .feeds-page .facebook-item .post-link-btn:after {
+    content: 'g';
+    font-size: 15px;
+    margin-top: -8px;
+}
+.body-rtl .feeds-page .twitter-item .post-link-btn:after {
+    content: 'd';
+    font-size: 15px;
+    margin-top: -8px;
+}
+.body-rtl .feeds-page .instagram-item .post-link-btn:after {
+    content: 'e';
+    font-size: 15px;
+    margin-top: -8px;
+}
+.body-rtl .feeds-page .pinterest-item .post-link-btn:after {
+    content: 'c';
+    font-size: 15px;
+    margin-top: -8px;
+}
+.body-rtl .feeds-page .googleplus-item .post-link-btn:after {
+    content: 'a';
+    font-size: 17px;
+    margin-top: -10px;
+    left: 12px;
+}
+
+@media all and (min-width: 769px) {
+
+    .feeds-page .feeds-nav-item:before,
+    .feeds-page .feeds-nav-item:after {
+        left: unset;      
+        right: 50%; 
+    }
+    .feeds-page .feeds-nav-item:before {
+        margin-left: unset;
+        margin-right: -8px;
+    }
+    .feeds-page .feeds-nav-item:after {
+        margin-left: unset;
+        margin-right: -7px;
+    }
+}

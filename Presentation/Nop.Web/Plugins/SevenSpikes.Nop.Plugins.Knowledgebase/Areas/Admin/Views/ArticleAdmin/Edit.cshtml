@@ -1,0 +1,53 @@
+@model ArticleAdminModel
+@{
+    //page title
+    ViewBag.PageTitle = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.EditArticleDetails").Text;
+
+    if (!Model.IsPopup)
+    {
+        Layout = AdminViewLocations.AdminLayoutViewPath;
+    }
+    else
+    {
+        Layout = "_AdminPopupLayout";
+    }
+}
+
+<form method="post" id="article-form">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.Knowledgebase.Admin.Entities.Article.EditArticleDetails") - @Model.Title
+            <small>
+                <i class="fa fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <a class="btn bg-purple" href="@Url.RouteUrl("KnowledgebaseArticle", new { SeName = Model.SEName })" target="_blank">
+                <i class="fa fa-eye"></i>
+                @T("Admin.Common.Preview")
+            </a>
+            <a class="btn bg-olive" href="@Url.Action("List", "CommentsAdmin", new {id = @Model.Id})">
+                <i class="fa fa-eye"></i>
+                @T("SevenSpikes.Knowledgebase.Admin.ViewComments")
+            </a>
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="article-delete" class="btn bg-red">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+
+    <input type="hidden" asp-for="@Model.IsPopup" />
+    @await Html.PartialAsync(AdminViews.CreateOrUpdate, Model)
+</form>
+<nop-delete-confirmation asp-model-id="@Model.Id" asp-button-id="article-delete" />

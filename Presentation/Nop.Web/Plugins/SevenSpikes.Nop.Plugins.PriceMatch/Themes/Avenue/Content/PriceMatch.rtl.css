@@ -1,0 +1,9 @@
+
+.priceMatchWindow .k-window-actions {
+    left: 0;
+    right: auto;
+}
+
+.priceMatchWindow .k-window-actions a:after {
+    padding-left: 0;
+}

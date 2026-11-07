@@ -102,6 +102,10 @@
     {
       "SystemName": "Delsami.Misc.OnePageCheckout",
       "Version": "1"
+    },
+    {
+      "SystemName": "SevenSpikes.Core",
+      "Version": "4.6"
     }
   ],
   "PluginNamesToUninstall": [],

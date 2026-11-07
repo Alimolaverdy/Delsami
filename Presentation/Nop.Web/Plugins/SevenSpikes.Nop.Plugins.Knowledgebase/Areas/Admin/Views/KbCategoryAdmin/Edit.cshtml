@@ -1,0 +1,85 @@
+@model CategoryAdminModel
+
+@{
+    if (!Model.IsPopup)
+    {
+        Layout = AdminViewLocations.AdminLayoutViewPath;
+    }
+    else
+    {
+        Layout = "_AdminPopupLayout";
+    }
+
+    var formAction = "/Admin/KbCategoryAdmin/Delete/" + Model.Id + "?isPopup=" + Model.IsPopup;
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {
+                window.opener.document.location.reload();
+            }
+            catch (e) { }
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+<form method="post" id="kbcategory-form">
+    
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.Knowledgebase.Admin.Entities.Category.EditCategoryDetails") - @Model.Name
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.Knowledgebase.Admin.Entities.Category.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+            <span id="category-delete" class="btn bg-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+        </div>
+    </div>
+
+    @await Html.PartialAsync(AdminViews.CreateOrUpdate, Model)
+</form>
+
+<div id="knowledgebasecategorymodel-delete-confirmation" style="display:none;">
+    <form action="@formAction" method="post" novalidate="novalidate">
+        <nop-antiforgery-token />
+        <div>
+            <p>
+                Are you sure you want to delete this item?
+            </p>
+            <div class="form-actions">
+                <span id="" class="k-button" onclick="$('#knowledgebasecategorymodel-delete-confirmation').data('kendoWindow').close();">No, cancel</span>
+                <input type="submit" class="k-button" value="Delete">
+            </div>
+        </div>
+    </form>
+</div>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $('#category-delete').click(function (e) {
+            e.preventDefault();
+            var window = $('#knowledgebasecategorymodel-delete-confirmation');
+            if (!window.data('kendoWindow')) {
+                window.kendoWindow({
+                    modal: true,
+                    title: 'Are you sure?',
+                    actions: ['Close']
+                });
+            }
+            window.data('kendoWindow').center().open();
+        });
+    });
+</script>

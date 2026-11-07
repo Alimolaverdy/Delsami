@@ -1,0 +1,92 @@
+﻿@model EditMessagePublicModel
+
+@{
+    Layout = "_ColumnsTwo";
+
+    var kendoVersion = "2020.1.406";
+
+    //title
+    NopHtml.AddTitleParts(T("SevenSpikes.HelpDesk.Public.EditTicket.Edit").Text + "#" + Model.MessageId);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-helpdesk-page");
+
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.css" />
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.css" />
+
+    var supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+        <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.rtl.css" />
+        <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.rtl.css" />
+    }
+
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/lib/kendo/@kendoVersion/js/kendo.all.min.js" asp-location="Footer"></script>
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation")
+}
+
+<div class="page account-page ticketing-page edit-message-page">
+    <div class="page-title">
+        <h1 class="pt-text">@T("Account.MyAccount") - @T("SevenSpikes.HelpDesk.Public.EditMessageLink")</h1>
+    </div>
+
+    <div class="page-body" id="addNewTicket">
+        @using (Html.BeginRouteForm("HelpDeskEditMessage", FormMethod.Post, new { id = "editMessageForm" }))
+        {
+            <input asp-for="MessageId" type="hidden" />
+
+            <div class="fieldset">
+                <div class="form-fields">
+                    <div class="inputs">
+                        <nop-label asp-for="Content" />
+                        <nop-textarea asp-for="Content" style = "height: 350px;" />
+                        <nop-required />
+                        <span asp-validation-for="Content"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="buttons">
+                <button type="submit" class="k-button button-1 save-message-button">@T("SevenSpikes.HelpDesk.Public.EditTicket.Save")</button>
+                <a href="@Url.RouteUrl("HelpDeskViewTicket", new { id = Model.TicketId })" class="k-button button-1 return-to-ticket-button">
+                    @T("SevenSpikes.HelpDesk.Public.ViewTicket.Notes.ReturnToTheTicket")
+                </a>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        @await Html.PartialAsync("_JSNavigation", "manageTickets")
+
+        var defaultTools = kendo.ui.Editor.defaultTools;
+
+        defaultTools["insertLineBreak"].options.shift = false;
+        defaultTools["insertParagraph"].options.shift = true;
+
+        $("#@Html.IdFor(model => model.Content)").kendoEditor({
+            encoded: false
+        });
+
+        $("#@Html.IdFor(model => model.Content)").data("kendoEditor")
+            .toolbar
+            .element
+            .find("select.k-formatting").data("kendoSelectBox")
+            .one("open", function (e) {
+                setTimeout(function () {
+                    e.sender.popup.wrapper.addClass("dropdown-wrapper paragraph-select");
+                });
+            });
+    });
+
+    // http://stackoverflow.com/questions/8466643/jquery-validate-enable-validation-for-hidden-fields/8565769#8565769
+    // enable the validation of the hidden fields( kendo fields )
+    $.validator.setDefaults({
+        ignore: []
+    });
+</script>

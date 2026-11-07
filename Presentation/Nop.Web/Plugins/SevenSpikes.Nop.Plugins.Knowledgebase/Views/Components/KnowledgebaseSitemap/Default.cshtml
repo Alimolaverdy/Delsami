@@ -1,0 +1,15 @@
+﻿@model List<BaseNavigationModel>
+
+<div class="entity">
+    <div class="entity-title">
+        <h2>@T("SevenSpikes.Knowledgebase.Public.Sitemap.Title")</h2>
+    </div>
+    <div class="entity-body">
+        <ul>
+            @foreach(var item in Model)
+            {
+                <li><a href="@item.SEName">@item.Text</a></li>
+            }
+        </ul>
+    </div>
+</div>

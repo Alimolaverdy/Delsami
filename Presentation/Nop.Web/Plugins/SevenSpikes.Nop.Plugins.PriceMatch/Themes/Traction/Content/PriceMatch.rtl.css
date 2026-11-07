@@ -1,0 +1,14 @@
+
+.price-match-button {
+    background-position: left center;
+    padding: 8px 12px 8px 38px;
+}
+
+.priceMatchWindow .k-header {
+    text-align: right;
+}
+
+.priceMatchWindow .k-window-actions {
+    left: 10px;
+    right: auto;
+}

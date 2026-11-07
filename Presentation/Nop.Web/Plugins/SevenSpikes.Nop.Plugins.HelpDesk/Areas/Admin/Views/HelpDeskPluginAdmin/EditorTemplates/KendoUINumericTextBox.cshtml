@@ -1,0 +1,20 @@
+﻿@model int
+
+@{
+    var inputFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
+    var inputFieldNameWithoutDot = inputFieldName.Replace(".", "");
+}
+
+<input id="@inputFieldNameWithoutDot" name="@inputFieldName" type="text" />
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $("#@inputFieldNameWithoutDot").kendoNumericTextBox({
+            step: 1,
+            format: "n0",
+            min: 0,
+            max: 23,
+            value: "@(Model)"
+        });
+    });
+</script>

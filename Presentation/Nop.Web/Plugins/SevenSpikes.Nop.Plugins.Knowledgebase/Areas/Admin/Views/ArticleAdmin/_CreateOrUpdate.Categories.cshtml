@@ -1,0 +1,75 @@
+@model ArticleAdminModel
+@inject AdminAreaSettings adminAreaSettigns
+
+@{
+    var defaultGridPageSize = adminAreaSettigns.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettigns.GridPageSizes;
+}
+
+@if (ViewBag.RefreshPage == true)
+{
+    <script type="text/javascript">
+        try {
+            window.opener.document.forms['@(ViewBag.formId)'].@(ViewBag.btnId).click();
+        }
+        catch (e){}
+        window.close();
+    </script>
+
+    return;
+}
+
+@if (Model.Id > 0)
+{
+    @await Html.PartialAsync("Table", new DataTablesModel
+    {
+        Name = "categories-grid",
+        UrlRead = new DataUrl("ListCategoriesForArticle", "CategoryToArticleAdmin", new RouteValueDictionary { ["articleId"] = Model.Id}),
+        UrlDelete = new DataUrl("Delete", "CategoryToArticleAdmin", null),
+        Length = defaultGridPageSize,
+        LengthMenu = gridPageSizes,
+        ColumnCollection = new List<ColumnProperty>
+        {
+            new ColumnProperty(nameof(CategoryMappedToArticleModel.Name))
+            {
+                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Category.Name").Text
+            },
+            new ColumnProperty(nameof(CategoryMappedToArticleModel.DisplayOrder))
+            {
+                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Category.DisplayOrder").Text
+            },
+            new ColumnProperty(nameof(CategoryMappedToArticleModel.Id))
+            {
+                Width = "70",
+                Render = new RenderButtonEdit(new DataUrl("Edit", "CategoryToArticleAdmin"))
+            },
+            new ColumnProperty(nameof(CategoryMappedToArticleModel.Id))
+            {
+                Width = "70",
+                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+            }
+        }
+    })
+
+<div class="card-body">
+    <input type="submit" id="btnAddNewCategory" name="btnAddNewCategory" value="@T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Category.AddNew")" onclick="javascript:OpenWindow('@Url.Action("AvailableCategoriesForArticle", "CategoryToArticleAdmin", new { articleId = Model.Id, btnId = "btnRefreshCategory" })', 800, 800, true); return false;" class="k-button" />
+    <input type="submit" id="btnRefreshCategory" name="btnRefreshCategory" style="display: none" />
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $('#btnRefreshCategory').click(function (e) {
+                //refresh grid
+                e.preventDefault();
+                var optionsGrid = $("#categories-grid").data('kendoGrid');
+                optionsGrid.dataSource.read();
+
+                //return false to don't reload a page
+                return false;
+            });
+        });
+    </script>
+</div>
+}
+else
+{
+    @T("SevenSpikes.Knowledgebase.Admin.Entities.Article.SaveBeforeEdit")
+}

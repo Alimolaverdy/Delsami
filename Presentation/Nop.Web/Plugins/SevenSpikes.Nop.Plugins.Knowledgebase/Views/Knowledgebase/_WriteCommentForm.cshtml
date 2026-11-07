@@ -1,0 +1,43 @@
+﻿@model CommentModel
+
+<script asp-location="Footer">
+    // http://stackoverflow.com/questions/8466643/jquery-validate-enable-validation-for-hidden-fields/8565769#8565769
+    // enable the validation of the hidden fields
+    $.validator.setDefaults({
+        ignore: [],
+    });
+</script>
+
+<form asp-controller="ArticleComment" asp-action="Create" method="post" id="comment-form">
+
+    @Html.Hidden("articleId", Model.ArticleId)
+    @Html.Hidden("articleSEName", Model.ArticleSEName)
+
+    @await Html.PartialAsync(Views.CommentsEditor, string.Empty)
+
+    <span asp-validation-for="Text"></span>
+
+    <div class="message-error">
+        <div asp-validation-summary="All"></div>
+    </div>
+
+    @if (Model.CommentsRequireApproval &&
+            TempData["SuccessfullySubmitedForApproval"] != null &&
+            (bool)TempData["SuccessfullySubmitedForApproval"])
+    {
+        <div class="message-success">
+            @T("SevenSpikes.Knowledgebase.Public.Entities.Article.Comment.SuccessfullySubmitedForApproval")
+        </div>
+    }
+
+    @if (Model.ShowCaptchaForComments)
+    {
+        <div class="captcha-box">
+            <nop-captcha />
+        </div>
+    }
+
+    <div class="buttons">
+        <button class="submit-comment" type="submit">@T("SevenSpikes.Knowledgebase.Public.Entities.Article.Comment.Submit")</button>
+    </div>
+</form>

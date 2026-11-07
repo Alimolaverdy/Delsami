@@ -1,0 +1,96 @@
+﻿.center-1 .social-feed {
+	margin-right: auto;
+	margin-left: auto;
+}
+.post-head {
+	padding: 0 0 0 90px;
+}
+.author-date-wrap {
+	margin: 0 65px 0 0;
+}
+.social-feed .avatar-wrap {
+	float: right;
+}
+.social-feed .author-name a {
+	text-align: right;
+}
+.post-date-wrap {
+	left: 0;
+	right: auto;
+}
+.twitter-feed .post-body {
+	text-align: right;
+}
+.home-page-blog-social-wrapper .ss-container {
+	padding: 0 0 0 20px;
+}
+.home-page-blog-social-wrapper .pinterest-feed .post-item {
+	margin: 0 0 10px 10px;
+}
+.home-page-blog-social-wrapper .pinterest-feed .feed-body {
+	padding: 10px 10px 10px 0;
+}
+.pinterest-feed .author-board-wrap {
+	margin: 0 55px 0 0;
+	text-align: right;
+}
+.feeds-page .post-buttons a {
+    padding: 0 20px 0 35px;
+    text-align: right;
+}
+.feeds-page .facebook-item .post-buttons a {
+    background-position: top -58px left 13px;
+}
+.feeds-page .twitter-item .post-buttons a {
+    background-position: top 10px left 10px;
+}
+.feeds-page .instagram-item .post-buttons a {
+    background-position: top -25px left 10px;
+}
+.feeds-page .pinterest-item .post-buttons a {
+    background-position: top -125px left 8px;
+}
+.feeds-page .googleplus-item .post-buttons a {
+    background-position: top -92px left 10px;
+}
+.ss-content {
+	right: 0;
+	left: -17px;
+}
+.ss-scroll {
+	left: 1px !important;
+	right: auto;
+}
+@media all and (min-width: 481px) {
+}
+@media all and (min-width: 1025px) {
+	.ss-container:after {
+		left: 1px;
+		right: auto;
+	}
+}
+@media all and (min-width: 1281px) {
+}
+@media all and (max-width: 768px) {
+}
+.feeds-page .author-info {
+	margin-right: 12px;
+	margin-left: 0;
+}
+.feeds-page .post-body {
+	text-align: right;
+}
+.feeds-page .post-link-btn:after {
+	margin-right: 10px;
+	margin-left: 0;
+}
+@media all and (min-width: 481px) {
+}
+@media all and (min-width: 769px) {
+	.feeds-page .feeds-nav:before {
+		right: 0;
+		left: 0;
+	}
+}
+@media all and (min-width: 1281px) {
+}

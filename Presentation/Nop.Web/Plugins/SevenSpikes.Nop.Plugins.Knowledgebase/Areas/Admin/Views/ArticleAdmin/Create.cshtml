@@ -1,0 +1,51 @@
+@model ArticleAdminModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Admin.Common.AddNew").Text;
+
+    if (!Model.IsPopup)
+    {
+        Layout = AdminViewLocations.AdminLayoutViewPath;
+    }
+    else
+    {
+        Layout = "_AdminPopupLayout";
+    }
+
+    if (ViewBag.RefreshPage != null && ViewBag.RefreshPage)
+    {
+        <script type="text/javascript">
+            try { window.opener.document.location.reload(); }
+            catch (e) { }
+            window.close();
+        </script>
+    }
+}
+<form method="post" id="article-form">
+
+    @if (Model.ParentCategoryId > 0)
+    {
+        <input type="hidden" asp-for="@Model.ParentCategoryId" />
+    }
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Common.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.Knowledgebase.Admin.Entities.Article.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+
+    <input type="hidden" asp-for="@Model.IsPopup" />
+    @await Html.PartialAsync(AdminViews.CreateOrUpdate, Model)
+</form>

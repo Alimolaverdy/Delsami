@@ -1,0 +1,16 @@
+
+.priceMatchWindow .k-header {
+    text-align: right;
+}
+.priceMatchWindow .k-window-actions {
+    left: 0;
+    right: auto;
+}
+.price-match-requests-list .details {
+    text-align: right;
+}
+.price-match-requests-list .details label {
+    display: inline-block; /*rtl*/
+    margin-left: 5px;
+    margin-right: 0;
+}

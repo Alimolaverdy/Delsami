@@ -1,0 +1,135 @@
+@model ArticleListModel
+@inject AdminAreaSettings adminAreaSettigns
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    var defaultGridPageSize = adminAreaSettigns.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettigns.GridPageSizes;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.Knowledgebase.Admin.Submenus.ManageArticles");
+
+    var gridPageSize = adminAreaSettigns.DefaultGridPageSize;
+
+    if (ViewBag.isPopup)
+    {
+        <script type="text/javascript">
+            try {
+                window.opener.document.location.reload();
+            }
+            catch (e) { }
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+<nop-antiforgery-token />
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("SevenSpikes.Knowledgebase.Admin.Entities.Article")
+    </h1>
+    <div class="float-right">
+        <a href="@Html.Raw(Url.Action("Create", "ArticleAdmin", new {categoryId = Model.CategoryId}))" class="btn bg-primary">
+            <i class="fa fa-plus-square"></i>
+            @T("SevenSpikes.Knowledgebase.Admin.Entities.Article.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @await Html.PartialAsync("Table", new DataTablesModel
+                    {
+                        Name = "knowledgebase-articles-grid",
+                        UrlRead = new DataUrl("List", "ArticleAdmin", null),
+                        UrlDelete = new DataUrl("DeleteArticle", "ArticleAdmin", null),
+                        Length = defaultGridPageSize,
+                        LengthMenu = gridPageSizes,
+                        ColumnCollection = new List<ColumnProperty>
+                        {
+                            new ColumnProperty(nameof(ArticleAdminModel.Title))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Title").Text
+                            },
+                            new ColumnProperty(nameof(ArticleAdminModel.CreatedOnUtc))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.CreationDate").Text
+                            },
+                            new ColumnProperty(nameof(ArticleAdminModel.AuthorEmail))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Author").Text
+                            },
+                            new ColumnProperty(nameof(ArticleAdminModel.LastEditorEmail))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.LastEditor").Text
+                            },
+                            new ColumnProperty(nameof(ArticleAdminModel.AddToMenu))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.AddedToMenu").Text,
+                                Render = new RenderCustom("renderIsAddedToMenu"),
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ArticleAdminModel.Published))
+                            {
+                                Title = T("SevenSpikes.Knowledgebase.Admin.Entities.Article.Published").Text,
+                                Render = new RenderCustom("renderIsPublished"),
+                                Width = "100"
+                            },
+                            new ColumnProperty(nameof(ArticleAdminModel.Id))
+                            {
+                                Width = "100",
+                                Render = new RenderCustom("renderEditButton")
+                            },
+                            new ColumnProperty(nameof(ArticleAdminModel.Id))
+                            {
+                                Width = "100",
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                            }
+                        }
+                    })
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script type="text/javascript">
+
+    function renderIsAddedToMenu(data, type, row, meta) {
+
+        if (row.AddToMenu) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderIsPublished(data, type, row, meta) {
+
+        if (row.Published) {
+
+            return '<i class="fa fa-check true-icon"></i>';
+        }
+        else {
+
+            return '<i class="fa fa-times false-icon"></i>';
+        }
+    }
+
+    function renderEditButton(data, type, row, meta) {
+
+        return '<a class="btn btn-default" href="@Url.Action("Edit", "ArticleAdmin")/' + data + '" title="@T("Admin.Common.Edit")">' +
+            '<i class="fas fa-pencil-alt"></i>' +
+            '@T("Admin.Common.Edit")' +
+            '</a>';
+    }
+</script>

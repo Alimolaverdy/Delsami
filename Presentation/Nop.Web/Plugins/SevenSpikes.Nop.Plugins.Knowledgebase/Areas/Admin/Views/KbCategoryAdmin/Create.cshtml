@@ -1,0 +1,49 @@
+@model CategoryAdminModel
+
+@{
+    if (!Model.IsPopup)
+    {
+        Layout = AdminViewLocations.AdminLayoutViewPath;
+    }
+    else
+    {
+        Layout = "_AdminPopupLayout";
+    }
+
+    if (ViewBag.RefreshPage == true)
+    {
+        <script type="text/javascript">
+            try {
+                window.opener.document.location.reload();
+            }
+            catch (e) { }
+            window.close();
+        </script>
+
+        return;
+    }
+}
+
+<form method="post" id="kbcategory-form">
+
+    <input id="Id" name="Id" type="hidden" value="@Model.Id">
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Admin.Common.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink("(" + T("SevenSpikes.Knowledgebase.Admin.Entities.Category.BackToList") + ")", "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+
+    @await Html.PartialAsync(AdminViews.CreateOrUpdate, Model)
+</form>

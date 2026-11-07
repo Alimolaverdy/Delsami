@@ -1,0 +1,16 @@
+@model ArticleRevision
+@{
+	Layout = AdminViewLocations.AdminPopupLayoutViewPath;
+}
+
+<section class="content">
+    <div class="form-horizontal">
+        <div class="cards-group">
+            <div class="card card-default">
+                <div class="card-body">
+                    @Html.Raw(@Model.Content)
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,33 @@
+﻿@model ReminderModel
+
+@{
+    var messageTemplateViewDataDictionary = new ViewDataDictionary(ViewData);
+    messageTemplateViewDataDictionary.TemplateInfo.HtmlFieldPrefix = "MessageTemplateModelCustomerReminders";
+}   
+
+<link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.CustomerReminders/Areas/Admin/Content/Styles/adminstyles.css" />
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="form-horizontal">
+        @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore, $"You can send up to 100 messages using this trial version. Number of messages sent so far: {Model.NumberOfSentMessages}")
+        
+        <nop-tabs id="reminders-create-or-edit">
+            <nop-tab asp-name="tab-settings" asp-default="true" asp-title="@T("SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.SettingsTabTitle")">
+                @{ await Html.RenderPartialAsync("_CreateOrUpdate.ReminderSettings", Model); }
+            </nop-tab>
+            <nop-tab asp-name="tab-message-template" asp-title="@T("SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.MessageTemplateTabTitle")">
+                @{ await Html.RenderPartialAsync("_CreateOrUpdate.MessageTemplate", Model.MessageTemplateModelCustomerReminders, messageTemplateViewDataDictionary); }
+            </nop-tab>
+
+            @if (Model.Id > 0)
+            {
+                <nop-tab asp-name="tab-excluded-customers" asp-title="@T("SevenSpikes.Plugins.CustomerReminders.Admin.Reminder.ReminderExcludedCustomerTabTitle")">
+                    @{ await Html.RenderPartialAsync("_CreateOrUpdate.ReminderExcludedCustomers", Model); }
+                </nop-tab>
+            }
+        </nop-tabs>
+    </div>
+</section>

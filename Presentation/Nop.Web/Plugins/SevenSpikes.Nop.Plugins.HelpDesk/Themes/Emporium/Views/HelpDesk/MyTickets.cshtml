@@ -1,0 +1,287 @@
+﻿@model MyTicketsPublicModel
+
+@inject AdminAreaSettings adminAreaSettings
+@inject HelpDeskSettings helpDeskSettings
+
+@{
+    Layout = "_ColumnsTwo";
+
+    var kendoVersion = "2020.1.406";
+
+    //title
+    NopHtml.AddTitleParts(T("SevenSpikes.HelpDesk.Public.MyTicketsLink").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-helpdesk-page");
+
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.css" />
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.css" />
+
+    var supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.rtl.css" />
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.rtl.css" />
+    }
+
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/lib/kendo/@kendoVersion/js/kendo.all.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Scripts/HelpDesk.min.js" asp-location="Footer"></script>  
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation")
+}
+
+@{
+    var defaultGridPageSize = adminAreaSettings.DefaultGridPageSize;
+    var gridPageSizes = adminAreaSettings.GridPageSizes;
+
+    var maxTicketProducts = helpDeskSettings.MaxTicketProducts;
+    var minimumProductSearchKeywordLength = helpDeskSettings.MinimumProductSearchKeywordLength;
+
+    var helpDeskResources = "{\"sevenSpikesHelpDeskSelect\": \"" + T("SevenSpikes.HelpDesk.Select").Text + "\"}";
+}
+
+@Html.Hidden("no-results-found", T("SevenSpikes.HelpDesk.Public.Common.NoResultsFound"))
+@Html.Hidden("read-allSubjects-url", Html.Raw(Url.Action("GetAllTicketSubjects", "HelpDesk", new { isManagingTickets = false })))
+@Html.Hidden("read-allProducts-url", Html.Raw(Url.Action("GetAllProducts", "HelpDesk")))
+@Html.Hidden("should-check", true)
+@Html.Hidden("grid-id", "mytickets-grid")
+@Html.Hidden("max-ticket-products", maxTicketProducts)
+@Html.Hidden("minimum-product-search-keyword", minimumProductSearchKeywordLength)
+
+<input type="hidden" class="helpdesk-resources" data-resources="@helpDeskResources" />
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation")
+}
+
+@section accountPageTitle
+{
+    <div class="page-title">
+        <h1 class="pt-text">@T("SevenSpikes.HelpDesk.Public.MyTicketsTitle")</h1>
+    </div>
+}
+
+<div class="page account-page ticketing-page my-tickets-page">
+    <div class="page-body">
+        <div id="grid-filters" class="grid-filters"> 
+            <ul class="filter-list">
+                <li class="inputs filter-item">
+                    <label class="filter-label">@T("SevenSpikes.HelpDesk.Public.Ticket.TicketId")</label>
+                    <input id="ticket-id" class="filter-input ticket-id" value="" size="3" />
+                </li>
+                <li class="inputs filter-item">
+                    <label class="filter-label">@T("SevenSpikes.HelpDesk.Public.Ticket.TicketStatus")</label>
+                    <input id="status-list" class="filter-input status-list" value="" />
+                </li>
+                @*<li class="inputs filter-item">
+                    <label class="filter-label">@T("SevenSpikes.HelpDesk.Public.Ticket.Department")</label>
+                    <input id="departments-list" class="filter-input department-list" value="" />
+                </li>*@
+                <li class="inputs filter-item search-row">
+                    <label class="filter-label">@T("SevenSpikes.HelpDesk.Public.ManageTickets.SearchBySubject")</label>
+                    <input id="subject-field" class="subject-field" value="" />
+                </li>
+                <li class="inputs filter-item search-row">
+                    <label class="filter-label">@T("SevenSpikes.HelpDesk.Public.ManageTickets.SearchByProduct")</label>
+                    <select id="product-field" class="product-field"></select>
+                </li>
+            </ul>
+            <div id="clear-filters" class="buttons filters-buttons">
+                <button type="button" id="clear" class="k-button button-1 clear-filters">@T("SevenSpikes.HelpDesk.Public.ManageTickets.ClearFilters")</button>
+            </div>
+        </div>
+        <div id="mytickets-grid" class="tickets-table-panel"></div>
+    </div>
+</div>
+
+<script type="text/x-kendo-template" id="ticket-information" asp-location="Footer">
+    <div class="ticket-info-panel tabstrip">
+        <ul class="tabs-list">
+            <li class="tab-item k-state-active">
+                <span class="tab-text">@T("SevenSpikes.HelpDesk.Public.ManageTickets.TicketInfo")</span>
+            </li>
+        </ul>
+        <div class="tab-box-wrapper">
+            <ul id="ticket-details-template" class="tab-box">
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.TicketId"):</label>
+                    <span class="row-text">#= Id #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.Product"):</label>
+                    <span class="row-text">#= AllProducts #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.Department"):</label>
+                    <span class="row-text">#= TicketDepartmentName #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.LastCustomerAnswerUtc"):</label>
+                    <span class="row-text">#= prettyDate(kendo.toString(kendo.parseDate(LastCustomerAnswerUtc), "u")) #</span>
+                </li>
+                <li class="box-row">
+                    <label class="row-label">@T("SevenSpikes.HelpDesk.Public.Ticket.LastStaffAnswerUtc"):</label>
+                    <span class="row-text">#= prettyDate(kendo.toString(kendo.parseDate(LastStaffAnswerUtc), "u")) #</span>
+                </li>
+            </ul>
+        </div>
+    </div>
+</script>
+
+<script id="commands-template" type="text/x-kendo-template" asp-location="Footer">
+    <a class="view-ticket k-button" href="ViewTicket/#: Id#" title="@T("Admin.Common.View")">@T("Admin.Common.View")</a>
+</script>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        @await Html.PartialAsync("_JSNavigation", "myTickets")
+
+        $("#product-field").data('kendoMultiSelect').tagList.addClass('product-tag-list');
+
+        $('#status-list').data('kendoDropDownList').one("open", function (e) {
+            setTimeout(function () {
+                e.sender.popup.wrapper.addClass("dropdown-wrapper");
+            });
+        });
+
+        $('#departments-list').data('kendoDropDownList').one("open", function (e) {
+            setTimeout(function () {
+                e.sender.popup.wrapper.addClass("dropdown-wrapper");
+            });
+        });
+    });
+</script>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $("#mytickets-grid").kendoGrid({
+            dataSource: {
+                type: "json",
+                transport: {
+                    read: {
+                        url: "@Html.Raw(Url.Action("MyTicketsList", "HelpDesk"))",
+                        type: "POST",
+                        dataType: "json",
+                        contentType: "application/json"
+                    },
+                    parameterMap: function(data, operation) {
+                        if (operation != "read") {
+                            return data;
+                        } else {
+                            //for some reasons only such "Filter" data be parsed
+                            return JSON.stringify(data);
+                        }
+                    }
+                },
+                schema: {
+                    data: "Data",
+                    total: "Total",
+                    errors: "Errors",
+                    model: {
+                        id: "Id",
+                        fields: {
+                            Id: { editable: false, type: "number" },
+                            CreatedOnUtc: { editable: false, type: "date" },
+                            LastCustomerAnswerUtc: { editable: false, type: "date" },
+                            LastStaffAnswerUtc: { editable: false, type: "date" },
+                            TicketStatusName: { editable: false, type: "string" }
+                        }
+                    }
+                },
+                error: function (e) {
+                    display_kendoui_grid_error(e);
+
+                    this.cancelChanges();
+                },
+                pageSize: "@(defaultGridPageSize)",
+                serverPaging: true,
+                serverFiltering: true,
+                serverSorting: true
+            },
+            pageable: {
+                refresh: true,
+                pageSizes: [@(gridPageSizes)],
+                messages: {
+                    refresh: "@T("SevenSpikes.HelpDesk.TicketsGrid.Pager.Messages.Refresh")",
+                    itemsPerPage: "@T("SevenSpikes.HelpDesk.TicketsGrid.Pager.Messages.ItemsPerPage")",
+                    empty: "@T("SevenSpikes.HelpDesk.TicketsGrid.Pager.Messages.Empty")"
+                }
+            },
+            editable: {
+                confirmation: false,
+                mode: "inline"
+            },
+            filterable: true,
+            sortable: true,
+            scrollable: false,
+            detailTemplate: kendo.template($("#ticket-information").html()),
+            detailInit: detailInit,
+            columns: [{
+                field: "Id",
+                title: "@T("SevenSpikes.HelpDesk.Public.ManageTickets.Ticket")",
+                width: 50,
+                template: "<div style='text-align:center'>\\##= Id #</div>",
+                headerAttributes: {
+                    style: "text-align: center;"
+                },
+                filterable: false
+            },{
+                field: "CreatedOnUtc",
+                title: "@T("SevenSpikes.HelpDesk.Public.Ticket.CreatedOnUtc")",
+                width: 120,
+                template: "#= prettyDate(kendo.toString(kendo.parseDate(CreatedOnUtc), 'u')) #",
+                filterable: false
+            }, {
+                field: "Subject",
+                title: "@T("SevenSpikes.HelpDesk.Public.Ticket.Subject")",
+                width: 150,
+                filterable: false
+            }, {
+                field: "TicketStatus",
+                template: "#= TicketStatusName #",
+                title: "@T("SevenSpikes.HelpDesk.Public.Ticket.TicketStatus")",
+                width: 100,
+                filterable: false
+            }, {
+                title: "@T("Admin.Common.View")",
+                template: kendo.template($("#commands-template").html()),
+                width: 60,
+                filterable: false,
+                sortable: false
+            }]
+        });
+
+        $('#mytickets-grid').data('kendoGrid').table.css('table-layout', 'fixed');
+
+        $('#mytickets-grid').data('kendoGrid').wrapper.find('.k-pager-sizes select').data('kendoDropDownList').one("open", function (e) {
+            setTimeout(function () {
+                e.sender.popup.wrapper.addClass("dropdown-wrapper");
+            });
+        }).list.addClass("grid-totalPages-list");
+    });
+
+    function detailInit(e) {
+        var detailRow = e.detailRow;
+
+        detailRow.find(".tabstrip").kendoTabStrip({
+            animation: {
+                open: { effects: "fadeIn" }
+            }
+        });
+    }
+
+    function localDatabase() {
+        var allDepartments = @Html.ToLocalDatabase(Model.AvailableDepartments);
+        var allStatus = @Html.ToLocalDatabase(Model.AvailableStatus);
+
+        return {
+            allDepartments: allDepartments,
+            allStatus: allStatus
+        };
+    }
+</script>

@@ -1,0 +1,12 @@
+﻿{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Customer Reminders",
+  "SystemName": "SevenSpikes.Nop.Plugins.CustomerReminders",
+  "Version": "4.60",
+  "SupportedVersions": [ "4.60" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.CustomerReminders.dll",
+  "Description": "With this plugin you can automatically recover abandoned shopping carts, incomplete registrations, unpaid orders and more."
+}

@@ -1,0 +1,73 @@
+﻿@inject HelpDeskSettings helpDeskSettings
+
+@{
+    var maximumSizeOfAttachedFiles = helpDeskSettings.MaximumSizeOfTheAttachedFiles;
+    var maximumSizeOfAttachedFilesInBytes = maximumSizeOfAttachedFiles*1048576;
+
+    var maximumFileSize = helpDeskSettings.MaximumSizeOfFileToAttach;
+    var maximumFileSizeInBytes = maximumFileSize*1048576;
+
+    string maximumFileSizeWarning = string.Format(T("SevenSpikes.HelpDesk.Public.KendoUIUpload.MaxFileSizeWarning").Text, maximumFileSize);;
+
+    var inputFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
+    var inputFieldNameWithoutDot = inputFieldName.Replace(".", "");
+}
+
+<input id="@inputFieldNameWithoutDot" name="@inputFieldName" type="file" />
+
+<script type="text/javascript" asp-location="Footer">
+
+    var sizeOfAttachedFiles = 0;
+
+    $(document).ready(function () {
+        $("#@inputFieldNameWithoutDot").kendoUpload(
+        {
+            localization: {
+                select: "@T("SevenSpikes.HelpDesk.Public.KendoUIUpload.AttachFiles")"
+            },
+            multiple: true,
+            remove: function(e) {
+
+                for (var i = 0; i < e.files.length; i++) {
+                    sizeOfAttachedFiles = sizeOfAttachedFiles - e.files[i].size;
+                }
+            },
+            select: function (e) {
+                var files = e.files;
+
+                if (files.length > 5) {
+                    alert("@T("SevenSpikes.HelpDesk.Public.KendoUIUpload.MaxFilesAtATime")");
+                    e.preventDefault();
+                    return false;
+                }
+
+                var sizeOfCurrentFileSelection = 0;
+
+                for (var fileCntr = 0; fileCntr < files.length; fileCntr++) {
+                    if (files[fileCntr].size > @maximumFileSizeInBytes) {
+                        alert("@maximumFileSizeWarning");
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    if (files[fileCntr].extension.toLowerCase() == '.exe') {
+                        alert("@T("SevenSpikes.HelpDesk.Public.KendoUIUpload.WrongExtension")");
+                        e.preventDefault();
+                        return false;
+                    }
+
+                    sizeOfCurrentFileSelection = sizeOfCurrentFileSelection + files[fileCntr].size;
+                }
+
+                if (sizeOfAttachedFiles + sizeOfCurrentFileSelection < @maximumSizeOfAttachedFilesInBytes) {
+                    sizeOfAttachedFiles = sizeOfAttachedFiles + sizeOfCurrentFileSelection;
+                } else {
+                    //If the total size plus the current selection size is larger than the setting we shouldn`t allow the files to be uploaded.
+                    alert("@T("SevenSpikes.HelpDesk.Public.KendoUIUpload.MaxSizeOfAttachedFilesWarning", maximumSizeOfAttachedFiles)");
+                    e.preventDefault();
+                    return false;
+                }
+            }
+        });
+    });
+</script>

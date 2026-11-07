@@ -1,0 +1,210 @@
+﻿@model NewTicketPublicModel
+
+@inject HelpDeskSettings helpDeskSettings
+
+@{
+    Layout = "_ColumnsTwo";
+
+    var kendoVersion = "2020.1.406";
+
+    //title
+    NopHtml.AddTitleParts(T("SevenSpikes.HelpDesk.Public.NewTicketLink").Text);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-helpdesk-page");
+    
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.css" />
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.css" />
+
+    var supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.rtl.css" />
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.rtl.css" />
+    }
+
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/lib/kendo/@kendoVersion/js/kendo.all.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Scripts/HelpDesk.common.min.js" asp-location="Footer"></script>   
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation")
+}
+
+<div class="page account-page ticketing-page new-ticket-page">
+    <div class="page-title">
+        <h1 class="pt-text">@T("SevenSpikes.HelpDesk.Public.NewTicketLink")</h1>
+    </div>
+    <div class="page-body" id="addNewTicket">
+        @if (Model.ShowDeadlineWorkingHoursAndWorkingDay)
+        {
+            <div class="working-days-wrapper">
+                <div class="details"><span>@T("SevenSpikes.HelpDesk.Public.WorkingWeekDays"):</span> @Model.WorkingWeekDays</div>
+                <div class="details"><span>@T("SevenSpikes.HelpDesk.Public.WorkingHours"):</span> @string.Format(T("SevenSpikes.HelpDesk.Public.WorkingHoursStartEnd").Text, Model.StartWorkingHour, Model.EndWorkingHour)</div>
+                <div class="details"><span>@T("SevenSpikes.HelpDesk.Public.Deadline"):</span>  @Model.Deadline @T("SevenSpikes.HelpDesk.Public.WorkingHours")</div>
+            </div>
+        }
+        @await Component.InvokeAsync("TopicBlock", new { systemName = "SubmitTicketInfo" })
+
+        @using (Html.BeginRouteForm("HelpDeskNewTicket", FormMethod.Post, new { id = "newTicketForm", enctype = "multipart/form-data" }))
+        {
+            @Html.AntiForgeryToken()
+            
+            IHtmlContent messageErrorHtml = Html.ValidationSummary(true);
+
+            if (!string.IsNullOrEmpty(messageErrorHtml.ToString()))
+            {
+                <div class="message-error">
+                    @messageErrorHtml
+                </div>
+            }
+
+            <div class="fieldset">
+                <div class="title">
+                    <strong class="title-text">@T("SevenSpikes.HelpDesk.Public.NewTicketLink.GeneralInformation")</strong>
+                </div>
+                <div class="form-fields">
+                    <div class="inputs">
+                        <nop-label asp-for="TicketModel.TicketDepartmentId" />
+                        <nop-select asp-for="TicketModel.TicketDepartmentId" asp-items="Model.AvailableDepartments" />
+                        <nop-required />
+                        <span asp-validation-for="TicketModel.TicketDepartmentId"></span>
+                    </div>
+                    <div class="inputs">
+                        <nop-label asp-for="TicketModel.CustomerName" />
+                        <nop-editor asp-for="TicketModel.CustomerName" />
+                        <nop-required />
+                        <span asp-validation-for="TicketModel.CustomerName"></span>
+                    </div>
+                    <div class="inputs">
+                        <nop-label asp-for="TicketModel.TicketProductIds" />
+                        <help-desk-editor asp-for="TicketModel.TicketProductIds" asp-additional-view-data="@(new { Model.AutoSelectedProducts} )" />
+
+                        @if (helpDeskSettings.IsProductFieldRequired)
+                        {
+                            <nop-required />
+                            <span asp-validation-for="TicketModel.TicketProductIds"></span>
+                        }
+                    </div>
+                </div>
+            </div>
+
+            if (Model.TicketModel.TicketAttributes.Count > 0)
+            {
+                <div class="fieldset">
+                    <div class="title">
+                        <strong class="title-text">@T("SevenSpikes.HelpDesk.Public.NewTicketLink.AdditionalInformation")</strong>
+                    </div>
+                    <div class="form-fields">
+                        @await Html.PartialAsync("_TicketAttributes", Model.TicketModel.TicketAttributes)
+                    </div>
+                </div>
+            }
+
+            <div class="fieldset">
+                <div class="title">
+                    <strong class="title-text">@T("SevenSpikes.HelpDesk.Public.NewTicketLink.MessageInformation")</strong>
+                </div>
+                <div class="form-fields">
+                    <div class="inputs">
+                        <nop-label asp-for="TicketModel.CCEmail" />
+                        <nop-editor asp-for="TicketModel.CCEmail" />
+                        <span asp-validation-for="TicketModel.CCEmail"></span>
+                    </div>
+                    <div class="inputs">
+                        <nop-label asp-for="TicketModel.Subject" />
+                        <nop-editor asp-for="TicketModel.Subject" />
+                        <nop-required />
+                        <span asp-validation-for="TicketModel.Subject"></span>
+                    </div>
+                    <div class="inputs">
+                        <nop-label asp-for="TicketModel.Message" />
+                        <nop-textarea asp-for="TicketModel.Message" style="height: 350px;" />
+                        <nop-required />
+                        <span asp-validation-for="TicketModel.Message"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fieldset">
+                <div class="title">
+                    <strong class="title-text">@T("SevenSpikes.HelpDesk.Public.NewTicketLink.Fileattachments")</strong>
+                </div>
+                <div class="form-fields">
+                    <div class="inputs upload">
+                        @Html.EditorFor(model => model.TicketAttachments)
+                    </div>
+                </div>
+            </div>
+
+            if (Model.DisplayCaptcha)
+            {
+                <nop-captcha />
+            }
+
+            <div class="buttons">
+                <button type="submit" class="k-button button-1 submit-ticket-button">@T("SevenSpikes.HelpDesk.Public.NewTicketLink.SubmitATicket")</button>
+            </div>
+        }
+    </div>
+</div>
+
+<script type="text/x-kendo-template" id="no-files-confirmation" asp-location="Footer">
+    <p class="message">@T("SevenSpikes.HelpDesk.NewTicket.AttachMentioned.Message")</p>
+
+    <button class="confirm">Yes</button>
+    <button class="cancel">No</button>
+</script>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        @await Html.PartialAsync("_JSNavigation", "newTicket")
+
+        var defaultTools = kendo.ui.Editor.defaultTools;
+
+        defaultTools["insertLineBreak"].options.shift = false;
+        defaultTools["insertParagraph"].options.shift = true;
+
+        $("#@Html.IdFor(model => model.TicketModel.Message)").kendoEditor({
+            encoded: false
+        });
+
+        $("#@Html.IdFor(model => model.TicketModel.Message)").data("kendoEditor")
+           .toolbar
+           .element
+           .find("select.k-formatting").data("kendoSelectBox")
+              .one("open", function (e) {
+                  setTimeout(function () {
+                      e.sender.popup.wrapper.addClass("dropdown-wrapper paragraph-select");
+                  });
+              });
+
+        $('#newTicketForm [type="submit"]').on('click', function (e) {
+            var message = $('#TicketModel_Message').val();
+            var fileUploaderValue = $('[name="TicketAttachments"].valid').val();
+            var filesUploaded = fileUploaderValue != undefined && fileUploaderValue !== '';
+            var target = $(this);
+
+            if (message.toLowerCase().indexOf('attach') !== -1 && !filesUploaded) {
+                if (target.attr('isValid') == null) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    createKendoConfirm('no-files-confirmation', function () {
+                        target.attr('isValid', 'true');
+                        target.click();
+                    }, function () {
+                        target.removeAttr('isValid');
+                    });
+                }
+            }
+        });
+    });
+
+    // http://stackoverflow.com/questions/8466643/jquery-validate-enable-validation-for-hidden-fields/8565769#8565769
+    // enable the validation of the hidden fields( kendo fields )
+    $.validator.setDefaults({
+        ignore: []
+    });
+</script>

@@ -1,0 +1,121 @@
+﻿@model MessageTemplateModelCustomerReminders
+    
+<input asp-for="Id" type="hidden" />
+<input asp-for="IsActive" type="hidden" />
+
+<div class="card-body">
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="AllowedTokens" />
+		</div>
+		<div class="col-md-9">
+			<span id="@Html.IdFor(model => model.AllowedTokens)">
+				@Model.AllowedTokens
+			</span>
+		</div>
+	</div>
+	<div class="form-group row">
+		<div class="col-md-3">
+			<nop-label asp-for="MessageTemplateName" />
+		</div>
+		<div class="col-md-9">
+			<nop-editor asp-for="MessageTemplateName" />
+			<span asp-validation-for="MessageTemplateName"></span>
+		</div>
+	</div>
+    <div>
+        @(await Html.LocalizedEditorAsync<MessageTemplateModelCustomerReminders, MessageTemplateLocalizedModelCustomerReminders>("messagetemplate-localized",
+        @<div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="BccEmailAddresses" />
+                </div>
+                <div class="col-md-9">
+                        <input class="form-control text-box single-line"
+                                asp-for="@Model.Locales[item].BccEmailAddresses"
+                                value="@Model.Locales[item].BccEmailAddresses"/>
+                    @*<seven-spikes-editor asp-for="@Model.Locales[item].BccEmailAddresses" asp-htmlPrefix="MessageTemplateModelCustomerReminders"/>*@
+                    <span asp-validation-for="@Model.Locales[item].BccEmailAddresses"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="Subject" />
+                </div>
+                <div class="col-md-9">
+                        <input class="form-control text-box single-line"
+                                asp-for="@Model.Locales[item].Subject"
+                                value="@Model.Locales[item].Subject"/>
+                    @*<seven-spikes-editor asp-for="@Model.Locales[item].Subject" asp-htmlPrefix="MessageTemplateModelCustomerReminders"/>*@
+                    <span asp-validation-for="@Model.Locales[item].Subject"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="Body" />
+                </div>
+                <div class="col-md-9">
+                        <input class="form-control text-box"
+                                asp-for="@Model.Locales[item].Body"
+                                value="@Model.Locales[item].Body"
+                               asp-template="RichEditor">
+                    <nop-editor asp-for="@Model.Locales[item].Body"
+                                value="@Model.Locales[item].Body"
+                                asp-template="RichEditor" style="display:none;">
+                    @*<seven-spikes-editor asp-for="@Model.Locales[item].Body" asp-template="RichEditor" asp-htmlPrefix="MessageTemplateModelCustomerReminders"/>*@
+                    <span asp-validation-for="@Model.Locales[item].Body"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="EmailAccountId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="@Model.Locales[item].EmailAccountId" asp-items="@(new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.Locales[item].EmailAccountId))" />
+                    <span asp-validation-for="@Model.Locales[item].EmailAccountId"></span>
+                </div>
+            </div>
+                <input type="hidden" asp-for="@Model.Locales[item].LanguageId" />
+        </div>
+        ,
+        @<div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="BccEmailAddresses" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="BccEmailAddresses" />
+                    <span asp-validation-for="BccEmailAddresses"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="Subject" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Subject" />
+                    <span asp-validation-for="Subject"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="Body" />
+                </div>
+                <div class="col-md-9">
+                    <nop-editor asp-for="Body" asp-template="RichEditor" />
+                    <span asp-validation-for="Body"></span>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="EmailAccountId" />
+                </div>
+                <div class="col-md-9">
+                    <nop-select asp-for="EmailAccountId" asp-items="@(new SelectList(Model.AvailableEmailAccounts, "Id", "DisplayName", Model.EmailAccountId))" />
+                    <span asp-validation-for="EmailAccountId"></span>
+                </div>
+            </div>
+        </div>
+        ))
+    </div>
+</div>

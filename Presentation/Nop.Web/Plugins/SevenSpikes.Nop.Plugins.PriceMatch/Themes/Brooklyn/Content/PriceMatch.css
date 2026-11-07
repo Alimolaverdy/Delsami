@@ -1,0 +1,151 @@
+
+.price-match-wrapper {
+	display: inline-block;
+}
+.price-match-button {
+    display: inline-block;
+    width: 48px;
+    height: 48px;
+    border: none;
+    background-color: #444;
+    background-image: url('images/price-match-button.png');
+    background-position: center;
+    background-repeat: no-repeat;
+    font-size: 0;
+    -webkit-transition: all 0.2s ease;
+    transition: all 0.2s ease;
+}
+
+/* form container */
+
+.k-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+    bottom: 0;
+	left: 0;
+    z-index: 1060;
+	background-color: #000;
+	opacity: 0.4;
+}
+.priceMatchWindow {
+	position: absolute;
+	left: 0 !important;
+    right: 0;
+	z-index: 1070;
+	width: 600px;
+	max-width: 95%;
+	margin: auto;
+	box-shadow: 0 1px 12px 2px rgba(0, 0, 0, 0.17);
+	background-color: #fff;
+	padding-top: 0 !important;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+	margin-top: 0 !important;
+	border-bottom: 1px solid #ccc;
+	background-color: #cc8a97;
+	padding: 10px;
+    text-align: left;
+    font-weight: bold;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    display: inline-block;
+    max-width: 90%;
+    overflow: hidden;
+    font-size: 14px;
+    color: #fff;
+    text-transform: uppercase;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 7px;
+	right: 7px;
+    z-index: 1;
+}
+.priceMatchWindow .k-window-actions a {
+	display: block;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: url('images/close.png') center no-repeat;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-content {
+	padding: 40px 20px;
+}
+
+/* request form */
+
+.price-match-form {
+	text-align: center;
+}
+.price-match-form .title {
+    margin: 0 0 20px;
+	font-size: 16px;
+}
+.price-match-form .captcha-box,
+.price-match-form .message-error {
+	margin: 0 0 20px;
+}
+.price-match-form .buttons {
+	margin: 0; /*reset theme styles*/
+	text-align: center;
+}
+.save-price-match-button {
+	width: 250px;
+    max-width: 100%;
+    padding: 14px 40px;
+    border: none;
+    background-color: #cc8a97;
+    font-size: 14px;
+    font-weight: bold;
+    color: #fff;
+    text-transform: uppercase;
+    -webkit-transition: all 0.2s ease 0s;
+    transition: all 0.2s ease 0s;
+}
+.save-price-match-button:hover {
+	opacity: 0.9;
+}
+
+/* requests page */
+
+.price-match-requests-page .details {
+    max-width: 900px;
+    margin: 0 auto 15px;
+    border: 2px solid #eee;
+    padding: 20px;
+    line-height: 24px;
+}
+.price-match-requests-page .details a {
+    font-weight: bold;
+    color: #cc8a97;
+}
+.price-match-requests-page .details a:hover {
+    text-decoration: underline;
+}
+
+
+@media all and (min-width: 1025px) {
+
+    .priceMatchWindow {
+	    width: 800px;
+    }
+    .priceMatchWindow .inputs label {
+	    width: 190px;
+    }
+    .price-match-requests-page .details {
+        max-width: none;
+    }
+}
+
+@media all and (min-width: 1281px) {
+
+    .priceMatchWindow .inputs label {
+	    width: 175px;
+    }
+}

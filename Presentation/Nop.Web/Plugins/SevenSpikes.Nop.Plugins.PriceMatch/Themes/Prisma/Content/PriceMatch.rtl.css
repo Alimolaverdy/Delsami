@@ -1,0 +1,30 @@
+@media (min-width: 1025px) {
+
+    .price-match-form .inputs {
+        text-align: right;
+    }
+    .priceMatchWindow .inputs label {
+        float: right;
+        text-align: right;
+    }
+    .price-match-wrapper {
+        float: right;
+    }
+}
+.priceMatchWindow .k-window-title {
+    float: right;
+}
+.priceMatchWindow .k-window-actions {
+    right: auto;
+    left: 5px;
+}
+.price-match-wrapper button {
+    padding: 0 45px 0 15px;
+}
+.price-match-wrapper:before {
+    left: auto;
+    right: 0;
+}
+.price-match-requests-page .details {
+    text-align: right;
+}

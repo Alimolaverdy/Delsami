@@ -1,0 +1,101 @@
+﻿@inject KnowledgebaseSettings knowledgebaseSettings
+
+@{
+    var kendoVersion = "2021.1.330";
+    //resources
+    NopHtml.AddScriptParts(ResourceLocation.Footer, $"~/Plugins/SevenSpikes.Core/Scripts/lib/kendo/{kendoVersion}/js/kendo.all.min.js");
+}
+
+<div class="knowledgebase-navigation-wrap">
+    <div class="knowledgebase-navigation">
+        <div id="navigation-treeview" class="nav-treeview"></div>
+
+        <script type="text/javascript" asp-location="Footer">
+            function preventParentSelection(e) {
+
+                var dataItem = this.dataItem(e.node);
+
+                @if (!knowledgebaseSettings.EnableCategoryPage)
+                {
+                    <text>
+                        if(dataItem.hasChildren) {
+
+                            e.preventDefault();
+
+                            this.toggle(e.node);
+
+                            return;
+                        }
+                    </text>
+                }
+
+                window.location.href = dataItem.RouteUrl;
+            }
+
+            function navigationTemplate() {
+
+                return function (currentNode) {
+
+                    var node = currentNode.item;
+                    var nodeText = node.Text;
+                    var nodeRouteUrl = node.RouteUrl;
+
+                    @if (!knowledgebaseSettings.EnableCategoryPage)
+                    {
+                        <text>
+                            if (node.hasChildren) {
+
+                                return nodeText;
+                            }
+                        </text>
+                    }
+
+                    return '<a href="' + nodeRouteUrl + '">' + nodeText + "</a>";
+                };
+            }
+
+            $(document).ready(function () {
+
+                navItems = new kendo.data.HierarchicalDataSource({
+                    transport: {
+                        read: {
+                            url: '@Html.Raw(Url.Action("ListAll", "Knowledgebase"))',
+                            dataType: 'json',
+                            data: function () {
+                                var data = {};
+                                var tokenInput = $('input[name=__RequestVerificationToken]');
+                                if (tokenInput.length) {
+                                    data.__RequestVerificationToken = tokenInput.val();
+                                }
+
+                                return data;
+                            }
+                        }
+                    },
+                    schema: {
+                        model: {
+                            id: "SEName",
+                            hasChildren: "Children",
+                            children: "Children",
+                            SEName: "SEName"
+                        }
+                    }
+                });
+
+                $("#navigation-treeview").kendoTreeView({
+                    loadOnDemand: false,
+                    dataSource: navItems,
+                    dataTextField: "Text",
+                    select: preventParentSelection,
+                    template: navigationTemplate(),
+                    dataBound: function () {
+
+                        var treeView = $("#navigation-treeview").data("kendoTreeView");
+
+                        treeView.expandTo("@Html.Raw(TempData["ExpandId"])");
+                    }
+                });
+            });
+        </script>
+    </div>
+</div>

@@ -66,12 +66,25 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Delsami.Plugin.Misc.Core", "Plugins\Delsami.Plugin.Misc.Core\Delsami.Plugin.Misc.Core.csproj", "{056E4EEE-4A56-48E6-AB06-0CC89A654A3D}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Delsami.Plugin.Misc.SMS", "Plugins\Delsami.Plugin.Misc.SMS\Delsami.Plugin.Misc.SMS.csproj", "{172C14AD-8F5A-44AE-A42D-7E87B55F3099}"
+	ProjectSection(ProjectDependencies) = postProject
+		{056E4EEE-4A56-48E6-AB06-0CC89A654A3D} = {056E4EEE-4A56-48E6-AB06-0CC89A654A3D}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "NopShop.Plugin.Misc.LoginWithMobile", "Plugins\NopShop.Plugin.Misc.LoginWithMobile\NopShop.Plugin.Misc.LoginWithMobile.csproj", "{BE5B41DC-DDE3-4423-A21E-5FC6E76A45C4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{172C14AD-8F5A-44AE-A42D-7E87B55F3099} = {172C14AD-8F5A-44AE-A42D-7E87B55F3099}
+		{6BDA8332-939F-45B7-A25E-7A797260AE59} = {6BDA8332-939F-45B7-A25E-7A797260AE59}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Delsami.Plugin.Widgets.AddressLocation", "Plugins\Delsami.Plugin.Widgets.AddressLocation\Delsami.Plugin.Widgets.AddressLocation.csproj", "{C953330B-5FF1-449E-A3A6-EDAF9AFE348C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{056E4EEE-4A56-48E6-AB06-0CC89A654A3D} = {056E4EEE-4A56-48E6-AB06-0CC89A654A3D}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Delsami.Plugin.Misc.OnePageCheckout", "Plugins\Delsami.Plugin.Misc.OnePageCheckout\Delsami.Plugin.Misc.OnePageCheckout.csproj", "{370A8AA9-164A-4A71-8584-03D65DC3F3F2}"
+	ProjectSection(ProjectDependencies) = postProject
+		{056E4EEE-4A56-48E6-AB06-0CC89A654A3D} = {056E4EEE-4A56-48E6-AB06-0CC89A654A3D}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

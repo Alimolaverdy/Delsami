@@ -1,0 +1,26 @@
+﻿@inherits Nop.Web.Framework.Mvc.Razor.NopRazorPage<TModel>
+
+@inject INopHtmlHelper NopHtml
+
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper *, Nop.Web.Framework
+@addTagHelper *, SevenSpikes.Nop.Plugins.HelpDesk
+
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using Nop.Web.Framework.UI
+@using Nop.Web.Framework.Extensions
+@using System.Text.Encodings.Web
+
+@using SevenSpikes.Nop.Framework
+
+@using Microsoft.AspNetCore.Html
+@using Nop.Core
+@using Nop.Core.Domain.Common
+@using Nop.Core.Infrastructure
+@using SevenSpikes.Nop.Core.Helpers
+@using SevenSpikes.Nop.Framework.Theme
+
+@using SevenSpikes.Nop.Plugins.HelpDesk.Domain.Enums;
+@using SevenSpikes.Nop.Plugins.HelpDesk.Domain.Settings
+@using SevenSpikes.Nop.Plugins.HelpDesk.Extensions
+@using SevenSpikes.Nop.Plugins.HelpDesk.Models

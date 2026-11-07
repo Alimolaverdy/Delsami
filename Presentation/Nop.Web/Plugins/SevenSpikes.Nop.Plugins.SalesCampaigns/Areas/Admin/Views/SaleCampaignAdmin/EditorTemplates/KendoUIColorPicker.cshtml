@@ -1,0 +1,26 @@
+﻿@using System;
+
+@model string
+
+@{
+    var inputFieldName = ViewData.TemplateInfo.GetFullHtmlFieldName(string.Empty);
+    var inputFieldNameWithoutDot = inputFieldName.Replace(".", "");
+    var defaultValueFromModel = ViewData.ModelMetadata.AdditionalValues["DefaultValue"];
+    var color = string.IsNullOrEmpty(defaultValueFromModel.ToString()) ? "#FFFFFF" : defaultValueFromModel;
+}
+
+<input id="@inputFieldNameWithoutDot" name="@inputFieldName" value="@(string.IsNullOrEmpty(Model) ? color : Model)" />
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        $("#@inputFieldNameWithoutDot").kendoColorPicker(
+            {
+                buttons: false,
+                opacity: true,
+                change: function (e) {
+                    $('#@inputFieldNameWithoutDot').val(e.value).trigger("change");
+                }
+            }
+        );
+    });
+</script>

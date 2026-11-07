@@ -1,0 +1,122 @@
+
+.price-match-wrapper {
+	display: inline-block;
+}
+.price-match-button {
+    background-image: url('images/price-match-button.png') !important;
+}
+
+/* form container */
+
+.k-overlay {
+	position: fixed;
+	top: 0;
+	right: 0;
+    bottom: 0;
+	left: 0;
+    z-index: 1060;
+	background-color: #000;
+	opacity: 0.7;
+}
+.priceMatchWindow {
+	position: absolute;
+	left: 0 !important;
+    right: 0;
+	z-index: 1070;
+	width: 600px;
+	max-width: 94%;
+	margin: auto;
+	box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+	background-color: #fff;
+	padding-top: 0 !important;
+    text-align: center;
+}
+.priceMatchWindow .k-header {
+	position: relative;
+	margin-top: 0 !important;
+	text-transform: uppercase;
+    color: #333;
+    font-size: 0;
+}
+.priceMatchWindow .k-window-title {
+    display: inline-block;
+    max-width: 90%;
+    margin-top: 40px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+	white-space: nowrap;
+}
+.air-theme .priceMatchWindow .k-window-title {
+	font-size: 18px;
+	font-weight: 700;
+	letter-spacing: 1px;
+}
+.earth-theme .priceMatchWindow .k-window-title {
+	font-size: 20px;
+	font-weight: 400;
+}
+.priceMatchWindow .k-window-actions {
+	position: absolute;
+	top: 10px;
+	right: 10px;
+    z-index: 1;
+}
+.priceMatchWindow .k-window-actions a {
+	display: block;
+    width: 22px;
+	height: 22px;
+	border-radius: 50%;
+    background: #ccc url('images/close-sprite.png') center bottom no-repeat;
+	font-size: 0;
+	transition: opacity 0.2s ease;
+}
+.priceMatchWindow .k-window-actions a:hover {
+	opacity: 0.9;
+}
+.priceMatchWindow .k-window-content {
+	padding: 30px 10px 40px;
+}
+
+/* request form */
+
+.price-match-form .form-fields {
+    border-top: 1px solid #eee;
+    background-color: #f9f9f9;
+    padding: 25px 10px 20px;
+}
+.price-match-form .captcha-box,
+.price-match-form .message-error {
+	margin: 30px 0 -10px;
+}
+
+
+
+@media all and (min-width: 721px) {
+
+.priceMatchWindow {
+	width: 95%;
+    max-width: 800px;
+}
+.priceMatchWindow .k-window-content {
+	padding: 30px 2% 40px;
+}
+.price-match-form .form-fields {
+    padding: 25px 2% 20px;
+}
+.price-match-form .inputs {
+    clear: both;
+    width: 100%;
+}
+.price-match-form .inputs.half-width {
+    float: left;
+    width: 49%;
+}
+.price-match-form .inputs.half-width:nth-child(odd) {
+    margin-left: 0;
+}
+.price-match-form .inputs.half-width:nth-child(even) {
+    clear: none;
+    margin-left: 2%;
+}
+
+}

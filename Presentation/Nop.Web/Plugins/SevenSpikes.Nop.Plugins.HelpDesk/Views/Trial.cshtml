@@ -1,0 +1,35 @@
+﻿@using Nop.Core;
+@using SevenSpikes.Nop.Plugins.HelpDesk.Domain.Settings;
+@using SevenSpikes.Nop.Plugins.HelpDesk.Models;
+@using Nop.Core.Infrastructure;
+
+@model NewTicketPublicModel
+
+@{
+    Layout = "~/Views/Shared/_ColumnsTwo.cshtml";
+
+    //title
+    NopHtml.AddTitleParts(T("SevenSpikes.HelpDesk.Public.NewTicketLink").Text);
+
+   <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.css" />
+
+    var supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.rtl.css" />
+    }
+}
+
+@section left
+{
+    @await Html.PartialAsync("CustomerNavigation", Model.NavigationModel)
+}
+
+<div class="trial">
+    <p>You are running a trial version of the Help Desk plugin!</p>
+    <p>You may write max @((int)ViewBag.maxNumberOfTickets) tickets in the trial version.</p>
+    <div style="font-size: 13px;">
+        <strong><a style="font-size: 13px;" href="http://www.nop-templates.com/help-desk-plugin-for-nopcommerce">Click HERE to buy the full version of the plugin </a> <br />
+        <a href="http://www.nop-templates.com/p/12/nop-ultimate-plugin-collection">or click HERE to buy the Nop Ultimate Plugin Collection.</a></strong>
+    </div>
+</div>

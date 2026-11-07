@@ -1,0 +1,121 @@
+﻿@using System.Globalization
+@inject StoreInformationSettings storeInformationSettings
+@inject CommonSettings commonSettings
+@inject IPermissionService permissionService
+@{
+	//var displayMiniProfiler = storeInformationSettings.DisplayMiniProfilerInPublicStore
+	//&& (!storeInformationSettings.DisplayMiniProfilerForAdminOnly || await permissionService.AuthorizeAsync(StandardPermissionProvider.AccessAdminPanel));
+	var displayMiniProfiler = false;
+	//resources
+	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-migrate/jquery-migrate.js");
+	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-ui-dist/jquery-ui.min.js");
+	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation-unobtrusive/jquery.validate.unobtrusive.min.js");
+	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery-validation/jquery.validate.min.js");
+	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/lib_npm/jquery/jquery.min.js");
+
+	NopHtml.AppendScriptParts(ResourceLocation.Footer, "~/Plugins/" + Plugin.FolderName + "/Scripts/kindeditor/kindeditor-all-min.js");
+
+	NopHtml.AddCssFileParts("~/Plugins/" + Plugin.FolderName + "/Scripts/kindeditor/themes/default/default.css");
+
+	var supportRtl = await Html.ShouldUseRtlThemeAsync();
+
+	var themeName = await ThemeHelper.GetPluginThemeAsync(Plugin.FolderName);
+
+	if (supportRtl)
+	{
+        <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.Knowledgebase/Themes/@themeName/Content/common.rtl.css" />
+	}
+	else
+	{		
+         <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.Knowledgebase/Themes/@themeName/Content/common.css" />
+	}
+
+	<script src="~/Plugins/SevenSpikes.Core/Scripts/sevenspikes.core.min.js" asp-location="Footer"></script>
+
+
+	NopHtml.AppendPageCssClassParts("html-knowledgebase-page");
+
+    var title = await NopHtml.GenerateTitleAsync(true);
+    var description = await @NopHtml.GenerateMetaDescriptionAsync();
+    var keywords = await NopHtml.GenerateMetaKeywordsAsync();
+}
+<!DOCTYPE html>
+<html lang="@CultureInfo.CurrentUICulture.TwoLetterISOLanguageName" dir="@Html.GetUIDirection(!await Html.ShouldUseRtlThemeAsync())" class="@NopHtml.GeneratePageCssClasses()">
+<head>
+    <title>@title</title>
+    <meta http-equiv="Content-type" content="text/html;charset=UTF-8" />
+    <meta name="description" content="@description" />
+    <meta name="keywords" content="@keywords" />
+    <meta name="generator" content="nopCommerce" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+
+    @NopHtml.GenerateHeadCustom()
+    @*This is used so that themes can inject content into the header*@
+    @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag" })
+    @NopHtml.GenerateCssFiles()
+    @await Component.InvokeAsync("Widget", new { widgetZone = "head_html_tag_after_css_files_noptemplates" })
+    @NopHtml.GenerateScripts(ResourceLocation.Head)
+    @NopHtml.GenerateCanonicalUrls()
+    @await Component.InvokeAsync("NewsRssHeaderLink")
+    @await Component.InvokeAsync("BlogRssHeaderLink")
+    @*Favicon - upload favicon.ico file to the root directory*@
+    @await Component.InvokeAsync("Favicon")
+    @if (displayMiniProfiler)
+    {
+        <mini-profiler />
+    }
+</head>
+<body>
+    <div class="knowledgebase-header-line">
+        <div class="knowledgebase-title">@T("SevenSpikes.Knowledgebase.Public.Title")</div>
+        <a class="back-to-button" href="@Url.RouteUrl("HomePage")">@T("SevenSpikes.Knowledgebase.Public.BackToWebsite")</a>
+        <div class="mobile-buttons">
+            <button class="mobile-button nav-button">@T("SevenSpikes.Knowledgebase.Public.Mobile.NavButton")</button>
+            <button class="mobile-button search-panel-button">@T("SevenSpikes.Knowledgebase.Public.Mobile.SearchPanelButton")</button>
+        </div>
+        <div class="knowledgebase-search">@await Html.PartialAsync(Views.KnowledgebaseSearch)</div>
+    </div>
+    <div class="knowledgebase-page">
+        @RenderBody()
+    </div>
+    <div class="footer">
+        <span class="copyright-info">@String.Format(T("SevenSpikes.Knowledgebase.Public.CopyrightInfo").Text, DateTime.UtcNow.Year)</span>
+    </div>
+    <div id="goToTop"></div>
+
+    <script type="text/javascript" asp-location="Footer">
+
+        // mobile navigation&search show/hide
+        $(document).ready(function () {
+
+            var $navOpener = $('.nav-button');
+            $searchOpener = $('.search-panel-button');
+            $navigation = $('.knowledgebase-navigation-wrap');
+            $searchPanel = $('.knowledgebase-search');
+
+            $navOpener.on('click', function () {
+                $navigation.toggle();
+            });
+            $searchOpener.on('click', function () {
+                $searchPanel.toggle();
+            });
+
+        });
+
+        //replace min-height of the navigation if necessary
+        $(window).load(function () {
+
+            var $baseHeight = $('.knowledgebase-page').innerHeight();
+
+            if ($baseHeight > 980) {
+                $navigation.css('min-height', $baseHeight);
+            }
+
+        });
+
+    </script>
+    @await Component.InvokeAsync("Widget", new { widgetZone = "body_end_html_tag_before" })
+    @NopHtml.GenerateScripts(ResourceLocation.Footer)
+    @NopHtml.GenerateInlineScripts(ResourceLocation.Footer)
+</body>
+</html>

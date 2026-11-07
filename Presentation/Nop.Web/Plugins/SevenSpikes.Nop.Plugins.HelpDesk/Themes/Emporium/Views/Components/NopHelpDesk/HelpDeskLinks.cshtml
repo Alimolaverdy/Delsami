@@ -1,0 +1,58 @@
+﻿@model LinksModel
+
+@{
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.css" />
+
+    var supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.rtl.css" />
+    }
+}
+
+
+@if (ViewBag.IsMobile != null && ViewBag.IsMobile)
+{
+    <option value="@Url.Action("NewTicket", "HelpDesk", new { })" id="newTicket">@T("SevenSpikes.HelpDesk.Public.NewTicketLink")</option>
+
+    <option value="@Url.Action("MyTickets", "HelpDesk", new { })" id="myTickets">@T("SevenSpikes.HelpDesk.Public.MyTicketsLink")</option>
+
+    @if (Model.HasPermissions)
+    {
+        IDictionary<string, string> routeData = new Dictionary<string, string>();
+
+        if (Model.SelectedStatus > 0)
+        {
+            routeData.Add("status", Model.SelectedStatus.ToString());
+        }
+
+        <option value="@Url.Action("ManageTickets", "HelpDesk", new { })" id="manageTickets">@T("SevenSpikes.HelpDesk.Public.ManageTicketsLink")</option>
+
+    }
+
+}
+else
+{
+    <li id="newTicket" class="new-ticket">
+        <a asp-controller="HelpDesk" asp-action="NewTicket">@T("SevenSpikes.HelpDesk.Public.NewTicketLink")</a>
+    </li>
+
+    <li id="myTickets" class="my-tickets">
+        <a asp-controller="HelpDesk" asp-action="MyTickets">@T("SevenSpikes.HelpDesk.Public.MyTicketsLink")</a>
+    </li>
+
+    @if (Model.HasPermissions)
+    {
+        IDictionary<string, string> routeData = new Dictionary<string, string>();
+
+        if (Model.SelectedStatus > 0)
+        {
+            routeData.Add("status", Model.SelectedStatus.ToString());
+        }
+
+        <li id="manageTickets" class="manage-tickets">
+            <a asp-controller="HelpDesk" asp-action="ManageTickets" asp-all-route-data="@routeData">@T("SevenSpikes.HelpDesk.Public.ManageTicketsLink")</a>
+        </li>
+    }
+
+}

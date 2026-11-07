@@ -1,0 +1,12 @@
+{
+  "Group": "7Spikes",
+  "FriendlyName": "Nop Sales Campaigns",
+  "SystemName": "SevenSpikes.Nop.Plugins.SalesCampaigns",
+  "Version": "4.6",
+  "SupportedVersions": [ "4.60" ],
+  "DependsOnSystemNames": [ "SevenSpikes.Core" ],
+  "Author": "Seven Spikes Ltd",
+  "DisplayOrder": 5,
+  "FileName": "SevenSpikes.Nop.Plugins.SalesCampaigns.dll",
+  "Description": "This plugin allows you to run sales the same way any brick and mortar store does!"
+}

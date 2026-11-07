@@ -1,0 +1,302 @@
+﻿@model ViewTicketPublicModel
+@inject IWorkContext _workContext
+
+@{
+    Layout = "_ColumnsTwo";
+
+    var currentCustomerId = (await _workContext.GetCurrentCustomerAsync()).Id;
+    var customerHasPermissions = ViewBag.HasPermissions;
+
+    var kendoVersion = "2020.1.406";
+
+    //title
+    NopHtml.AddTitleParts(T("SevenSpikes.HelpDesk.Public.ViewTicket").Text + "#" + Model.TicketModel.Id);
+    //page class
+    NopHtml.AppendPageCssClassParts("html-account-page");
+    NopHtml.AppendPageCssClassParts("html-helpdesk-page");
+
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.css" />
+    <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.css" />
+
+    var supportRtl = (await EngineContext.Current.Resolve<IWorkContext>().GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Styles/kendoCommonStyles.rtl.css" />
+       <link rel="stylesheet" href="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Themes/@Model.Theme/Content/HelpDesk.rtl.css" />
+    }
+
+    <script src="~/Plugins/SevenSpikes.Core/Scripts/lib/kendo/@kendoVersion/js/kendo.all.min.js" asp-location="Footer"></script>
+    <script src="~/Plugins/SevenSpikes.Nop.Plugins.HelpDesk/Scripts/HelpDesk.common.min.js" asp-location="Footer"></script>
+}
+
+@section left
+{
+    @await Component.InvokeAsync("CustomerNavigation")
+}
+
+<div class="page account-page ticketing-page view-ticket-page">
+    <div class="page-title">
+        <h1 class="pt-text">@T("SevenSpikes.HelpDesk.Public.ViewTicket") #@Model.TicketModel.Id</h1>
+    </div>
+
+    <div class="page-body">
+        <div class="conversation">
+            <div class="ticket">
+                <div class="ticket-header">
+                    <div class="ticket-information">
+                        <h3 class="ticket-title">@Model.TicketModel.Subject</h3>
+                        <span class="ticket-date">
+                            @T("SevenSpikes.HelpDesk.Public.ViewTicket.RaisedOn") @Model.TicketModel.CreatedOnUtc
+                            @T("SevenSpikes.HelpDesk.Public.ViewTicket.By") @Model.TicketModel.CustomerName
+                        </span>
+                    </div>
+                    <div class="ticket-buttons">
+                        <div class="tb-left">
+                            <button class="ticket-info-button k-button">@T("SevenSpikes.HelpDesk.Public.ViewTicket.ShowInfo")</button>
+                        </div>
+                        <div class="tb-right">
+                            <button class="show-reply-button k-button">@T("SevenSpikes.HelpDesk.Public.ViewTicket.ShowReplyForm")</button>
+
+                            @if (Model.TicketModel.TicketStatus != TicketStatus.Closed && Model.TicketModel.TicketStatus != TicketStatus.ClosedAutomatically)
+                            {
+                                <a href="@Url.RouteUrl("HelpDeskMarkTicketAsResolved", new {id = Model.TicketModel.Id})" id="ticket-mark-as-resolved" class="mark-resolved-button k-button">
+                                    @T("SevenSpikes.HelpDesk.Public.ViewTicket.MarkAsResolved")
+                                </a>
+                            }
+
+                            @if (customerHasPermissions)
+                            {
+                                <a href="@Url.RouteUrl("HelpDeskManageTicketNotes", new {id = Model.TicketModel.Id})" class="notes-button k-button">
+                                    @T("SevenSpikes.HelpDesk.Public.ViewTicket.Notes", Model.TicketModel.TicketNotes.Count)
+                                </a>
+
+                                <a href="@Url.RouteUrl("HelpDeskEditTicket", new {id = Model.TicketModel.Id})" class="edit-ticket-button k-button">
+                                    @T("SevenSpikes.HelpDesk.Public.EditTicket.Edit")
+                                </a>
+
+                                <a href="@Url.RouteUrl("HelpDeskDeleteTicket", new {id = Model.TicketModel.Id})" id="delete-ticket" class="delete-ticket-button k-button">
+                                    @T("SevenSpikes.HelpDesk.Public.EditTicket.Delete")
+                                </a>
+                            }
+                        </div>
+                    </div>
+                </div>
+
+                <div id="ticket-details" class="ticket-details">
+                    @await Html.PartialAsync("_TicketDetails", Model)
+                </div>
+            </div>
+
+            <div id="submit-reply" class="reply-form ticket-reply-form">
+                @using (Html.BeginForm("SubmitReply", "HelpDesk", FormMethod.Post, new { id = "submit-reply-Form", enctype = "multipart/form-data" }))
+                {
+                    @Html.AntiForgeryToken()
+
+                    IHtmlContent messageErrorHtml = Html.ValidationSummary(true);
+
+                    if (!string.IsNullOrEmpty(messageErrorHtml.ToString()))
+                    {
+                        <div class="message-error">
+                            @messageErrorHtml
+                        </div>
+                    }
+
+                    @Html.Hidden("ticketId", Model.TicketModel.Id)
+                    @Html.Hidden("customerId", Model.TicketModel.CustomerId)
+
+                    <div class="fieldset">
+                        <div class="form-fields">
+                            <div class="inputs">
+                                <nop-label asp-for="SubmitReplyModel.CCEmail" />
+                                <nop-editor asp-for="SubmitReplyModel.CCEmail" />
+                                <span asp-validation-for="SubmitReplyModel.CCEmail"></span>
+                            </div>
+                            <div class="inputs">
+                                <nop-label asp-for="SubmitReplyModel.ReplyMessage" />
+                                <nop-textarea asp-for="SubmitReplyModel.ReplyMessage" style="height: 350px;" />
+                                <nop-required />
+                                <span asp-validation-for="SubmitReplyModel.ReplyMessage"></span>
+                            </div>
+                            <div class="inputs upload">
+                                <nop-editor asp-for="SubmitReplyModel.MessageAttachments" />
+                            </div>
+                            <div class="buttons">
+                                <button type="submit" name="reply" class="k-button button-1 reply-button">@T("SevenSpikes.HelpDesk.Public.ViewTicket.Reply")</button>
+                                <button type="submit" name="reply-and-mark-as-resolved" id="reply-and-mark-as-resolved" class="k-button button-1 reply-and-mark-button" value="@T("SevenSpikes.HelpDesk.Public.ViewTicket.ReplyAndMarkAsResolved")">@T("SevenSpikes.HelpDesk.Public.ViewTicket.ReplyAndMarkAsResolved")</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <div class="ticket-comments">
+                @await Html.PartialAsync("_TicketMessages", Model.TicketModel.TicketMessages)
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/x-kendo-template" id="mark-as-resolved-confirmation" asp-location="Footer">
+    <p class="message">@T("SevenSpikes.HelpDesk.Public.ViewTicket.MarkAsResolvedConfirm")</p>
+
+    <button class="confirm">Yes</button>
+    <button class="cancel">No</button>
+</script>
+
+<script type="text/x-kendo-template" id="delete-ticket-confirmation" asp-location="Footer">
+    <p class="message">@T("SevenSpikes.HelpDesk.Public.EditTicket.DeleteTicketConfirm")</p>
+
+    <button class="confirm">Yes</button>
+    <button class="cancel">No</button>
+</script>
+
+<script type="text/x-kendo-template" id="no-files-confirmation" asp-location="Footer">
+    <p class="message">@T("SevenSpikes.HelpDesk.ViewTicket.AttachMentioned.Message")</p>
+
+    <button class="confirm">Yes</button>
+    <button class="cancel">No</button>
+</script>
+
+<script type="text/x-kendo-template" id="ticket-not-assigned-confirmation" asp-location="Footer">
+    <p class="message">@T("SevenSpikes.HelpDesk.ViewTicket.TicketNotAssigned.Message")</p>
+
+    <button class="confirm">Yes</button>
+    <button class="cancel">No</button>
+</script>
+
+<script type="text/javascript" asp-location="Footer">
+    $(document).ready(function () {
+        @await Html.PartialAsync("_JSNavigation", "myTickets")
+
+
+        var defaultTools = kendo.ui.Editor.defaultTools;
+
+        defaultTools["insertLineBreak"].options.shift = false;
+        defaultTools["insertParagraph"].options.shift = true;
+
+        $("#@Html.IdFor(model => model.SubmitReplyModel.ReplyMessage)").kendoEditor({
+            encoded: false
+        });
+
+        $("#@Html.IdFor(model => model.SubmitReplyModel.ReplyMessage)").data("kendoEditor")
+           .toolbar
+           .element
+           .find("select.k-formatting").data("kendoSelectBox")
+              .one("open", function (e) {
+                  setTimeout(function () {
+                      e.sender.popup.wrapper.addClass("dropdown-wrapper paragraph-select");
+                  });
+              });
+
+        $(document).on("click", ".ticket-info-button", function (e) {
+            e.preventDefault();
+
+            if (!$('#ticket-details').hasClass("expanded")) {
+                $('#ticket-details').addClass("expanded").slideDown();
+                $('.ticket-info-button').text('@T("SevenSpikes.HelpDesk.Public.ViewTicket.HideInfo")');
+            } else {
+                $('#ticket-details').removeClass("expanded").slideUp();
+                $('.ticket-info-button').text('@T("SevenSpikes.HelpDesk.Public.ViewTicket.ShowInfo")');
+            }
+        });
+
+        $(document).on("click", ".show-reply-button", function (e) {
+            e.preventDefault();
+
+            if (!$('#submit-reply').hasClass("expanded")) {
+                $('#submit-reply').addClass("expanded").slideDown();
+                $('.show-reply-button').text('@T("SevenSpikes.HelpDesk.Public.ViewTicket.HideReplyForm")');
+            } else {
+                $('#submit-reply').removeClass("expanded").slideUp();
+                $('.show-reply-button').text('@T("SevenSpikes.HelpDesk.Public.ViewTicket.ShowReplyForm")');
+            }
+        });
+
+        $(document).on("click", "#ticket-mark-as-resolved, #reply-and-mark-as-resolved", function (e) {
+            var target = $(this);
+
+            if (target.attr('isValid') == null) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                createKendoConfirm('mark-as-resolved-confirmation', function() {
+                    target.attr('isValid', 'true');
+                    target.click();
+                }, function() {
+                    target.removeAttr('isValid');
+                });
+            } else {
+                window.location.href = target.attr('href');
+            }
+        });
+
+        $(document).on("click", "#delete-ticket", function (e) {
+            var target = $(this);
+
+            if (target.attr('isValid') == null) {
+                e.preventDefault();
+                e.stopPropagation();
+
+                createKendoConfirm('delete-ticket-confirmation', function () {
+                    target.attr('isValid', 'true');
+                    target.click();
+                }, function () {
+                    target.removeAttr('isValid');
+                });
+            } else {
+                window.location.href = target.attr('href');
+            }
+        });
+
+        $('[type="submit"].reply-button, #reply-and-mark-as-resolved').on('click', function (e) {
+            var message = $('#SubmitReplyModel_ReplyMessage').val();
+            var fileUploaderValue = $('[name="SubmitReplyModel.MessageAttachments"].valid').val();
+            var filesUploaded = fileUploaderValue != undefined && fileUploaderValue !== '';
+            var target = $(this);
+
+            if (message.toLowerCase().indexOf('attach') !== -1 && !filesUploaded) {
+                if (target.attr('isValid') == null) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    createKendoConfirm('no-files-confirmation', function () {
+                        target.attr('isValid', 'true');
+                        target.click();
+                    }, function () {
+                        target.removeAttr('isValid');
+                    });
+                }
+            }
+
+            @if (customerHasPermissions && Model.TicketModel.TicketOwnerId != currentCustomerId)
+            {
+                <text>
+                    if (target.attr('isValid') == null) {
+                        e.preventDefault();
+                        e.stopPropagation();
+
+                        createKendoConfirm('ticket-not-assigned-confirmation', function () {
+                            target.attr('isValid', 'true');
+                            target.click();
+                        }, function () {
+                            target.removeAttr('isValid');
+                        });
+                    }
+                </text>
+            }
+        });
+
+        @if (ViewBag.OpenReplyForm != null && ViewBag.OpenReplyForm)
+        {
+            <text>
+                $('.show-reply-button').trigger('click');
+            </text>
+        }
+    });
+
+    // http://stackoverflow.com/questions/8466643/jquery-validate-enable-validation-for-hidden-fields/8565769#8565769
+    // enable the validation of the hidden fields( kendo fields )
+    $.validator.setDefaults({
+        ignore: []
+    });
+</script>

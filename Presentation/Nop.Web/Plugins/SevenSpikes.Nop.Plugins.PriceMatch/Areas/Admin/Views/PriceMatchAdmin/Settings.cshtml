@@ -1,0 +1,214 @@
+﻿@model PriceMatchSettingsAdminModel
+
+@{
+    Layout = AdminViewLocations.AdminLayoutViewPath;
+
+    NopHtml.SetActiveMenuItemSystemName("SevenSpikes.PriceMatch.Admin.Submenus.Settings");
+}
+
+<form method="post">
+    <nop-antiforgery-token />
+
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("SevenSpikes.PriceMatch.Admin.Settings")
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+
+    <section class="content">
+        <div class="form-horizontal">
+            @await Html.TrialMessageAsync(Model.IsTrialVersion, Plugin.Name, Plugin.UrlInStore)
+
+            @await Component.InvokeAsync("StoreScopeConfiguration")
+
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsEnabled_OverrideForStore" asp-input="IsEnabled" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsEnabled" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsEnabled" />
+                                <span asp-validation-for="IsEnabled"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="IsPriceMatchEnabledForGuests_OverrideForStore" asp-input="IsPriceMatchEnabledForGuests" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="IsPriceMatchEnabledForGuests" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsPriceMatchEnabledForGuests" />
+                                <span asp-validation-for="IsPriceMatchEnabledForGuests"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="EnableCaptcha_OverrideForStore" asp-input="EnableCaptcha" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="EnableCaptcha" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EnableCaptcha" />
+                                <span asp-validation-for="EnableCaptcha"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AdditionalDiscountAmount_OverrideForStore" asp-input="AdditionalDiscountAmount" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AdditionalDiscountAmount" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AdditionalDiscountAmount" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.PercentageEscaped").Text" />
+                                <span asp-validation-for="AdditionalDiscountAmount"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AdditionalDiscountEndDateInDays_OverrideForStore" asp-input="AdditionalDiscountEndDateInDays" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AdditionalDiscountEndDateInDays" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AdditionalDiscountEndDateInDays" asp-postfix="days" />
+                                <span asp-validation-for="AdditionalDiscountEndDateInDays"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="DefaultEmailAccountId_OverrideForStore" asp-input="DefaultEmailAccountId" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="DefaultEmailAccountId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="DefaultEmailAccountId" asp-items="Model.AvailableEmailAccounts" />
+                                <a href="@Url.Action("Create", "EmailAccount")" class="btn bg-blue margin-t-5"><i class="fa fa-plus-square"></i>@T("Admin.Configuration.EmailAccounts.AddNew")</a>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailToVendorOnNewRequest_OverrideForStore" asp-input="SendEmailToVendorOnNewRequest" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailToVendorOnNewRequest" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailToVendorOnNewRequest" />
+                                <span asp-validation-for="SendEmailToVendorOnNewRequest"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="SendEmailToVendorOnNewRequest" id="SendEmailToVendorOnNewRequestPanel">
+                            <div class="form-group">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="IncludeStoreOwnerInBccOnNewRequest_OverrideForStore" asp-input="IncludeStoreOwnerInBccOnNewRequest" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="IncludeStoreOwnerInBccOnNewRequest" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="IncludeStoreOwnerInBccOnNewRequest" />
+                                    <span asp-validation-for="IncludeStoreOwnerInBccOnNewRequest"></span>
+                                </div>
+                            </div>
+                        </nop-nested-setting>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="SendEmailOnDenyRequest_OverrideForStore" asp-input="SendEmailOnDenyRequest" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="SendEmailOnDenyRequest" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="SendEmailOnDenyRequest" />
+                                <span asp-validation-for="SendEmailOnDenyRequest"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AutoApprovePriceMatchRequests_OverrideForStore" asp-input="AutoApprovePriceMatchRequests" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AutoApprovePriceMatchRequests" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="AutoApprovePriceMatchRequests" />
+                                <span asp-validation-for="AutoApprovePriceMatchRequests"></span>
+                            </div>
+                        </div>
+                        <nop-nested-setting asp-for="AutoApprovePriceMatchRequests" id="AutoApprovePriceMatchRequestsPanel">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="MaximumPriceIntervalFromOriginalPrice_OverrideForStore" asp-input="MaximumPriceIntervalFromOriginalPrice" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="MaximumPriceIntervalFromOriginalPrice" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="MaximumPriceIntervalFromOriginalPrice" asp-postfix="@T("SevenSpikes.Plugins.Admin.InputStyles.Postfix.PercentageEscaped").Text" />
+                                    <span asp-validation-for="MaximumPriceIntervalFromOriginalPrice"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="SendEmailToVendorOnNewAutoApprovedRequest_OverrideForStore" asp-input="SendEmailToVendorOnNewAutoApprovedRequest" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="SendEmailToVendorOnNewAutoApprovedRequest" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="SendEmailToVendorOnNewAutoApprovedRequest" />
+                                    <span asp-validation-for="SendEmailToVendorOnNewAutoApprovedRequest"></span>
+                                </div>
+                            </div>
+                            <nop-nested-setting asp-for="SendEmailToVendorOnNewAutoApprovedRequest" id="SendEmailToVendorOnNewAutoApprovedRequestPanel">
+                                <div class="form-group row">
+                                    <div class="col-md-3">
+                                        <nop-override-store-checkbox asp-for="IncludeStoreOwnerInBccOnNewAutoApprovedRequest_OverrideForStore" asp-input="IncludeStoreOwnerInBccOnNewAutoApprovedRequest" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                        <nop-label asp-for="IncludeStoreOwnerInBccOnNewAutoApprovedRequest" />
+                                    </div>
+                                    <div class="col-md-9">
+                                        <nop-editor asp-for="IncludeStoreOwnerInBccOnNewAutoApprovedRequest" />
+                                        <span asp-validation-for="IncludeStoreOwnerInBccOnNewAutoApprovedRequest"></span>
+                                    </div>
+                                </div>
+                            </nop-nested-setting>
+                        </nop-nested-setting>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="WidgetZone_OverrideForStore" asp-input="WidgetZone" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="WidgetZone" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="WidgetZone" asp-items="Model.AvailableWidgetZones" />
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="GroupedProductsWidgetZone_OverrideForStore" asp-input="GroupedProductsWidgetZone" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="GroupedProductsWidgetZone" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="GroupedProductsWidgetZone" asp-items="Model.AvailableWidgetZonesForGroupedProducts" />
+                            </div>
+                        </div>
+                        <div class="form-group row clearfix">
+                            <div class="col-md-3">
+                                <nop-override-store-checkbox asp-for="AccountNavigationWidgetZone_OverrideForStore" asp-input="AccountNavigationWidgetZone" asp-store-scope="Model.ActiveStoreScopeConfiguration" />
+                                <nop-label asp-for="AccountNavigationWidgetZone" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="AccountNavigationWidgetZone" asp-items="Model.AvailableWidgetZonesForAccountNavigation" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
+
+
+<script type="text/javascript">
+    (function ($, ssAdminCore) {
+
+        $(document).ready(function () {
+
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.AutoApprovePriceMatchRequests)", "#AutoApprovePriceMatchRequestsPanel");
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.SendEmailToVendorOnNewRequest)", "#SendEmailToVendorOnNewRequestPanel");
+            ssAdminCore.registerToggleEvents("#@Html.IdFor(model => model.SendEmailToVendorOnNewAutoApprovedRequest)", "#SendEmailToVendorOnNewAutoApprovedRequestPanel");
+        });
+    })(jQuery, sevenSpikesAdminCore);
+</script>
