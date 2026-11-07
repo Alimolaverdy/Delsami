@@ -1,0 +1,15 @@
+﻿{
+  "Group": "Shipping",
+  "FriendlyName": "Delsami Logistic",
+  "SystemName": "Delsami.Shipping.DelsamiLogistic",
+  "Version": "1",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Nob Parts",
+  "DisplayOrder": 5,
+  "FileName": "Delsami.Plugin.Shipping.DelsamiLogistic.dll",
+  "Description": "Fix Rates OF Delsami Logistic",
+  "DependsOnSystemNames": [
+    "Delsami.Misc.Core"
+
+  ]
+}

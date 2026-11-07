@@ -118,6 +118,10 @@
     {
       "SystemName": "Delsami.OrderFulfillment.DeliveryScheduling",
       "Version": "1.2"
+    },
+    {
+      "SystemName": "Delsami.Shipping.DelsamiLogistic",
+      "Version": "1"
     }
   ],
   "PluginNamesToUninstall": [],

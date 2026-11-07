@@ -1,0 +1,155 @@
+﻿@model ConfigurationModel
+
+@{
+    Layout = "_ConfigurePlugin";
+    NopHtml.SetActiveMenuItemSystemName(T("Delsami.Plugin.Shipping.DelsamiLogistic.Configuration.SystemName").Text);
+}
+
+<form asp-controller="DelsamiLogistic" asp-action="Configure" method="post">
+    <section class="content">
+        <div class="container-fluid">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ShippingMethodId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="ShippingMethodId" asp-items="Model.AvailableShippingMethods" />
+                                <span asp-validation-for="ShippingMethodId"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PickupTruckShippingMethodId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="PickupTruckShippingMethodId" asp-items="Model.AvailableShippingMethods" />
+                                <span asp-validation-for="PickupTruckShippingMethodId"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ScheduledShippingMethodId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="ScheduledShippingMethodId" asp-items="Model.AvailableShippingMethods" />
+                                <span asp-validation-for="ScheduledShippingMethodId"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ScheduledShippingMethodWithTruckId" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="ScheduledShippingMethodWithTruckId" asp-items="Model.AvailableShippingMethods" />
+                                <span asp-validation-for="ScheduledShippingMethodWithTruckId"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Price" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Price" asp-required="true" />
+                                <span asp-validation-for="Price"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PickupTruckPrice" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PickupTruckPrice" asp-required="true" />
+                                <span asp-validation-for="PickupTruckPrice"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ScheduledPrice" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ScheduledPrice" asp-required="true" />
+                                <span asp-validation-for="ScheduledPrice"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ScheduledPriceForHeavyOrBigBasket" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ScheduledPriceForHeavyOrBigBasket" asp-required="true" />
+                                <span asp-validation-for="ScheduledPriceForHeavyOrBigBasket"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="WeightMustCarryByPickupTruckInGrams" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="WeightMustCarryByPickupTruckInGrams" asp-required="true" />
+                                <span asp-validation-for="WeightMustCarryByPickupTruckInGrams"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="VolumeMustCarryByPickupTruckInCM3" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="VolumeMustCarryByPickupTruckInCM3" asp-required="true" />
+                                <span asp-validation-for="VolumeMustCarryByPickupTruckInCM3"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="OverSizeProductVolumeMustCarryByPickupTruckInCM3" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="OverSizeProductVolumeMustCarryByPickupTruckInCM3" asp-required="true" />
+                                <span asp-validation-for="OverSizeProductVolumeMustCarryByPickupTruckInCM3"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ApiBaseUrl" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ApiBaseUrl" asp-required="true" />
+                                <span asp-validation-for="ApiBaseUrl"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ApiToken" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-textarea asp-for="ApiToken" asp-required="true" />
+                                <span asp-validation-for="ApiToken"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="submit" name="save" class="btn btn-primary">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</form>
