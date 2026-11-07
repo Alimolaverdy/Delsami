@@ -106,6 +106,10 @@
     {
       "SystemName": "SevenSpikes.Core",
       "Version": "4.6"
+    },
+    {
+      "SystemName": "Delsami.Payment.Core",
+      "Version": "1"
     }
   ],
   "PluginNamesToUninstall": [],
