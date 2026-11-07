@@ -1,0 +1,103 @@
+﻿<div class="card-body">
+
+    <div class="card card-default">
+        <div class="card-body">
+            @await Html.PartialAsync("Table", new DataTablesModel
+       {
+           Name = "payment-list-grid",
+           UrlRead = new DataUrl("List", "Payment", new RouteValueDictionary { { "orderid", Model.OrderId }, { "Area", "Admin" } }),
+           SearchButtonId = "search-customer-attribute-validations",
+           Length = Model.PageSize,
+           LengthMenu = Model.AvailablePageSizes,
+           Filters = new List<FilterParameter>
+           {
+
+           },
+           ColumnCollection = new List<ColumnProperty>
+            {
+            new ColumnProperty(nameof(PaymentModel.Id))
+            {
+            Title = T("Delsami.Plugin.Payment.Core.Admin.PaymentModel.Id").Text,
+            ClassName =  NopColumnClassDefaults.CenterAll,
+            Width = "100"
+            },
+            new ColumnProperty(nameof(PaymentModel.AmountStr))
+            {
+            Title = T("Delsami.Plugin.Payment.Core.Admin.PaymentModel.Amount").Text,
+            ClassName =  NopColumnClassDefaults.CenterAll,
+            Width = "100"
+            },
+            // new ColumnProperty(nameof(PaymentModel.ResultCode))
+            // {
+            //     Title = T("Delsami.Plugin.Payment.Core.PaymentModel.ResultCode").Text,
+            //     ClassName =  NopColumnClassDefaults.CenterAll,
+            //     Width = "100"
+            // },
+            new ColumnProperty(nameof(PaymentModel.StatusStr))
+            {
+            Title = T("Delsami.Plugin.Payment.Core.Admin.PaymentModel.Status").Text,
+            ClassName =  NopColumnClassDefaults.CenterAll,
+            Width = "100"
+            },
+            // new ColumnProperty(nameof(PaymentModel.VerifyDateTimeStr))
+            // {
+            //     Title = T("Delsami.Plugin.Payment.Core.PaymentModel.VerifyDateTime").Text,
+            //     ClassName =  NopColumnClassDefaults.CenterAll,
+            //     Width = "100"
+            // },
+            // new ColumnProperty(nameof(PaymentModel.ConfirmDateTimeStr))
+            // {
+            //     Title = T("Delsami.Plugin.Payment.Core.PaymentModel.ConfirmDateTime").Text,
+            //     ClassName =  NopColumnClassDefaults.CenterAll,
+            //     Width = "100"
+            // },
+            new ColumnProperty(nameof(PaymentModel.CreatedDateTimeStr))
+            {
+            Title = T("Delsami.Plugin.Payment.Core.Admin.PaymentModel.CreatedDateTime").Text,
+            ClassName =  NopColumnClassDefaults.CenterAll,
+            Width = "100"
+            } ,
+            new ColumnProperty(nameof(PaymentModel.GatewayStr))
+            {
+            Title = T("Delsami.Plugin.Payment.Core.Admin.PaymentModel.Gateway").Text,
+            ClassName =  NopColumnClassDefaults.CenterAll,
+            Width = "100"
+            } ,
+            new ColumnProperty(nameof(PaymentModel.OrderId))
+            {
+            Title = T("Delsami.Plugin.Payment.Core.Admin.PaymentModel.OrderId").Text,
+            ClassName =  NopColumnClassDefaults.CenterAll,
+            Width = "100"
+            } ,
+            new ColumnProperty(nameof(PaymentModel.Completed))
+            {
+            Title = T("Delsami.Plugin.Payment.Core.Admin.PaymentModel.Completed").Text,
+            Width = "80",
+            ClassName = NopColumnClassDefaults.CenterAll,
+            Render = new RenderBoolean()
+            } ,
+            new ColumnProperty(nameof(PaymentModel.Id))
+            {
+            Title = "",
+            ClassName =  NopColumnClassDefaults.CenterAll,
+            Width = "100",
+            Render = new RenderButtonView(new DataUrl("/Admin/Payment/Details"))
+            } ,
+            // new ColumnProperty(nameof(PaymentModel.MaskedCardNumber))
+            // {
+            //     Title = T("Delsami.Plugin.Payment.Core.PaymentModel.MaskedCardNumber").Text,
+            //     ClassName =  NopColumnClassDefaults.CenterAll,
+            //     Width = "100"
+            // },
+            // new ColumnProperty(nameof(PaymentModel.TeminalNo))
+            // {
+            //     Title = T("Delsami.Plugin.Payment.Core.PaymentModel.TeminalNo").Text,
+            //     ClassName =  NopColumnClassDefaults.CenterAll,
+            //     Width = "100"
+            // }
+            }
+       })
+
+        </div>
+    </div>
+</div>

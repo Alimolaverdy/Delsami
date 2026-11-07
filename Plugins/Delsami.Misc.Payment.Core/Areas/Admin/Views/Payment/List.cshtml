@@ -1,0 +1,12 @@
+﻿@model PaymentSearchModel
+@{
+    Layout = "_AdminLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.Payment.Core.Payment.List").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(T("Delsami.Plugin.Payment.Core.Payment.List.SystemName").Text);
+}
+
+@await Html.PartialAsync("~/Plugins/Delsami.Payment.Core/Areas/Admin/Views/Payment/_PaymentList.cshtml")
+

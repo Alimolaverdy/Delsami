@@ -1,0 +1,8 @@
+﻿@model PaymentSearchModel
+
+<nop-card asp-name="payments" asp-icon="fas fa-cart-arrow-down" asp-title="@T("Delsami.Plugin.Payment.Core.Payments")" asp-hide-block-attribute-name="asp-hide-block-attribute-name" asp-hide=false>
+
+    @await Html.PartialAsync("~/Plugins/Delsami.Payment.Core/Areas/Admin/Views/Payment/_PaymentList.cshtml")
+
+</nop-card>
+

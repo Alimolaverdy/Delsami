@@ -1,0 +1,178 @@
+﻿@model Delsami.Plugin.Payment.Core.Areas.Admin.Models.PaymentModel
+
+@{
+    Layout = "_AdminLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.Payment.Core.Payment.List").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(T("Delsami.Plugin.Payment.Core.Payment.List.SystemName").Text);
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="card-body">
+                <div class="card card-default">
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Id" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Id</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="OrderId" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.OrderId</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="GatewayStr" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.GatewayStr</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TeminalNo" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.TeminalNo</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ReferenceNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.ReferenceNumber</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="TrackId" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.TrackId</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="MaskedCardNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row" style="direction:ltr">@Model.MaskedCardNumber</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="HashedCardNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.HashedCardNumber</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="UrlId" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.UrlId</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AmountStr" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.AmountStr</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="CreatedDateTimeStr" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.CreatedDateTimeStr</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="VerifyDateTimeStr" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.VerifyDateTimeStr</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ConfirmDateTimeStr" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.ConfirmDateTimeStr</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StatusStr" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.StatusStr</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ResultCode" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.ResultCode</div>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Completed" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.Completed</div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="AdditionalData" />
+                            </div>
+                            <div class="col-md-9">
+                                <div class="form-text-row">@Model.AdditionalData</div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

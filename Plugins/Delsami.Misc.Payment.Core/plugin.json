@@ -1,0 +1,12 @@
+﻿{
+  "Group": "Misc",
+  "FriendlyName": "Delsami payment core",
+  "SystemName": "Delsami.Payment.Core",
+  "Version": "1",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "Nob Parts",
+  "DisplayOrder": 2,
+  "FileName": "Delsami.Plugin.Payment.Core.dll",
+  "Description": "Delsami payment core",
+  "DependsOnSystemNames": [ "Delsami.Misc.Core" ]
+}
