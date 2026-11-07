@@ -1,0 +1,69 @@
+﻿@using Delsami.Plugin.Shipping.Core.Areas.Admin.Models.Cartons
+@model CartonModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Name" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Name" asp-required="true" />
+                                <span asp-validation-for="Name"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Width" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Width" asp-required="true" />
+                                <span asp-validation-for="Width"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Height" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Height" asp-required="true" />
+                                <span asp-validation-for="Height"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="Length" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="Length" asp-required="true" />
+                                <span asp-validation-for="Length"></span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="PostBoxNumber" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="PostBoxNumber" asp-required="true" />
+                                <span asp-validation-for="PostBoxNumber"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

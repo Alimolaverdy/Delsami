@@ -1,0 +1,157 @@
+﻿@using Delsami.Plugin.Shipping.Core.Areas.Admin.Models.LogisticsSchedules
+@using Delsami.Plugin.Shipping.Core.Areas.Admin.Models.LogisticsSchedulesException
+@model LogisticsScheduleSearchModel
+
+@{
+    Layout = "_AdminLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsSchedule.List").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsSchedule.List.SystemName").Text);
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsSchedule.List")
+    </h1>
+
+    <div class="float-right">
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "logistics-schedule-grid",
+                            UrlRead = new DataUrl("List", "LogisticsSchedule", new RouteValueDictionary{{"Area","Admin"}}),
+                            SearchButtonId = "search-logistics-schedule",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(LogisticsScheduleModel.DayOfWeekStr))
+                                {
+                        Title = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleModel.DayOfWeek").Text,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(LogisticsScheduleModel.StartTime))
+                                {
+                        Title = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleModel.StartTime").Text,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "80"
+                                },
+                                new ColumnProperty(nameof(LogisticsScheduleModel.EndTime))
+                                {
+                        Title = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleModel.EndTime").Text,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "80"
+                                },
+                                // new ColumnProperty(nameof(LogisticsScheduleModel.ValidFrom))
+                                // {
+                        //     Title = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleModel.ValidFrom").Text,
+                                //     ClassName =  NopColumnClassDefaults.CenterAll,
+                                //     Width = "80"
+                                // },
+                                new ColumnProperty(nameof(LogisticsScheduleModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "80",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                }
+                            }
+                        })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleException.List")
+    </h1>
+
+    <div class="float-right">
+        <a asp-action="Create" asp-controller="LogisticsScheduleException" class="btn btn-primary">
+            <i class="fas fa-plus-square"></i>
+            @T("Admin.Common.AddNew")
+        </a>
+    </div>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                        {
+                            Name = "logistics-schedule-exception-grid",
+                            UrlRead = new DataUrl("List", "LogisticsScheduleException", new RouteValueDictionary{{"Area","Admin"}}),
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            Filters = new List<FilterParameter>
+                            {
+
+                            },
+                            ColumnCollection = new List<ColumnProperty>
+                            {
+                                new ColumnProperty(nameof(LogisticsScheduleExceptionModel.ExceptionDateStr))
+                                {
+                        Title = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleExceptionModel.ExceptionDate").Text,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "100"
+                                },
+                                new ColumnProperty(nameof(LogisticsScheduleExceptionModel.StartTime))
+                                {
+                        Title = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleExceptionModel.StartTime").Text,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "80"
+                                },
+                                new ColumnProperty(nameof(LogisticsScheduleExceptionModel.EndTime))
+                                {
+                        Title = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleExceptionModel.EndTime").Text,
+                                    ClassName =  NopColumnClassDefaults.CenterAll,
+                                    Width = "80"
+                                },
+                                new ColumnProperty(nameof(LogisticsScheduleExceptionModel.Id))
+                                {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "80",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonEdit(new DataUrl("/Admin/LogisticsScheduleException/Edit/"))
+                                }
+                            }
+                        })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+

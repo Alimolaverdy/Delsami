@@ -1,0 +1,84 @@
+﻿@using Delsami.Plugin.Shipping.Core.Areas.Admin.Models.LogisticsSchedules
+@model LogisticsScheduleModel
+
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="DayOfWeek" />
+                            </div>
+
+                            <div class="col-md-9">
+                                <div class="input-group-append input-group-required">
+                                    <div class="input-group">
+                                        <nop-select asp-for="DayOfWeek" asp-items="Model.AvailableDays" />
+                                    </div>
+                                    <div class="input-group-btn">
+                                        <nop-required />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StartTimeStr" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="StartTimeStr" asp-required="true" />
+                                <span asp-validation-for="StartTimeStr"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EndTimeStr" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="EndTimeStr" asp-required="true" />
+                                <span asp-validation-for="EndTimeStr"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<script>
+    $(document).ready(function () {
+
+        $("#StartTimeStr").kendoTimePicker({
+            culture: "en-US",
+            format: "HH:mm:ss",          // نمایش
+            valueFormat: "HH:mm:ss",    // مقدار ارسالی به سرور
+            parseFormats: ["HH:mm:ss"],
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
+
+        $("#EndTimeStr").kendoTimePicker({
+            culture: "en-US",
+            format: "HH:mm:ss",
+            valueFormat: "HH:mm:ss",
+            parseFormats: ["HH:mm:ss"],
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
+
+    });
+</script>

@@ -1,0 +1,101 @@
+﻿@using Delsami.Plugin.Shipping.Core.Areas.Admin.Models.LogisticsSchedulesException
+@model LogisticsScheduleExceptionModel
+@{
+   NopHtml.AppendScriptParts(ResourceLocation.Head, "~/Plugins/NopShop.Misc.Calendare/Content/js/jquery.md.bootstrap.datetimepicker.js", "");
+}
+<div asp-validation-summary="All"></div>
+<input asp-for="Id" type="hidden" />
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ExceptionDate" />
+                            </div>
+
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExceptionDate" asp-required="true" />
+                                <span asp-validation-for="ExceptionDate"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="StartTimeStr" />
+                            </div>
+                            <div class="col-md-9" id="startTimeDiv">
+                                <nop-editor asp-for="StartTimeStr" asp-required="true" />
+                                <span asp-validation-for="StartTimeStr"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="EndTimeStr" />
+                            </div>
+                            <div class="col-md-9" id="endTimeDiv">
+                                <nop-editor asp-for="EndTimeStr" asp-required="true" />
+                                <span asp-validation-for="EndTimeStr"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="IsHoliday" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="IsHoliday" />
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+       </div>
+</section>
+
+<script>
+
+    $(document).ready(function () {
+
+    function toggleHodiday() {
+        var isChecked = $("#IsHoliday").prop('checked');
+        $("#startTimeDiv, #endTimeDiv").css({
+            'opacity': isChecked ? '0.5' : '1',
+            'pointer-events': isChecked ? 'none' : 'auto'
+        });
+    }
+
+    $("#IsHoliday").on('change', toggleHodiday);
+    toggleHodiday(); 
+
+        $("#StartTimeStr").kendoTimePicker({
+            culture: "en-US",
+            format: "HH:mm:ss",        
+            valueFormat: "HH:mm:ss",    
+            parseFormats: ["HH:mm:ss"],
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
+
+        $("#EndTimeStr").kendoTimePicker({
+            culture: "en-US",
+            format: "HH:mm:ss",
+            valueFormat: "HH:mm:ss",
+            parseFormats: ["HH:mm:ss"],
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
+
+    });
+</script>

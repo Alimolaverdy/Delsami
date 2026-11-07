@@ -1,0 +1,30 @@
+@using Delsami.Plugin.Shipping.Core.Areas.Admin.Models.Cartons
+@model CartonModel
+
+@{
+    Layout = "_AdminLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.Misc.ShippingCore.Carton.AddNew").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(T("Delsami.Plugin.Misc.ShippingCore.Carton.List.SystemName").Text);
+}
+
+<form asp-controller="Carton" asp-action="Create" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Delsami.Plugin.Misc.ShippingCore.Admin.Carton.AddNew")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List">@T("Delsami.Plugin.Misc.ShippingCore.Admin.Carton.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/Delsami.Shipping.Core/Areas/Admin/Views/Carton/_CreateOrUpdate.cshtml", Model)
+</form>

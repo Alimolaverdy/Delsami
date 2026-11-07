@@ -110,6 +110,10 @@
     {
       "SystemName": "Delsami.Payment.Core",
       "Version": "1"
+    },
+    {
+      "SystemName": "Delsami.Shipping.Core",
+      "Version": "1"
     }
   ],
   "PluginNamesToUninstall": [],

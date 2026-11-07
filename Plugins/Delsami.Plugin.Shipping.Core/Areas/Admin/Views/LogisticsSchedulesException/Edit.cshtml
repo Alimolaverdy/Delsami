@@ -1,0 +1,37 @@
+@using Delsami.Plugin.Shipping.Core.Areas.Admin.Models.LogisticsSchedulesException
+@model LogisticsScheduleExceptionModel
+
+@{
+    Layout = "_AdminLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleException.Edit").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName(T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsSchedule.List.SystemName").Text);
+}
+
+<form asp-controller="LogisticsScheduleException" asp-action="Edit" method="post">
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsScheduleException.Edit")
+            <small>
+                <i class="fas fa-arrow-circle-left"></i>
+                <a asp-action="List" asp-controller="LogisticsSchedule">@T("Delsami.Plugin.Misc.ShippingCore.Admin.LogisticsSchedule.BackToList")</a>
+            </small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+           
+            <span id="exception-model-delete" class="btn btn-danger">
+                <i class="far fa-trash-alt"></i>
+                @T("Admin.Common.Delete")
+            </span>
+
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/Delsami.Shipping.Core/Areas/Admin/Views/LogisticsSchedulesException/_CreateOrUpdate.cshtml", Model)
+</form>
+<nop-delete-confirmation asp-action"Delete" asp-controller="LogisticsScheduleException" asp-model-id="@Model.Id"  asp-button-id="exception-model-delete" />
