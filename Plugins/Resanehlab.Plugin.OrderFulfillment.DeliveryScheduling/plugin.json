@@ -1,0 +1,11 @@
+﻿{
+  "Group": "Order fulfillment",
+  "FriendlyName": "Delivery Scheduling",
+  "SystemName": "Delsami.OrderFulfillment.DeliveryScheduling",
+  "Version": "1.2",
+  "SupportedVersions": [ "4.60" ],
+  "Author": "AliMolaverdi",
+  "DisplayOrder": 2,
+  "FileName": "Delsami.Plugin.OrderFulfillment.DeliveryScheduling.dll",
+  "Description": "This plugin allows customers to select specific date and time for order delivery."
+}

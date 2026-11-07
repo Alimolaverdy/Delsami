@@ -1,0 +1,51 @@
+﻿@model List<AvailableDeliveryDateTimesTableModel>
+
+@{
+    Layout = "_AdminPopupLayout";
+
+    NopHtml.AppendCssFileParts(string.Format(Constants.PluginOutputPath + Constants.DeliverySchedulingCssPath + "{0}", "adminStyle.css"));
+
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.LoadTimeTable").Text;
+}
+
+<div class="cards-group">
+    <div class="card card-default">
+        <div class="card-body">
+
+            <div class="well">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.LoadTimeTable.Hint")</div>
+
+            @if (Model != null && Model.Count > 0)
+            {
+                <table class="table table-bordered  table-striped time-table time-table-popup">
+                    <thead>
+                        <tr>
+                            <th>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.LoadTimeTable")</th>
+                            @foreach (var time in Model.First().Times)
+                            {
+                                <th>@time.Time</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+
+                        @foreach (var deliveryDateTime in Model)
+                        {
+                            <tr>
+                                <td>
+                                    @deliveryDateTime.DeliveryDateString
+                                </td>
+                                @foreach (var time in deliveryDateTime.Times)
+                                {
+                                    <td>
+                                        @time.AvailableCapacities
+                                    </td>
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            }
+        </div>
+    </div>
+</div>

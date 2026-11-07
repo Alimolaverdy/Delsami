@@ -1,0 +1,132 @@
+﻿@model ShippingMethodContentModel
+
+@using Nop.Core
+@inject IWorkContext workContext
+
+<link href="@string.Format(Constants.PluginOutputPathWithoutTilde + Constants.DeliverySchedulingCssPath + "{0}", "style.css" )" rel="stylesheet" />
+@{
+    Layout = "";
+
+    var supportRtl = (await workContext.GetWorkingLanguageAsync()).Rtl;
+    if (supportRtl)
+    {
+        <link href="@string.Format(Constants.PluginOutputPathWithoutTilde +"/Themes/Clarity"+Constants.DeliverySchedulingCssPath + "{0}", "styles.rtl.css" )" rel="stylesheet" />
+    }
+    <link href="@string.Format(Constants.PluginOutputPathWithoutTilde +"/Themes/Clarity"+ Constants.DeliverySchedulingCssPath + "{0}", "styles.css" )" rel="stylesheet" />
+}
+
+<div id="available-delivery-datetimes">
+</div>
+
+@if (Model.IsOpc)
+{
+    <script>
+        $(document).ready(function () {
+            var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+            if (selectedShippingOption == '' || selectedShippingOption == null)
+                return;
+
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("LoadAvailableDeliveryDateTimesTable", "DeliveryScheduling")',
+                data: { selectedShippingOption: selectedShippingOption, isOpc: '@Model.IsOpc' },
+                type: 'post',
+                success: function (data) {
+                    $("#available-delivery-datetimes").html(data);
+                },
+                complete: {},
+                error: {}
+            });
+
+            $("input[name=shippingoption]").change(function (e) {
+                if ($(this).val() == '')
+                    return;
+
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("LoadAvailableDeliveryDateTimesTable", "DeliveryScheduling")',
+                    data: { selectedShippingOption: $(this).val(), isOpc: '@Model.IsOpc' },
+                    type: 'post',
+                    success: function (data) {
+                        $("#available-delivery-datetimes").html(data);
+                    },
+                    complete: {},
+                    error: {}
+                });
+            });
+
+            $(document).on("click", ".delivery-time-table input[type=radio]", function () {
+                $(".delivery-time-table td.selected").removeClass("selected");
+                $(this).parents("td").addClass("selected")
+            });
+
+            $(document).on("click", ".delivery-time-table td", function () {
+                $(".delivery-time-table td.selected").removeClass("selected");
+                $(this).addClass("selected")
+                $(this).find("input[type=radio]").prop("checked", true);
+            });
+        });
+    </script>
+}
+else
+{
+    <script>
+        Delsami.documentReady(function () {
+            var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+            if (selectedShippingOption == '' || selectedShippingOption == null)
+                return;
+
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("LoadAvailableDeliveryDateTimesTable", "DeliveryScheduling")',
+                data: { selectedShippingOption: selectedShippingOption, isOpc: '@Model.IsOpc' },
+                type: 'post',
+                success: function (data) {
+                    $("#available-delivery-datetimes").html(data);
+                },
+                complete: {},
+                error: {}
+            });
+
+            $("input[name=shippingoption]").change(function (e) {
+                if ($(this).val() == '')
+                    return;
+
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("LoadAvailableDeliveryDateTimesTable", "DeliveryScheduling")',
+                    data: { selectedShippingOption: $(this).val(), isOpc: '@Model.IsOpc' },
+                    type: 'post',
+                    success: function (data) {
+                        $("#available-delivery-datetimes").html(data);
+                    },
+                    complete: {},
+                    error: {}
+                });
+            });
+
+            $(document).on("click", ".delivery-time-table input[type=radio]", function () {
+                $(".delivery-time-table td.selected").removeClass("selected");
+                $(this).parents("td").addClass("selected")
+            });
+
+            $(document).on("click", ".delivery-time-table td", function () {
+                $(".delivery-time-table td.selected").removeClass("selected");
+                $(this).addClass("selected")
+                $(this).find("input[type=radio]").prop("checked", true);
+            });
+        });
+    </script>
+}
+
+@if (Model.IsOpc)
+{
+    @await Html.PartialAsync("_OpcShippingMethodOverrideNextButtonAction")
+}
+else
+{
+    @await Html.PartialAsync("_ShippingMethodOverrideNextButtonAction")
+}
+

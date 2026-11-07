@@ -1,0 +1,409 @@
+﻿@model ConfigurationModel
+
+@using System.Net
+
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject Nop.Core.IWorkContext workContext
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Delsami.DeliveryScheduling.Configuration");
+
+    Layout = "_ConfigurePlugin";
+
+    NopHtml.AddCssFileParts($"~/Plugins/Delsami.OrderFulfillment.DeliveryScheduling/Areas/Admin/Content/Styles/resanehlab-core-admin.css");
+
+    const string hideSettingsBlockAttributeName = "Delsami.DeliveryScheduling.ConfigurationPage.HideSettingsBlock";
+    var hideSettingsBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSettingsBlockAttributeName);
+
+    var overriddenStartDisplayDaysOffsetSearchModel = new OverriddenStartDisplayDaysOffsetSearchModel();
+}
+@await Component.InvokeAsync("StoreScopeConfiguration")
+<form asp-controller="DeliverySchedulingAdmin" asp-action="Configure" method="post">
+    <div class="content-header clearfix">
+        <div class="float-right">
+            <button type="submit" name="save" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.Save")
+            </button>
+            <button type="submit" name="save-continue" class="btn btn-primary">
+                <i class="far fa-save"></i>
+                @T("Admin.Common.SaveContinue")
+            </button>
+        </div>
+    </div>
+    <section class="content">
+        <div class="container-fluid">
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-12 clearfix">
+                        <div class="float-left">
+                        </div>
+                    </div>
+                </div>
+
+                <nop-cards id="delivery-scheduling-configure">
+                    <nop-card asp-name="delivery-configuration-common" asp-icon="fas fa-info" asp-title="@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration")" asp-hide-block-attribute-name="@hideSettingsBlockAttributeName" asp-hide="@hideSettingsBlock" asp-advanced="false">
+                        <div class="card-body">
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="EnablePlugin_OverrideForStore" asp-input="EnablePlugin" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="EnablePlugin" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="EnablePlugin" />
+                                    <span asp-validation-for="EnablePlugin"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="NumberOfDisplayDays_OverrideForStore" asp-input="NumberOfDisplayDays" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="NumberOfDisplayDays" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="NumberOfDisplayDays" />
+                                    <span asp-validation-for="NumberOfDisplayDays"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="SelectedDisabledShippingMethodIds" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="SelectedDisabledShippingMethodIds" asp-items="Model.AvailableShippingMethods" asp-multiple="true" />
+                                </div>
+                                <script type="text/javascript">
+                                    $(document).ready(function () {
+                                        var categoryIdsInput = $('#@Html.IdFor(model => model.SelectedDisabledShippingMethodIds)').data("kendoMultiSelect");
+                                        categoryIdsInput.setOptions({
+                                            autoClose: false,
+                                            filter: "contains"
+                                        });
+
+                                    @if (Model.AvailableShippingMethods.Count == 0)
+                                    {
+                                        <text>
+                                                categoryIdsInput.setOptions({
+                                                    enable: false,
+                                                    placeholder: '@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration.Fields.ShippingMethods.NoShippingMethodsAvailable")'
+                                                });
+                                            categoryIdsInput._placeholder();
+                                            categoryIdsInput._enable();
+                                        </text>
+                                    }
+                                                                                                                                                                                                                                            });
+                                </script>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="HideUnselectableDays_OverrideForStore" asp-input="HideUnselectableDays" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="HideUnselectableDays" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="HideUnselectableDays" />
+                                    <span asp-validation-for="HideUnselectableDays"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="DeliveryDateTimeFormatString_OverrideForStore" asp-input="DeliveryDateTimeFormatString" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="DeliveryDateTimeFormatString" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="DeliveryDateTimeFormatString" />
+                                    <span asp-validation-for="DeliveryDateTimeFormatString"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="FormatDeliveryDateTimesBasedOnCustomerLanguage_OverrideForStore" asp-input="FormatDeliveryDateTimesBasedOnCustomerLanguage" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="FormatDeliveryDateTimesBasedOnCustomerLanguage" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="FormatDeliveryDateTimesBasedOnCustomerLanguage" />
+                                    <span asp-validation-for="FormatDeliveryDateTimesBasedOnCustomerLanguage"></span>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="StartDisplayDaysOffset_OverrideForStore" asp-input="StartDisplayDaysOffset" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="StartDisplayDaysOffset" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="StartDisplayDaysOffset" />
+                                    <span asp-validation-for="StartDisplayDaysOffset"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-override-store-checkbox asp-for="StartHourOffsetIfDaysOffsetIsZero_OverrideForStore" asp-input="StartHourOffsetIfDaysOffsetIsZero" asp-store-scope="@Model.ActiveStoreScopeConfiguration" />
+                                    <nop-label asp-for="StartHourOffsetIfDaysOffsetIsZero" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="StartHourOffsetIfDaysOffsetIsZero" />
+                                    <span asp-validation-for="StartHourOffsetIfDaysOffsetIsZero"></span>
+                                </div>
+                            </div>
+
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <div class="label-wrapper">
+                                        <label class="control-label">
+                                            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration.OverrideStartDisplayDaysOffsets.OverriddenStartDisplayDaysOffsetsByCategories")
+                                        </label>
+                                        <div title="@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration.OverrideStartDisplayDaysOffsets.OverriddenStartDisplayDaysOffsetsByCategories.Hint")" data-toggle="tooltip" class="ico-help">
+                                            <i class="fa fa-question-circle"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-9">
+                                    @await Html.PartialAsync("Table", new DataTablesModel
+                               {
+                                   Name = "overridden-display-days-offsets-grid",
+                                   UrlRead = new DataUrl("OverriddenStartDisplayDaysOffsetsList", "DeliverySchedulingAdmin", null),
+                                   UrlDelete = new DataUrl("DeleteOverriddenStartDisplayDaysOffset", "DeliverySchedulingAdmin", null),
+                                   Length = overriddenStartDisplayDaysOffsetSearchModel.PageSize,
+                                   LengthMenu = overriddenStartDisplayDaysOffsetSearchModel.AvailablePageSizes,
+                                   ColumnCollection = new List<ColumnProperty>
+                                    {
+                                    new ColumnProperty("CategoryName")
+                                    {
+                                    Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration.OverrideStartDisplayDaysOffsets.Category").Text
+                                    },
+                                    new ColumnProperty("StartDisplayDaysOffset")
+                                    {
+                                    Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration.OverrideStartDisplayDaysOffsets.StartDisplayDaysOffset").Text,
+                                    Width = "250"
+                                    },
+                                    new ColumnProperty("Id")
+                                    {
+                                    Title = T("Admin.Common.Edit").Text,
+                                    Width = "150",
+                                    ClassName =  NopColumnClassDefaults.Button,
+                                    Render = new RenderButtonCustom(NopButtonClassDefaults.Default, T("Admin.Common.Edit").Text)
+                                    {
+                                    OnClickFunctionName =  $"oddogEdit"
+                                    }
+                                    },
+                                    new ColumnProperty("Id")
+                                    {
+                                    Title = T("Admin.Common.Delete").Text,
+                                    Width = "150",
+                                    Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                    ClassName =  NopColumnClassDefaults.Button
+                                    }
+                                    }
+                               })
+
+                                    <div id="oddog-kendo-window" class="k-popup-edit-form">
+                                        <div class="k-edit-form-container"></div>
+                                    </div>
+
+                                    <script type="text/javascript">
+                                        var oddogCreateOrUpdateFlag = "Create";
+                                        var oddogEditingId = 0;
+
+                                        $(document).ready(function () {
+                                            var table = $("#overridden-display-days-offsets-grid").DataTable();
+
+                                            //add a new button to the datatable
+                                            new $.fn.dataTable.Buttons(table, {
+                                                buttons: [
+                                                    {
+                                                        text: '<span><i class="fa fa-plus"></i>@T("Admin.Common.AddNewRecord")</span>',
+                                                        action: function (e, dt, node, config) {
+                                                            oddogCreateOrUpdateFlag = "Create";
+
+                                                            initiateKendoEditorTemplateDropdowns();//id = 0
+
+                                                            openKendoWindow();
+                                                        }
+                                                    }
+                                                ]
+                                            });
+
+                                            //add new button html to the table header
+                                            table.buttons(1, null).container().prependTo(
+                                                table.table().container()
+                                            );
+                                        });
+
+                                        function oddogEdit(id) {
+                                            oddogCreateOrUpdateFlag = "Update";
+
+                                            initiateKendoEditorTemplateDropdowns(id);
+
+                                            openKendoWindow();
+                                        }
+
+                                        function compileKendoEditorTemplate() {
+                                            var template = kendo.template($("#oddog-kendo-editor-template").html());
+
+                                            var createOrUpdateButtonName = "@T("Delsami.Plugin.Core.Admin.Common.Create")";
+                                            if (oddogCreateOrUpdateFlag == "Update")
+                                                createOrUpdateButtonName = "@T("Admin.Common.Update")";
+
+                                            var data = { CreateOrUpdateButtonName: createOrUpdateButtonName };
+
+                                            var result = template(data); //pass the data to the compiled template
+
+                                            var windowEditForm = $("#oddog-kendo-window .k-edit-form-container");
+
+                                            windowEditForm.html(result);
+                                        }
+
+                                        function initiateKendoEditorTemplateDropdowns(id) {
+                                            oddogEditingId = (id === undefined) ? 0 : id;
+
+                                            compileKendoEditorTemplate();
+
+                                            var selectedCategoryId = 0;
+                                            var selectedStartDisplayDaysOfsset = 0;
+
+                                            var table = $("#overridden-display-days-offsets-grid").DataTable();
+
+                                            var selectedRowData = {};
+                                            table.rows(function (idx, data, node) {
+                                                if (data.Id === id)
+                                                    selectedRowData = data;
+
+                                                return false;
+                                            });
+
+                                            if (!jQuery.isEmptyObject(selectedRowData)) {
+                                                selectedCategoryId = selectedRowData.CategoryId;
+                                                selectedStartDisplayDaysOfsset = selectedRowData.StartDisplayDaysOffset;
+                                            }
+
+                                            $('#available-categories').width(300).kendoDropDownList({
+                                                optionLabel: "Select a category...",
+                                                dataTextField: "Text",
+                                                dataValueField: "Value",
+                                                dataSource: {
+                                                    type: "json",
+                                                    transport: {
+                                                        read: {
+                                                            url: "@Html.Raw(Url.Action("GetAvailableCategoriesForOverrideStartDisplayDaysOffsetJsonModel", "DeliverySchedulingAdmin"))",
+                                                            type: "POST",
+                                                            dataType: "json",
+                                                            data: function () {
+                                                                var data = {
+                                                                    Id: id
+                                                                };
+                                                                addAntiForgeryToken(data);
+                                                                return data;
+                                                            }
+                                                        }
+                                                    },
+                                                    serverFiltering: true,
+                                                }
+                                            }).data("kendoDropDownList").value(selectedCategoryId);
+
+                                            $("#start-display-days-offset").val(selectedStartDisplayDaysOfsset);
+                                        }
+
+                                        function openKendoWindow() {
+                                            var window = $("#oddog-kendo-window");
+
+                                            var windowOptions = {
+                                                actions: ["Close"],
+                                                draggable: false,
+                                                resizable: false,
+                                                modal: true,
+                                                width: "700px",
+                                                title: "@T("Admin.Common.Edit")"
+                                            };
+
+                                            window.kendoWindow(windowOptions);
+
+                                            window.data("kendoWindow").center().open();
+                                        }
+
+                                        function closeKendoWindow() {
+                                            var window = $("#oddog-kendo-window");
+
+                                            window.data("kendoWindow").close();
+                                        }
+
+                                        function createOrUpdateOddog() {
+                                            var validator = $("#oddog-kendo-window").kendoValidator().data("kendoValidator");
+
+                                            validator.hideMessages();//hide previous messages
+
+                                            var validate = validator.validate();
+
+                                            if (validate) {
+                                                var url = "@Html.Raw(Url.Action("CreateOverriddenStartDisplayDaysOffset", "DeliverySchedulingAdmin"))";
+
+                                                if (oddogCreateOrUpdateFlag == "Update")
+                                                    url = "@Html.Raw(Url.Action("UpdateOverriddenStartDisplayDaysOffset", "DeliverySchedulingAdmin"))";
+
+                                                var postData =
+                                                {
+                                                    Id: oddogEditingId,
+                                                    CategoryId: $("#available-categories").val(),
+                                                    StartDisplayDaysOffset: $("#start-display-days-offset").val()
+                                                };
+                                                addAntiForgeryToken(postData);
+
+                                                $.ajax({
+                                                    url: url,
+                                                    type: "@WebRequestMethods.Http.Post",
+                                                    dataType: "json",
+                                                    data: postData,
+                                                    success: function (data, textStatus, jqXHR) {
+                                                        //refresh grid
+                                                        updateTable("#overridden-display-days-offsets-grid");
+                                                    },
+                                                    error: function (jqXHR, textStatus, errorThrown) {
+                                                        alert(errorThrown);
+                                                    },
+                                                    complete: function (jqXHR, textStatus) {
+                                                        closeKendoWindow();
+                                                    }
+                                                });
+                                            }
+                                        }
+                                    </script>
+                                    <script type="text/x-kendo-template" id="oddog-kendo-editor-template">
+                                        <div class="k-edit-label">
+                                            <label>
+                                        @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration.OverrideStartDisplayDaysOffsets.Category")
+                                            </label>
+                                        </div>
+                                        <div class="k-edit-field">
+                                            <input id="available-categories" name="available-categories" required validationMessage="Category is required">
+                                            <span class="k-invalid-msg" data-for="available-categories"></span>
+                                        </div>
+                                        <div class="k-edit-label">
+                                            <label>
+                                        @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Configuration.OverrideStartDisplayDaysOffsets.StartDisplayDaysOffset")
+                                            </label>
+                                        </div>
+                                        <div class="k-edit-field">
+                                            <input id="start-display-days-offset" name="start-display-days-offset" required validationMessage="Start display days offset is required">
+                                            <span class="k-invalid-msg" data-for="start-display-days-offset"></span>
+                                        </div>
+                                        <div class="k-edit-buttons k-state-default">
+                                            <a class="k-button k-button-icontext k-grid-update" onclick="createOrUpdateOddog()" href="\#">
+                                                <i class="fa fa-check"></i>#= CreateOrUpdateButtonName #
+                                            </a>
+                                            <a class="k-button k-button-icontext k-grid-cancel" onclick="closeKendoWindow()" href="\#">
+                                                <i class="fa fa-ban"></i>@T("Admin.Common.Cancel")
+                                            </a>
+                                        </div>
+                                    </script>
+                                </div>
+                            </div>
+                        </div>
+                    </nop-card>
+
+                </nop-cards>
+            </div>
+        </div>
+    </section>
+</form>

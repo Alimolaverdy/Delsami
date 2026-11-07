@@ -1,0 +1,245 @@
+﻿@model AvailableDeliveryDateTimeTableModel
+
+@{
+    Layout = "";
+}
+
+@if (Model.IsDisabled)
+{
+    if (Model.IsOpc)
+    {
+        <script>
+            $.ajax({
+                url: '/DeliveryScheduling/RemoveSelectedDateTime',
+                type: 'post',
+                success: function (data) {
+                    if (data.Success) {
+                        $(".confirm-order-next-step-button")[0].onclick = null;
+                        $(".confirm-order-next-step-button").click(function () { ConfirmOrder.save(); });
+                    }
+                    else {
+                        alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.NoLongerAvailable")');
+                        return false;
+                    }
+                },
+                complete: {},
+                error: function (data) {
+                    alert('Error happend!');
+                    return false;
+                },
+            });
+        </script>
+    }
+    else
+    {
+        <script>
+            Delsami.documentReady(function () {
+                $.ajax({
+                    url: '/DeliveryScheduling/RemoveSelectedDateTime',
+                    type: 'post',
+                    success: function (data) {
+                        if (data.Success) {
+                            $(".shipping-method form").unbind("submit");
+                        }
+                        else {
+                            alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.NoLongerAvailable")');
+                            return false;
+                        }
+                    },
+                    complete: {},
+                    error: function (data) {
+                        alert('Error happend!');
+                        return false;
+                    },
+                });
+            });
+        </script>
+    }
+}
+else
+{
+    if (Model != null && Model.AvailableDeliveryDateTimesTable != null && Model.AvailableDeliveryDateTimesTable.Count > 0)
+    {
+        <div class="table-responsive">
+            <div class="delivery-datetime-table">
+                @{
+                    var i = 1;
+                    
+                    foreach (var deliveryDateTime in Model.AvailableDeliveryDateTimesTable)
+                    {
+                        @if (deliveryDateTime.Times.Sum(a => a.AvailableCapacities) == 0 && Model.HideUnselectableDays)
+                        {
+                            i++;
+                            continue;
+                        }
+
+                        <div class="deliveryDateContainer">
+                            <span>
+                                <a onclick="selectDeliveryDate('@deliveryDateTime.DeliveryDateString',this, @i)">
+                                    @Html.Raw(deliveryDateTime.DeliveryDateString)
+                                </a>
+                            </span>
+                        </div>
+
+
+                        i++;
+                    }
+                }
+            </div>
+
+            <div class="delivery-time-table">
+                <div class="delivery-times-container">
+                    <div class="deliveryTimeContainer not-selected">
+                        @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.DeliveryDateTime.PleaseSelectDate")
+                    </div>
+                    @foreach (var deliveryDateTime in Model.AvailableDeliveryDateTimesTable)
+                    {
+                        <div class="deliveryTimeContainer" data-deliverydate="@deliveryDateTime.DeliveryDateString">
+                            @foreach (var time in deliveryDateTime.Times)
+                            {
+                                if (time.AvailableCapacities > 0 || (time.AvailableCapacities == 0 && !Model.HideUnselectableDays))
+                                {
+                                    if (time.AvailableCapacities > 0)
+                                    {
+                                        <div class="deliveryTime" data-deliverydate="@deliveryDateTime.DeliveryDateString">
+                                            <label>
+                                                <span data-shippingmethod-capacity-id="@time.ShippingMethodCapacityId" data-deliverydate-on-utc="@deliveryDateTime.DeliveryDateOnUtc"
+                                                      data-delivery-time="@time.Time" data-available-delivery-time-range-id="@time.AvailableDeliveryTimeRangeId">
+                                                    <input type="radio"  name="deliveryDateTimesRadioGroup" />
+                                                    @*  @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.Hour") *@ @time.Time
+                                                </span>
+                                            </label>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <div class="deliveryTime bookedup" data-deliverydate="@deliveryDateTime.DeliveryDateString">
+                                            <span>
+                                                @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.BookedUp")
+                                            </span>
+                                        </div>
+                                    }
+                                }
+
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    }
+    else
+    {
+        <div class="alert alert-danger">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.NoDefinedDeliveryDateTimes")</div>
+    }
+
+    if (Model.IsOpc)
+    {
+        <script>
+            $(".confirm-order-next-step-button")[0].onclick = null;
+            $(".confirm-order-next-step-button").off("click");
+
+            $(".confirm-order-next-step-button").each(function () {
+                $(".confirm-order-next-step-button").data('onclick', this.onclick);
+
+                this.onclick = function (event) {
+                    var selectedRadioButton = $("input[name='deliveryDateTimesRadioGroup']:checked");
+                    if (!selectedRadioButton.val()) {
+                        alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.MustBeSelectedAtLeastOne")');
+                        return false;
+                    }
+                    else {
+                        var shippingMethodCapacityId = selectedRadioButton.parent().attr("data-shippingmethod-capacity-id");
+                        var deliveryDateOnUtc = selectedRadioButton.parent().attr("data-deliverydate-on-utc");
+                        var deliveryTime = selectedRadioButton.parent().attr("data-delivery-time");
+                        var availableDeliveryTimeRangeId = selectedRadioButton.parent().attr("data-available-delivery-time-range-id");
+                        var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+                        $.ajax({
+                            url: '/DeliveryScheduling/CheckAvailabilityForSelectedDateTime',
+                            data: { shippingMethodCapacityId: shippingMethodCapacityId, deliveryDateOnUtc: deliveryDateOnUtc, availableDeliveryTimeRangeId: availableDeliveryTimeRangeId, deliveryTime: deliveryTime, selectedShippingOption: selectedShippingOption },
+                            type: 'post',
+                            success: function (data) {
+                                if (data.Success)
+                                    ConfirmOrder.save();
+                                else {
+                                    alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.NoLongerAvailable")');
+                                    return false;
+                                }
+                            },
+                            complete: {},
+                            error: function (data) {
+                                alert('Error happend!');
+                                return false;
+                            },
+                        });
+                    }
+                };
+            });
+
+            function selectDeliveryDate(deliveryDate, el, index) {
+
+                jQuery('.deliveryDateContainer').removeClass('selected');
+                jQuery(el).closest('.deliveryDateContainer').addClass('selected');
+
+                const width = jQuery('.deliveryTimeContainer').parent().width();
+
+                jQuery('.deliveryTimeContainer').parent().animate({ left: width * index }, 300);
+                /*jQuery('.deliveryTimeContainer[data-deliverydate="' + deliveryDate + '"]').removeClass('hide').animate({ left: '0', opacity: 1 }, 250);*/
+            }
+        </script>
+    }
+    else
+    {
+        <script>
+            Delsami.documentReady(function () {
+                $(".shipping-method form").unbind("submit");
+                $(".shipping-method .buttons").detach().insertAfter("#available-delivery-datetimes");
+                var flag = true;
+
+                $(".shipping-method form").submit(function (e) {
+
+                    var selectedRadioButton = $("input[name='deliveryDateTimesRadioGroup']:checked");
+                    if (!selectedRadioButton.val()) {
+                        alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.MustBeSelectedAtLeastOne")');
+                        return false;
+                    }
+
+                    var shippingMethodCapacityId = selectedRadioButton.parent().attr("data-shippingmethod-capacity-id");
+                    var deliveryDateOnUtc = selectedRadioButton.parent().attr("data-deliverydate-on-utc");
+                    var deliveryTime = selectedRadioButton.parent().attr("data-delivery-time");
+                    var availableDeliveryTimeRangeId = selectedRadioButton.parent().attr("data-available-delivery-time-range-id");
+                    var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+                    var submitButton = $(".shipping-method .buttons .shipping-method-next-step-button")
+
+                    if (flag) {
+                        e.preventDefault();
+
+                        $.ajax({
+                            url: '@Url.Action("CheckAvailabilityForSelectedDateTime", "DeliveryScheduling")',
+                            data: { shippingMethodCapacityId: shippingMethodCapacityId, deliveryDateOnUtc: deliveryDateOnUtc, availableDeliveryTimeRangeId: availableDeliveryTimeRangeId, deliveryTime: deliveryTime, selectedShippingOption: selectedShippingOption },
+                            type: 'post',
+                            success: function (data) {
+                                if (!data.Success) {
+                                    alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.NoLongerAvailable")');
+                                    return false;
+                                }
+                                else {
+                                    flag = false;
+                                    submitButton.click();
+                                }
+                            },
+                            complete: {},
+                            error: function (data) {
+                                alert('Error happend!');
+                                return false;
+                            },
+                        });
+                    }
+                });
+            });
+        </script>
+    }
+}

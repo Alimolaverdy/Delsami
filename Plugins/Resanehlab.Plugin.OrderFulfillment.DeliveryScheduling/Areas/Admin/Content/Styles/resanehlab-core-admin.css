@@ -1,0 +1,39 @@
+﻿.license-key-validation-message {
+    font-weight: bold;
+    font-size: 13px;
+}
+
+.valid-license {
+    color: #258e27;
+}
+
+.invalid-license {
+    color: #ff1c00
+}
+
+.k-window .k-edit-form-container {
+    width: auto
+}
+
+.k-window .k-invalid-msg {
+    position: relative;
+    border-color: #ffe79e;
+    background-color: #fff4c9;
+    color: #635145;
+    margin: 0.5em;
+    padding: 4px 5px 4px 6px
+}
+
+.k-window .k-i-error {
+    vertical-align: text-top;
+    margin-right: 3px;
+}
+
+.k-window .k-window-titlebar{
+    height:3em;
+}
+
+.k-window .k-button:hover, .k-window .k-button:focus {
+    border-color: #adadad;
+    box-shadow: none
+}

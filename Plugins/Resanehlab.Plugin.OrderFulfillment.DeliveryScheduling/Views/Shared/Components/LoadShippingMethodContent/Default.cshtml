@@ -1,0 +1,123 @@
+﻿@model ShippingMethodContentModel
+
+@{
+    Layout = "";
+}
+
+<div id="available-delivery-datetimes">
+</div>
+
+@if (Model.IsOpc)
+{
+    <script>
+        $(document).ready(function () {
+            var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+            if (selectedShippingOption == '' || selectedShippingOption == null)
+                return;
+
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("LoadAvailableDeliveryDateTimesTable", "DeliveryScheduling")',
+                data: { selectedShippingOption: selectedShippingOption, isOpc: '@Model.IsOpc' },
+                type: 'post',
+                success: function (data) {
+                    $("#available-delivery-datetimes").html(data);
+                },
+                complete: {},
+                error: {}
+            });
+
+            $("input[name=shippingoption]").change(function (e) {
+                if ($(this).val() == '')
+                    return;
+
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("LoadAvailableDeliveryDateTimesTable", "DeliveryScheduling")',
+                    data: { selectedShippingOption: $(this).val(), isOpc: '@Model.IsOpc' },
+                    type: 'post',
+                    success: function (data) {
+                        $("#available-delivery-datetimes").html(data);
+                    },
+                    complete: {},
+                    error: {}
+                });
+            });
+
+            $(document).on("click", ".delivery-time-table input[type=radio]", function () {
+                $(".delivery-time-table td.selected").removeClass("selected");
+                $(this).parents("td").addClass("selected")
+            });
+
+            $(document).on("click", ".delivery-time-table td", function () {
+                $(".delivery-time-table td.selected").removeClass("selected");
+                $(this).addClass("selected")
+                $(this).find("input[type=radio]").prop("checked", true);
+            });
+        });
+
+    </script>
+
+
+}
+else
+{
+    <script>
+        Delsami.documentReady(function () {
+            var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+            if (selectedShippingOption == '' || selectedShippingOption == null)
+                return;
+
+            $.ajax({
+                cache: false,
+                url: '@Url.Action("LoadAvailableDeliveryDateTimesTable", "DeliveryScheduling")',
+                data: { selectedShippingOption: selectedShippingOption, isOpc: '@Model.IsOpc' },
+                type: 'post',
+                success: function (data) {
+                    $("#available-delivery-datetimes").html(data);
+                },
+                complete: {},
+                error: {}
+            });
+
+            $("input[name=shippingoption]").change(function (e) {
+                if ($(this).val() == '')
+                    return;
+
+                $.ajax({
+                    cache: false,
+                    url: '@Url.Action("LoadAvailableDeliveryDateTimesTable", "DeliveryScheduling")',
+                    data: { selectedShippingOption: $(this).val(), isOpc: '@Model.IsOpc' },
+                    type: 'post',
+                    success: function (data) {
+                        $("#available-delivery-datetimes").html(data);
+                    },
+                    complete: {},
+                    error: {}
+                });
+            });
+
+            $(document).on("click", ".delivery-time-table input[type=radio]", function () {
+                $(".delivery-time-table td.selected").removeClass("selected");
+                $(this).parents("td").addClass("selected")
+            });
+
+            $(document).on("click", ".delivery-time-table td", function () {
+                $(".delivery-time-table td.selected").removeClass("selected");
+                $(this).addClass("selected")
+                $(this).find("input[type=radio]").prop("checked", true);
+            });
+        });
+    </script>
+}
+
+@if (Model.IsOpc)
+{
+    @await Html.PartialAsync("~/Plugins/Delsami.OrderFulfillment.DeliveryScheduling/Views/Shared/_OpcShippingMethodOverrideNextButtonAction.cshtml")
+}
+else
+{
+    @await Html.PartialAsync("~/Plugins/Delsami.OrderFulfillment.DeliveryScheduling/Views/Shared/_ShippingMethodOverrideNextButtonAction.cshtml")
+}

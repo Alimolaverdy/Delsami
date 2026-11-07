@@ -1,0 +1,47 @@
+﻿@model OrderDetailsDeliveryDateTimeModel
+
+@{
+    Layout = "";
+}
+
+<ul class="loadDeliveryDateTimes" style="display:none">
+    <li class="delivery-date">
+        <span class="label">
+            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDetails.DeliveryDate"):
+        </span>
+        <span class="value">
+            @Model.DeliveryDate
+        </span>
+    </li>
+    <li class="delivery-time">
+        <span class="label">
+            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDetails.DeliveryTime"):
+        </span>
+        <span class="value">
+            @Model.DeliveryTime
+        </span>
+    </li>
+</ul>
+
+@if (Model.IsOpc)
+{
+    <script>
+        $(document).ready(function () {
+            var elem = $(".order-review-data .shipping-method");
+            if (elem.length) {
+                $(".loadDeliveryDateTimes").children().insertAfter(elem);
+            }
+        });
+    </script>
+}
+else
+{
+    <script>
+        Delsami.documentReady(function () {
+            var elem = $(".order-review-data .shipping-method");
+            if (elem.length) {
+                $(".loadDeliveryDateTimes").children().insertAfter(elem);
+            }
+        });
+    </script>
+}

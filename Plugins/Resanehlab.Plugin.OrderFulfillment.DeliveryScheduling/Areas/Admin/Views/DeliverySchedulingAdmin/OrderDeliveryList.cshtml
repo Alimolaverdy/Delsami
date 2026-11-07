@@ -1,0 +1,197 @@
+﻿@model OrderDeliverySearchModel
+
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject Nop.Core.IWorkContext workContext
+
+@{
+    Layout = "_AdminLayout";
+
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList").Text;
+
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Delsami.DeliveryScheduling.OrderDelivery");
+
+    const string hideSearchBlockAttributeName = "Delsami.DeliveryScheduling.OrderDeliveryListPage.HideSearchBlock";
+    var hideSearchBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideSearchBlockAttributeName);
+}
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList")
+        </h1>
+        <div class="float-right">
+            <div class="btn-group">
+                <button type="button" class="btn bg-purple">
+                    <i class="fa fa-file-pdf-o"></i>
+                    @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList.PdfOrdersDelivery")
+                </button>
+                <button type="button" class="btn bg-purple dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                    <span class="caret"></span>
+                    <span class="sr-only">&nbsp;</span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="dropdown-item">
+                        <button type="submit" name="pdf-all">
+                            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList.PdfOrdersDelivery.All")
+                        </button>
+                    </li>
+                    <li class="dropdown-item">
+                        <button type="button" id="pdf-selected">
+                            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList.PdfOrdersDelivery.Selected")
+                        </button>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            <div class="cards-group">
+                <div class="card card-default card-search">
+                    <div class="card-body">
+                        <div class="row search-row @(!hideSearchBlock ? "opened" : "")" data-hideAttribute="@hideSearchBlockAttributeName">
+                            <div class="search-text">@T("Admin.Common.Search")</div>
+                            <div class="icon-search"><i class="fas fa-search" aria-hidden="true"></i></div>
+                            <div class="icon-collapse"><i class="far fa-angle-@(!hideSearchBlock ? "up" : "down")" aria-hidden="true"></i></div>
+                        </div>
+                        <div class="search-body @(hideSearchBlock ? "closed" : "")">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row" @(Model.AvailableStores.SelectionIsNotPossible() ? Html.Raw("style=\"display:none\"") : null)>
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="StoreId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="StoreId" asp-items="@Model.AvailableStores" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="SelectedShippingMethodId" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-select asp-for="SelectedShippingMethodId" asp-items="@Model.AvailableShippingMethods" />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="FromDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="FromDate" />
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-md-4">
+                                            <nop-label asp-for="ToDate" />
+                                        </div>
+                                        <div class="col-md-8">
+                                            <nop-editor asp-for="ToDate" />
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="text-center col-12">
+                                    <button type="button" id="search-orderdelivery" class="btn btn-primary btn-search">
+                                        <i class="fa fa-search"></i>
+                                        @T("Admin.Common.Search")
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                         {
+                            Name = "orderdeliverylist-grid",
+                            SearchButtonId = "search-orderdelivery",
+                            Length = Model.PageSize,
+                            LengthMenu = Model.AvailablePageSizes,
+                            UrlRead = new DataUrl("GetOrderDeliveryList", "DeliverySchedulingAdmin"),
+                            Filters = new List<FilterParameter>
+                             {
+                                 new FilterParameter(nameof(Model.StoreId)),
+                                 new FilterParameter(nameof(Model.SelectedShippingMethodId)),
+                                 new FilterParameter(nameof(Model.FromDate)),
+                                 new FilterParameter(nameof(Model.ToDate))
+                             },
+                            ColumnCollection = new List<ColumnProperty>
+                             {
+                             new ColumnProperty(nameof(OrderDeliveryModel.OrderId))
+                             {
+                             IsMasterCheckBox = true,
+                             Render = new RenderCheckBox("checkbox_orders", nameof(OrderDeliveryModel.OrderId)),
+                             ClassName = NopColumnClassDefaults.CenterAll,
+                             Width = "50"
+                             },
+                              new ColumnProperty(nameof(OrderDeliveryModel.OrderName))
+                             {
+                             Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList.OrderId").Text,
+                             Width = "150",
+                             Render = new RenderLink(new DataUrl("/Admin/Order/Edit", nameof(OrderDeliveryModel.OrderId)))
+                            },
+                               new ColumnProperty(nameof(OrderDeliveryModel.DeliveryDate))
+                             {
+                             Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList.DeliveryDateTime").Text,
+                             Width = "200",
+                             Editable = true,
+                             EditType = EditType.String
+                             },
+                               new ColumnProperty(nameof(OrderDeliveryModel.ShippingMethodName))
+                             {
+                             Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList.ShippingMethodName").Text,
+                             Width = "100",
+                             Editable = true,
+                             EditType = EditType.String
+                             },
+                                new ColumnProperty(nameof(OrderDeliveryModel.StoreName))
+                             {
+                             Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.OrderDeliveryList.StoreName").Text,
+                             Width = "100",
+                             Editable = true,
+                             EditType = EditType.String
+                             }
+                               }
+                        })
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@*Print packaging slips selected (XML). We don't use GET approach because it's limited to 2K-4K chars and won't work for large number of entities*@
+@using (Html.BeginForm("PdfSelected", "DeliverySchedulingAdmin", FormMethod.Post, new { id = "pdf-selected-form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <input type="hidden" id="selectedIds" name="selectedIds" value="" />
+}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('#pdf-selected').click(function (e) {
+            e.preventDefault();
+            var ids = selectedIds.join(",");
+            $('#pdf-selected-form #selectedIds').val(ids);
+            $('#pdf-selected-form').submit();
+
+            updateTable('#orderdeliverylist-grid');
+
+            return false;
+        });
+    });
+</script>

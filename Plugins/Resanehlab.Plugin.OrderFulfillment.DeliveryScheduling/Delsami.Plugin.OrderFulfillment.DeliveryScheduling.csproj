@@ -1,0 +1,212 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup Label="Globals">
+		<SccProjectName></SccProjectName>
+		<SccProvider></SccProvider>
+		<SccAuxPath></SccAuxPath>
+		<SccLocalPath></SccLocalPath>
+	</PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net7.0</TargetFramework>
+		<Copyright>Copyright © Delsami</Copyright>
+		<Company>Delsami</Company>
+		<Authors>Delsami</Authors>
+		<RepositoryType>Git</RepositoryType>
+		<AssemblyName>Delsami.Plugin.OrderFulfillment.DeliveryScheduling</AssemblyName>
+		<RootNamespace>Delsami.Plugin.OrderFulfillment.DeliveryScheduling</RootNamespace>
+		<OutputPath>..\..\Presentation\Nop.Web\Plugins\Delsami.OrderFulfillment.DeliveryScheduling</OutputPath>
+		<OutDir>$(OutputPath)</OutDir>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<ClearPluginAssemblies Include="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" />
+	</ItemGroup>
+	
+
+	<ItemGroup>
+		<Compile Remove="Scripts\**" />
+		<EmbeddedResource Remove="Scripts\**" />
+		<None Remove="Scripts\**" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Remove="DeliveryScheduling.cs" />
+	</ItemGroup>
+	<ItemGroup>
+		<None Remove=".gitignore" />
+		<None Remove="Areas\Admin\Views\Shared\Components\OrderDeliveryDateTime\Default.cshtml" />
+		<None Remove="Areas\Admin\Views\_ViewImports.cshtml" />
+		<None Remove="Content\css\adminStyle.css" />
+		<None Remove="Content\css\modal.css" />
+		<None Remove="Content\css\style.css" />
+		<None Remove="Content\js\modal.js" />
+		<None Remove="logo.png" />
+		<None Remove="plugin.json" />
+		<None Remove="Themes\Clarity\Content\css\styles.css" />
+		<None Remove="Themes\Clarity\Content\css\styles.rtl.css" />
+		<None Remove="Themes\Clarity\Views\_ViewImports.cshtml" />
+		<None Remove="Areas\Admin\Views\DeliverySchedulingAdmin\Configure.cshtml" />
+		<None Remove="Areas\Admin\Views\DeliverySchedulingAdmin\OrderDeliveryList.cshtml" />
+		<None Remove="Areas\Admin\Views\DeliverySchedulingAdmin\TimeTable.cshtml" />
+		<None Remove="Areas\Admin\Views\DeliverySchedulingAdmin\TimeTableList.cshtml" />
+		<None Remove="Areas\Admin\Views\DeliverySchedulingAdmin\TimeTablePopup.cshtml" />
+		<None Remove="Areas\Admin\Views\ExceptionDateAdmin\Create.cshtml" />
+		<None Remove="Areas\Admin\Views\ExceptionDateAdmin\Edit.cshtml" />
+		<None Remove="Areas\Admin\Views\ExceptionDateAdmin\List.cshtml" />
+		<None Remove="Areas\Admin\Views\ExceptionDateAdmin\TimeTableList.cshtml" />
+		<None Remove="Areas\Admin\Views\ExceptionDateAdmin\_CreateOrUpdate.cshtml" />
+		<None Remove="Views\Shared\Components\LoadShippingMethodContent\Default.cshtml" />
+		<None Remove="Views\_ViewImports.cshtml" />
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Areas\Admin\Views\ExceptionDateAdmin\_ExceptionTimeRange.cshtml">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\Shared\Components\OrderDeliveryDateTime\Default.cshtml">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\_ViewImports.cshtml">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Content\css\adminStyle.css">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Content\css\modal.css">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Content\css\style.css">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Content\js\modal.js">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Themes\Clarity\Content\css\styles.css">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Themes\Clarity\Content\css\styles.rtl.css">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Themes\Clarity\Views\_ViewImports.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\DeliverySchedulingAdmin\Configure.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\DeliverySchedulingAdmin\TimeTablePopup.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\DeliverySchedulingAdmin\OrderDeliveryList.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\DeliverySchedulingAdmin\TimeTable.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\DeliverySchedulingAdmin\TimeTableList.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Views\Shared\Components\LoadAvailableDeliveryDateTimesTable\Default.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Views\Shared\_OpcShippingMethodOverrideNextButtonAction.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Views\Shared\Components\LoadOrderDetailsDeliveryDateTime\Default.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Views\Shared\Components\LoadOrderSummaryDeliveryDateTime\Default.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Views\Shared\_ShippingMethodOverrideNextButtonAction.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\ExceptionDateAdmin\Create.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\ExceptionDateAdmin\Edit.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\ExceptionDateAdmin\List.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\ExceptionDateAdmin\_CreateOrUpdate.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+		<Content Include="Areas\Admin\Views\ExceptionDateAdmin\TimeTableList.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Views\_ViewImports.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="Views\Shared\Components\LoadShippingMethodContent\Default.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="logo.png">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+		<Content Include="plugin.json">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</Content>
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Presentation\Nop.Web\Nop.Web.csproj">
+	    <Private>False</Private>
+	  </ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+	  <Reference Include="Delsami.Plugin.Misc.Core">
+	    <HintPath>..\..\Presentation\Nop.Web\Plugins\Delsami.Misc.Core\Delsami.Plugin.Misc.Core.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	  <Reference Include="Delsami.Plugin.Shipping.Core">
+	    <HintPath>..\..\Presentation\Nop.Web\Plugins\Delsami.Shipping.Core\Delsami.Plugin.Shipping.Core.dll</HintPath>
+	    <Private>False</Private>
+	  </Reference>
+	</ItemGroup>
+	<ItemGroup>
+		<None Update="Areas\Admin\Content\Styles\QueryBuilder\bootstrap-datepicker3.min.css">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Areas\Admin\Content\Styles\QueryBuilder\query-builder.css">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Areas\Admin\Content\Styles\QueryBuilder\query-builder.default.min.css">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Areas\Admin\Content\Styles\QueryBuilder\RLStyle.css">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Areas\Admin\Content\Styles\resanehlab-core-admin.css">
+		  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Delivery scheduling plugin guide - English version.docx">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Themes\Clarity\Views\Shared\Components\LoadShippingMethodContent\Default.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Areas\Admin\Views\AvailableDeliveryTimeRangeAdmin\Create.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Areas\Admin\Views\AvailableDeliveryTimeRangeAdmin\Edit.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Areas\Admin\Views\AvailableDeliveryTimeRangeAdmin\List.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+		<None Update="Areas\Admin\Views\AvailableDeliveryTimeRangeAdmin\_CreateOrUpdate.cshtml">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>
+	</ItemGroup>
+
+	<!-- This target execute after "Build" target -->
+	<Target Name="NopTarget" AfterTargets="Build">
+		<!-- Delete unnecessary libraries from plugins path -->
+		<MSBuild Projects="$(MSBuildProjectDirectory)\..\..\Build\ClearPluginAssemblies.proj" Properties="PluginPath=$(MSBuildProjectDirectory)\$(OutDir)" Targets="NopClear" />
+	</Target>
+</Project>

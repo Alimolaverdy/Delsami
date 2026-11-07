@@ -1,0 +1,40 @@
+﻿@model DeliverySchedulingOrderModel
+
+@{
+    @inject IGenericAttributeService genericAttributeService
+    @inject IWorkContext workContext
+
+    const string hideOrderDeliverySchedulingBlockAttributeName = "Delsami.DeliveryScheduling.OrderPage.HideDeliverySchedulingBlock";
+    var hideOrderDeliverySchedulingBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideOrderDeliverySchedulingBlockAttributeName);
+}
+
+<nop-card asp-name="order-delivery-date-time" asp-icon="fas fa-info" asp-title="@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Orders.DeliveryScheduling")" asp-hide-block-attribute-name="@hideOrderDeliverySchedulingBlockAttributeName" asp-hide="@hideOrderDeliverySchedulingBlock" asp-advanced="false">
+    <div class="card-body">
+        <div class="card-body">
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="DeliveryTimeRange" />
+                </div>
+                <div class="col-md-9">
+                    <div class="form-text-row">@Model.DeliveryTimeRange</div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="DeliveryTime" />
+                </div>
+                <div class="col-md-9">
+                    <div class="form-text-row">@Model.DeliveryTime</div>
+                </div>
+            </div>
+            <div class="form-group row">
+                <div class="col-md-3">
+                    <nop-label asp-for="ShippingMethodName" />
+                </div>
+                <div class="col-md-9">
+                    <div class="form-text-row">@Model.ShippingMethodName</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</nop-card>

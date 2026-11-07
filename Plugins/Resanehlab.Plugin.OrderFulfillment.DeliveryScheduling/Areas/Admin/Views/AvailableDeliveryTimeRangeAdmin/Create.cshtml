@@ -1,0 +1,28 @@
+﻿@model AvailableDeliveryTimeRangeModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.AddNew").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Delsami.DeliveryScheduling.ManageAvailableDeliveryTimeRanges");
+
+    Layout = "_AdminLayout";
+}
+
+@using (Html.BeginForm(null, null, FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    <div class="content-header clearfix">
+        <h1 class="float-left">
+            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.AddNew")
+            <small><i class="fa fa-arrow-circle-left"></i>@Html.ActionLink(T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.BackToList").Text, "List")</small>
+        </h1>
+        <div class="float-right">
+            <button type="submit" name="save" class="btn bg-blue">
+                <i class="fa fa-floppy-o"></i>
+                @T("Admin.Common.Save")
+            </button>
+        </div>
+    </div>
+    @await Html.PartialAsync("~/Plugins/Delsami.OrderFulfillment.DeliveryScheduling/Areas/Admin/Views/AvailableDeliveryTimeRangeAdmin/_CreateOrUpdate.cshtml", Model)
+}

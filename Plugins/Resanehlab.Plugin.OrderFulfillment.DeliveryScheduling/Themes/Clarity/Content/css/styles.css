@@ -1,0 +1,25 @@
+/*********** CSS For LTR **********/
+.delivery-time-table td:first-child {
+    background: #d1cac3 !important;
+    color: #000 !important;
+}
+.delivery-time-table td.selected:not(:first-child), .delivery-time-table td:not(:first-child):hover {
+    background-color: #b5ab9f !important;
+    color: #000 !important;
+    font-weight: 700;
+}
+
+.table-bordered tbody tr td {
+    border: 0px !important;
+    padding: 5px 15px !important;
+}
+.table-bordered tr {
+    background-color: #fcf9f9 !important;
+    border-bottom: 1px solid #b5ab9f !important;
+}
+#available-delivery-datetimes {
+    box-shadow: 0 0 10px 1px #7a7a7a;
+}
+.delivery-time-table {
+    margin-bottom: 0 !important;
+}

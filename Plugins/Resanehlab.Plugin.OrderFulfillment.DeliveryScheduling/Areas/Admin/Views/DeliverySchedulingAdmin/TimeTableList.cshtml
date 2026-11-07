@@ -1,0 +1,109 @@
+﻿@model TimeTableModel
+@{
+    Layout = null;
+    int j = 0;
+}
+@if (Model.HasConfirmedTimeRange)
+{
+    <div class="show-save-button">
+        <button type="submit" name="save" class="btn bg-blue">
+            <i class="fa fa-floppy-o"></i>
+            @T("Admin.Common.Save")
+        </button>
+    </div>
+
+    <div class="cards-group">
+        <div class="card card-default">
+            <div class="card-body">
+                <a class="btn btn-info" href='javascript:OpenWindow("@Url.Content("~/Admin/Plugin/DeliveryScheduling/DeliverySchedulingAdmin/TimeTablePopup")?storeId=@Model.StoreId&shippingMethodId=@Model.ShippingMethodId", 800, 320, true);'>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.LoadTimeTableText")</a>
+                <table class="table table-bordered  table-striped time-table">
+                    <thead>
+                        <tr>
+                            <th>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.TimeTable.DaysOfWeek")</th>
+                            @foreach (var availableDeliveryTimeRange in Model.AvailableDeliveryTimeRanges)
+                            {
+                                <th>@availableDeliveryTimeRange.Time</th>
+                            }
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < 7; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @switch (i + 1)
+                                    {
+                                        case 6:
+                                            <span>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Saturday")</span>
+                                            ;
+                                            break;
+                                        case 1:
+
+                                            <span>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Monday")</span>
+                                            ;
+                                            break;
+                                        case 2:
+
+                                            <span>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Tuesday")</span>
+                                            ;
+                                            break;
+                                        case 3:
+
+                                            <span>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Wednesday")</span>
+                                            ;
+                                            break;
+                                        case 4:
+
+                                            <span>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Thursday")</span>
+                                            ;
+                                            break;
+                                        case 5:
+
+                                            <span>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Friday")</span>
+                                            ;
+                                            break;
+                                        default:
+
+                                            <span>@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Sunday")</span>
+                                            ;
+                                            break;
+                                    }
+                                </td>
+
+                                @foreach (var timeRanges in Model.TimeRangeLists.Where(w => w.Where(e => e.DayOfWeek == ((i + 1) % 7)).Any()))
+                                {
+
+                                    foreach (var timeRange in timeRanges)
+                                    {
+                                        if (timeRange.AvailableDeliveryTimeRangeId == 0)
+                                        {
+                                            <td></td>
+
+                                        }
+                                        else
+                                        {
+
+                                            <td>
+                                                <input name="TimeRanges[@j].AvailableDeliveryTimeRangeId" value="@timeRange.AvailableDeliveryTimeRangeId" type="hidden" />
+                                                <input name="TimeRanges[@j].ShippingMethodCapacityId" value="@timeRange.ShippingMethodCapacityId" type="hidden" />
+                                                <input name="TimeRanges[@j].DayOfWeek" value="@timeRange.DayOfWeek" type="hidden" />
+                                                <input class="form-control" name="TimeRanges[@j].Capacity" value="@timeRange.Capacity" style="max-width:300px" />
+                                            </td>
+                                            j++;
+                                        }
+                                    }
+                                }
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+}
+else
+{
+    <div class="alert alert-warning">
+        @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.TimeTable.HasNotConfimedTimeRange")
+    </div>
+}

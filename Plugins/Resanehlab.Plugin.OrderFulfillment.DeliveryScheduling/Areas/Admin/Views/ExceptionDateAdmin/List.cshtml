@@ -1,0 +1,119 @@
+﻿@model ExceptionDateListModel
+
+@{
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.List").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Delsami.DeliveryScheduling.ManageExceptionDates");
+
+    Layout = "_AdminLayout";
+
+    NopHtml.AppendCssFileParts(string.Format(Constants.PluginOutputPath + Constants.DeliverySchedulingCssPath + "{0}", "adminStyle.css"));
+
+    var searchModel = new ExceptionDateSearchModel();
+    searchModel.SetGridPageSize();
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.List")
+    </h1>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal ">
+            @if (Model.AvailableStores != null && Model.AvailableStores.Count() > 0)
+            {
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="search-body">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <div class="label-wrapper">
+                                                    <label class="control-label">
+                                                        @T("Admin.Configuration.Settings.StoreScope")
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-select asp-for-name="store-scope-configuration" asp-items="@Model.AvailableStores" onchange="setLocation(this.value);" style="width: auto;min-width: 300px;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            @if (Model.HasAvailableDeliveryTimeRange)
+            {
+                <div class="content-header clearfix">
+                    <div class="float-right">
+                        <a href="@(Url.Action("Create", "ExceptionDateAdmin", new { StoreId = Model.StoreId}))" class="btn bg-blue">
+                            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.AddButton")
+                        </a>
+                    </div>
+                </div>
+
+                <div class="cards-group">
+                    <div class="card card-default">
+                        <div class="card-body">
+                            @await Html.PartialAsync("Table", new DataTablesModel
+                       {
+                           Name = "ExceptionDate-grid",
+                           Length = searchModel.PageSize,
+                           LengthMenu = searchModel.AvailablePageSizes,
+                           UrlRead = new DataUrl("List", "ExceptionDateAdmin", new RouteValueDictionary { [nameof(ExceptionDateSearchModel.StoreId)] = Model.StoreId }),
+                           UrlDelete = new DataUrl("Delete", "ExceptionDateAdmin", new RouteValueDictionary { [nameof(ExceptionDateSearchModel.StoreId)] = Model.StoreId }),
+                           UrlUpdate = new DataUrl("Edit", "ExceptionDateAdmin", new RouteValueDictionary { [nameof(ExceptionDateSearchModel.StoreId)] = Model.StoreId }),
+                           ColumnCollection = new List<ColumnProperty>
+                                    {
+                                    new ColumnProperty(nameof(ExceptionDateModel.DateOnUtcStr))
+                                    {
+                                    Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.Fields.DateOnUtc").Text,
+                                    Width = "200",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                    },
+                                     new ColumnProperty(nameof(ExceptionDateModel.Title))
+                                    {
+                                    Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.Fields.Title").Text,
+                                    Width = "200",
+                                    Editable = true,
+                                    EditType = EditType.String
+                                    },
+                                     new ColumnProperty(nameof(ExceptionDateModel.Id))
+                                     {
+                                     Title = T("Admin.Common.Edit").Text,
+                                     Width = "100",
+                                     ClassName =  NopColumnClassDefaults.Button,
+                                     Render = new RenderButtonEdit(new DataUrl("Edit"))
+                                     }
+                                     ,
+                                     new ColumnProperty(nameof(ExceptionDateModel.Id))
+                                     {
+                                     Title = T("Admin.Common.Delete").Text,
+                                     Width = "100",
+                                     Render = new RenderButtonRemove(T("Admin.Common.Delete").Text),
+                                     ClassName =  NopColumnClassDefaults.Button
+                                     }
+                             }
+                       })
+
+                        </div>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="alert alert-warning">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.TimeTable.HasNotConfimedTimeRange")</div>
+            }
+        </div>
+    </div>
+</section>

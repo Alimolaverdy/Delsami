@@ -1,0 +1,274 @@
+﻿@model ExceptionDateModel
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.StoreId)
+@{
+    var searchModel = new AvailableDeliveryTimeRangeSearchModel();
+    searchModel.SetGridPageSize();
+}
+
+<div class="card-body">
+    <div class="cards-group">
+        <div class="card card-search">
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-12">
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ExceptionTimeRange.StartHour" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExceptionTimeRange.StartHour" />
+                                <span asp-validation-for="ExceptionTimeRange.StartHour"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ExceptionTimeRange.EndHour" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="ExceptionTimeRange.EndHour" />
+                                <span asp-validation-for="ExceptionTimeRange.EndHour"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="ExceptionTimeRange.ShippingMethodIds" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-select asp-for="ExceptionTimeRange.ShippingMethodIds" asp-items="Model.ExceptionTimeRange.AvailableShippingMethod" asp-multiple="true" asp-required="true" />
+                                <script>
+                                    $(document).ready(function () {
+                                        var ShippingIdsInput = $('#@Html.IdFor(model => model.ExceptionTimeRange.ShippingMethodIds)').data("kendoMultiSelect");
+                                        ShippingIdsInput.setOptions({
+                                            autoClose: false,
+                                        });
+                                    });
+                                </script>
+                            </div>
+                        </div>
+
+                        <div class="offset-md-3" style="display: inline-flex;">
+                            <div class="col-md-9 offset-md-3">
+                                <button type="button" id="addTimeRange" class="btn btn-primary w-100">@T("Admin.Common.AddNewRecord")</button>
+                            </div>
+                            <div class="col-md-9 offset-md-3">
+                                <button type="button" id="saveTimeRanges" class="btn btn-primary w-100">@T("Admin.Common.Save")</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <div class="card card-default">
+            <div class="card-body">
+                @await Html.PartialAsync("Table", new DataTablesModel
+                {
+
+                    Name = "timeRange-grid",
+                                Paging = false,
+                                Length = searchModel.PageSize,
+                                LengthMenu = searchModel.AvailablePageSizes,
+                                UrlRead = new DataUrl("ExceptionTimeRangeList", "ExceptionDateAdmin", new RouteValueDictionary { [nameof(Model.StoreId)] = Model.StoreId, [nameof(Model.ExceptionTimeRange.ExceptionDateId)] = Model.Id, [nameof(Model.IsCustomTimeRange)] = Model.IsCustomTimeRange }),
+                                UrlDelete = new DataUrl("DeleteByException", "AvailableDeliveryTimeRangeAdmin", new RouteValueDictionary { [nameof(Model.ExceptionTimeRange.Id)] = Model.ExceptionTimeRange.Id }),
+
+                                ColumnCollection = new List<ColumnProperty>
+                                {
+                                new ColumnProperty(nameof(Model.ExceptionTimeRange.Time))
+                                {
+                                Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.Time").Text,
+                                Width = "100",
+                                Editable = false,
+                                },
+                                new ColumnProperty(nameof(Model.ExceptionTimeRange.StartHour))
+                                {
+                                Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.StartHour").Text,
+                                Width = "100",
+                                Editable = false,
+                                },
+                                new ColumnProperty(nameof(Model.ExceptionTimeRange.EndHour))
+                                {
+                                Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.EndHour").Text,
+                                Width = "100",
+                                Editable = false,
+                                },
+                                new ColumnProperty(nameof(Model.ExceptionTimeRange.ShippingMethodTexts))
+                                {
+                                Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.ShippingMethods").Text,
+                                Editable = false,
+                                Width = "400",
+                                },
+                                new ColumnProperty(nameof(Model.ExceptionTimeRange.Id))
+                                {
+                                Title = T("Admin.Common.Delete").Text,
+                                Width = "100",
+                                ClassName =  NopColumnClassDefaults.Button,
+                                Render = new RenderButtonRemove(T("Admin.Common.Delete").Text)
+                                },
+                                new ColumnProperty(nameof(Model.ExceptionTimeRange.IsConfirmed))
+                                {
+                                Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.IsConfirmed").Text,
+                                Width = "100",
+                                Render = new RenderCustom("renderIsConfirmed")
+                                }
+                                }
+                                })
+
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script>
+
+     function renderIsConfirmed(data, type, row, meta) {
+          if (row.IsConfirmed === true) {
+              return '<span class=\"alert alert-success\">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.ConfirmedText")</span>'
+          }
+          else {
+              return '<span class=\"alert alert-warning\">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.NotConfirmedText")</span>'
+          }
+      }
+
+         function DisableDropDown() {
+
+                if ($('#timeRange-grid tbody tr').length === 1 &&
+                     $('table tbody tr td:first').text().includes('وجود ندارد')) {
+
+                     $('#SelectedShippingMethodId').attr('disabled', true);
+                 }
+                 else{
+
+                     $('#SelectedShippingMethodId').attr('disabled', false);
+                 }
+
+                     var count = $('span.alert').filter(function () {
+                                     return $(this).text().trim() === 'Not Confirmed';
+                                 }).length;
+                if(count>0){
+                   $('#SelectedShippingMethodId').attr('disabled', true);
+
+                }
+
+
+         }
+
+    $(document).ready(function () {
+
+
+        $('#addTimeRange').click(function () {
+
+           $('#addTimeRange').attr('disabled', true);
+
+            var postData = {
+            EndHour: $("#@Html.IdFor(model => model.ExceptionTimeRange.EndHour)").val(),
+            StartHour:$("#@Html.IdFor(model => model.ExceptionTimeRange.StartHour)").val(),
+            Time:$("#@Html.IdFor(model => model.ExceptionTimeRange.Time)").val(),
+            ShippingMethodIds:$("#@Html.IdFor(model => model.ExceptionTimeRange.ShippingMethodIds)").val(),
+            ExceptionDateId:$("#@Html.IdFor(model => model.Id)").val(),
+            };
+
+            addAntiForgeryToken(postData);
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Admin.AvailableDeliveryTimeRangeAdmin.Create")",
+                data: postData,
+                success: function (data) {
+                    if (data.Result) {
+
+                        updateTable('#timeRange-grid');
+                        $('#SelectedShippingMethodId').attr('disabled', true);
+
+                        //clear input value
+                        $("#@Html.IdFor(model => model.ExceptionTimeRange.EndHour)").val('00:00:00');
+                        $("#@Html.IdFor(model => model.ExceptionTimeRange.StartHour)").val('00:00:00');
+                        $("#@Html.IdFor(model => model.ExceptionTimeRange.Time)").val('');
+                        $("#@Html.IdFor(model => model.ExceptionTimeRange.ShippingMethodIds)").val();
+                    } else {
+                        //display errors if returned
+                        display_nop_error(data);
+                    }
+                },
+                complete: function () {
+                    $('#addTimeRange').attr('disabled', false);
+
+                }
+            });
+        });
+
+        $('#saveTimeRanges').click(function () {
+            $('#saveTimeRanges').attr('disabled', true);
+
+            var postData = {
+            exceptionDateId: $("#@Html.IdFor(model => model.Id)").val(),
+            storeId:$("#@Html.IdFor(model => model.StoreId)").val(),
+            };
+
+            addAntiForgeryToken(postData);
+
+            $.ajax({
+                cache: false,
+                type: "POST",
+                url: "@Url.RouteUrl("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.Admin.ExceptionDateAdmin.ConfirmingTimeRanges")",
+                data: postData,
+                success: function (data) {
+                    if (data.Result) {
+
+                      updateTable('#timeRange-grid');
+                      $('#SelectedShippingMethodId').attr('disabled', false);
+
+
+                    } else {
+                        //display errors if returned
+                        display_nop_error(data);
+                    }
+                }
+               
+            });
+        });
+
+
+        $("#ExceptionTimeRange_StartHour").kendoTimePicker({
+            culture: "en-US",
+            format: "HH:mm:ss",          // نمایش
+            valueFormat: "HH:mm:ss",    // مقدار ارسالی به سرور
+            parseFormats: ["HH:mm:ss"],
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
+
+        $("#ExceptionTimeRange_EndHour").kendoTimePicker({
+            culture: "en-US",
+            format: "HH:mm:ss",          // نمایش
+            valueFormat: "HH:mm:ss",    // مقدار ارسالی به سرور
+            parseFormats: ["HH:mm:ss"],
+            popup: {
+                position: "bottom right",
+                origin: "top right"
+            }
+        });
+
+        setTimeout(function() {
+            DisableDropDown();
+        }, 1000);
+
+    setInterval(() => {
+        const hasWarning = $('span.alert-warning').length > 0;
+        $('#SelectedShippingMethodId').prop('disabled', hasWarning);
+        $('#saveTimeRanges').prop('disabled', !hasWarning);
+
+    }, 1000);
+
+    });
+</script>

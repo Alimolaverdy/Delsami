@@ -1,0 +1,144 @@
+﻿@model AvailableDeliveryTimeRangeListModel
+@{
+    //page title
+    ViewBag.PageTitle = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.List").Text;
+    //active menu item (system name)
+    NopHtml.SetActiveMenuItemSystemName("Delsami.DeliveryScheduling.ManageAvailableDeliveryTimeRanges");
+
+    Layout = "_AdminLayout";
+
+    NopHtml.AppendCssFileParts(string.Format(Constants.PluginOutputPath + Constants.DeliverySchedulingCssPath + "{0}", "adminStyle.css"));
+
+    var searchModel = new AvailableDeliveryTimeRangeSearchModel();
+    searchModel.SetGridPageSize();
+}
+
+<div class="content-header clearfix">
+    <h1 class="float-left">
+        @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.List")
+    </h1>
+</div>
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="form-horizontal">
+            @if (Model.AvailableStores != null && Model.AvailableStores.Count() > 0)
+            {
+                <div class="cards-group">
+                    <div class="card card-default card-search">
+                        <div class="card-body">
+                            <div class="search-body">
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group row">
+                                            <div class="col-md-6">
+                                                <div class="label-wrapper">
+                                                    <label class="control-label">
+                                                        @T("Admin.Configuration.Settings.StoreScope")
+                                                    </label>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <nop-select asp-for-name="store-scope-configuration" asp-items="@Model.AvailableStores" onchange="setLocation(this.value);" style="width: auto;min-width: 300px;" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+
+            <div class="content-header clearfix">
+                <div class="float-right">
+                    @if (!Model.IsConfirmed)
+                    {
+                        <a href="@(Url.Action("Create", "AvailableDeliveryTimeRangeAdmin", new { StoreId = Model.StoreId}))" class="btn bg-blue">
+                            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.AddButton")
+                        </a>
+                        if (Model.ItemsCount > 0)
+                        {
+                            <a href="@(Url.Action("Confirm", "AvailableDeliveryTimeRangeAdmin", new { StoreId = Model.StoreId}))" class="btn btn-success">
+                                @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.ConfirmButton")
+                            </a>
+                        }
+                    }
+                    else
+                    {
+                        <a class="btn btn-danger" href="@(Url.Action("DeleteAll", "AvailableDeliveryTimeRangeAdmin", new { StoreId = Model.StoreId}))" onclick="return confirm('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.DeleteConfirmation")')">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.DeleteButton")</a>
+                    }
+                </div>
+            </div>
+
+            <div class="cards-group">
+                <div class="card card-default">
+                    <div class="card-body">
+                        @await Html.PartialAsync("Table", new DataTablesModel
+                   {
+                       Name = "availableDeliveryTimeRange-grid",
+                       Length = searchModel.PageSize,
+                       LengthMenu = searchModel.AvailablePageSizes,
+                       UrlRead = new DataUrl("List", "AvailableDeliveryTimeRangeAdmin", new RouteValueDictionary { [nameof(AvailableDeliveryTimeRangeSearchModel.StoreId)] = Model.StoreId }),
+                       UrlDelete = new DataUrl("Delete", "AvailableDeliveryTimeRangeAdmin"),
+                       ColumnCollection = new List<ColumnProperty>
+                                         {
+                                new ColumnProperty(nameof(AvailableDeliveryTimeRangeModel.Time))
+                                {
+                        Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.Time").Text,
+                                Width = "200",
+                                Editable = true,
+                                EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(AvailableDeliveryTimeRangeModel.StartHour))
+                                {
+                        Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.StartHour").Text,
+                                Width = "100",
+                                Editable = true,
+                                EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(AvailableDeliveryTimeRangeModel.EndHour))
+                                {
+                        Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.EndHour").Text,
+                                Width = "100",
+                                Editable = true,
+                                EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(AvailableDeliveryTimeRangeModel.SelectedDayText))
+                                {
+                        Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.DaysOfWeek").Text,
+                                Width = "400",
+                                Editable = true,
+                                EditType = EditType.String
+                                },
+                                new ColumnProperty(nameof(AvailableDeliveryTimeRangeModel.ShippingMethodTexts))
+                                {
+                        Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.Fields.ShippingMethods").Text,
+                                Width = "400",
+                                Editable = true,
+                                EditType = EditType.String
+                                },
+                                 new ColumnProperty(nameof(AvailableDeliveryTimeRangeModel.IsConfirmed))
+                                {
+                        Title = T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.IsConfirmed").Text,
+                                Width = "100",
+                                Render = new RenderCustom("renderIsConfirmed")
+                                }
+                               }
+                   })
+                        <script>
+                            function renderIsConfirmed(data, type, row, meta) {
+                                if (row.IsConfirmed === true) {
+                                    return '<span class=\"alert alert-success\">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.ConfirmedText")</span>'
+                                }
+                                else {
+                                    return '<span class=\"alert alert-warning\">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryTimeRange.NotConfirmedText")</span>'
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

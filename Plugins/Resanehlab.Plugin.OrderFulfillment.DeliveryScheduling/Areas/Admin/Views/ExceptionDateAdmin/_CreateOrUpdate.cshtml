@@ -1,0 +1,139 @@
+﻿@model ExceptionDateModel
+
+@inject Nop.Services.Common.IGenericAttributeService genericAttributeService
+@inject Nop.Core.IWorkContext workContext
+
+@Html.ValidationSummary(false)
+@Html.HiddenFor(model => model.Id)
+@Html.HiddenFor(model => model.StoreId)
+
+@{
+    const string hideInfoBlockAttributeName = "Delsami.DeliveryScheduling.ExceptionDatePage.HideInfoBlock";
+    var hideInfoBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideInfoBlockAttributeName);
+
+    var hideTime = !Model.IsCustomTimeRange;
+
+    const string hideTimeTableBlockAttributeName = "Delsami.DeliveryScheduling.ExceptionDatePage.HideSTimeTableBlock";
+    var hideTimeTableBlock = await genericAttributeService.GetAttributeAsync<bool>(await workContext.GetCurrentCustomerAsync(), hideTimeTableBlockAttributeName);
+    NopHtml.AppendScriptParts(ResourceLocation.Head, "~/Plugins/NopShop.Misc.Calendare/Content/js/jquery.md.bootstrap.datetimepicker.js", "");
+}
+
+<section class="content">
+    <div class="container-fluid">
+        <div class="content-header">
+            <div class="well">@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.Hint")</div>
+        </div>
+        <div class="form-horizontal">
+            <nop-cards id="exception-date-cards">
+                <nop-card asp-name="exception-date-info" asp-icon="fas fa-info" asp-title="@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.Info")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">
+                    <div class="card-body">
+                        @Html.HiddenFor(x => x.StoreId)
+
+                        <div>
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="@Model.Title" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-editor asp-for="@Model.Title" />
+                                    <span asp-validation-for="@Model.Title"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col-md-3">
+                                <nop-label asp-for="@Model.DateOnUtc" />
+                            </div>
+                            <div class="col-md-9">
+                                <nop-editor asp-for="@Model.DateOnUtc" />
+                                <span asp-validation-for="@Model.DateOnUtc"></span>
+                            </div>
+                        </div>
+
+
+                        <div class="form-group row">
+                            <div class="col-md-4">
+                                <nop-label asp-for="IsCustomTimeRange" />
+                            </div>
+                            <div class="col-md-8">
+                                <nop-editor asp-for="IsCustomTimeRange" />
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                </nop-card>
+
+                @if (Model.ExceptionTimeRange != null)
+                {
+                    <nop-card asp-name="language-info" asp-icon="fas fa-info" asp-title="@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.TimeRanges")" asp-hide-block-attribute-name="@hideInfoBlockAttributeName" asp-hide="@hideInfoBlock" asp-advanced="false">
+                        @await Html.PartialAsync("~/Plugins/Delsami.OrderFulfillment.DeliveryScheduling/Areas/Admin/Views/ExceptionDateAdmin/_ExceptionTimeRange.cshtml", Model)
+                    </nop-card>
+                }
+
+                <nop-card asp-name="exception-date-time-table" asp-icon="fas fa-info" asp-title="@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.TimeTable")" asp-hide-block-attribute-name="@hideTimeTableBlockAttributeName" asp-hide="@hideTimeTableBlock" asp-advanced="false">
+                    <div class="card-body">
+                        @if (Model.Id > 0)
+                        {
+                            <div class="form-group row">
+                                <div class="col-md-3">
+                                    <nop-label asp-for="@Model.SelectedShippingMethodId" />
+                                </div>
+                                <div class="col-md-9">
+                                    <nop-select asp-for="SelectedShippingMethodId" asp-items="@Model.AvailableShippingMethods" style="width: auto;min-width: 300px;" />
+                                </div>
+                            </div>
+
+                            <div id="TimeTable"></div>
+                        }
+                        else
+                        {
+                            @T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.ExceptionDate.TimeTable.SaveBeforeEdit")
+                        }
+
+                        <script>
+
+                            $(document).ready(function () {
+
+
+                            if("@Model.Id" > 0)
+                            {
+                                $('#IsCustomTimeRange').attr('disabled', true);
+                                $('#DateOnUtc').attr('disabled', true);
+                            }
+                            if ("@Model.SelectedShippingMethodId") {
+                                    LoadTimeTable(@Model.SelectedShippingMethodId)
+                                }
+                                $("#SelectedShippingMethodId").on("change", function () {
+                                    var shippingMethodId = $("#SelectedShippingMethodId").val();
+                                    if (shippingMethodId) {
+                                        LoadTimeTable(shippingMethodId)
+                                    }
+                                });
+                            });
+
+                                   function LoadTimeTable(shippingMethodId) {
+                                        if (shippingMethodId != 0) {
+                            var url = '@Url.Action("TimeTableList", "ExceptionDateAdmin")'
+                                + '?shippingMethodId=' + shippingMethodId
+                                + '&exceptionDateId=@Model.Id'
+                                + '&isCustomTimeRange=@Model.IsCustomTimeRange'
+                                + '&selectedDateStr=' + encodeURIComponent('@Model.DateOnUtc.ToString("yyyy/MM/dd")');
+
+                            var encodedUrl=    encodeURI(url);
+                                $("#TimeTable").load(encodedUrl);
+                                        }
+                                        else {
+                                            $("#TimeTable").empty();
+                                        }
+                                }
+                        </script>
+                    </div>
+                </nop-card>
+            </nop-cards>
+        </div>
+    </div>
+</section>
+
+

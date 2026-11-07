@@ -1,0 +1,45 @@
+﻿@{
+    Layout = "";
+}
+
+<script>
+    $('.shipping-method-next-step-button[onclick]').each(function () {
+        $(this).data('onclick', this.onclick);
+
+        this.onclick = function (event) {
+            var selectedRadioButton = $("input[name='deliveryDateTimesRadioGroup']:checked");
+            if (!selectedRadioButton.val()) {
+                alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.MustBeSelectedAtLeastOne")');
+                return false;
+            }
+            else {
+                var shippingMethodCapacityId = selectedRadioButton.parent().attr("data-shippingmethod-capacity-id");
+                var deliveryDateOnUtc = selectedRadioButton.parent().attr("data-deliverydate-on-utc");
+                var deliveryTime = selectedRadioButton.parent().attr("data-delivery-time");
+                var availableDeliveryTimeRangeId = selectedRadioButton.parent().attr("data-available-delivery-time-range-id");
+                var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+                var elem = this;
+
+                $.ajax({
+                    url: '@Url.Action("CheckAvailabilityForSelectedDateTime", "DeliveryScheduling")',
+                    data: { shippingMethodCapacityId: shippingMethodCapacityId, deliveryDateOnUtc: deliveryDateOnUtc, availableDeliveryTimeRangeId: availableDeliveryTimeRangeId, deliveryTime: deliveryTime, selectedShippingOption: selectedShippingOption },
+                    type: 'post',
+                    success: function (data) {
+                        if (data.Success)
+                            $(elem).data('onclick').call(elem, event || window.event);
+                        else {
+                            alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.NoLongerAvailable")');
+                            return false;
+                        }
+                    },
+                    complete: {},
+                    error: function (data) {
+                        alert('Error happend!');
+                        return false;
+                    },
+                });
+            }
+        };
+    });
+</script>

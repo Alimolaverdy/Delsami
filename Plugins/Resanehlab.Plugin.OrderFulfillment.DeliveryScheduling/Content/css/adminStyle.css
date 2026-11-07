@@ -1,0 +1,38 @@
+.rlds-content {
+    min-height: initial
+}
+
+.k-grid td {
+    line-height: 2.5
+}
+
+td .alert {
+    padding: 6px 12px;
+    line-height:20px;
+    display:inline-block
+}
+.time-table {
+margin-top:15px
+}
+
+.time-table td {
+    vertical-align: middle !important
+}
+
+#TimeTable {
+margin-top:30px
+}
+.time-table-popup {
+    margin: 0
+}
+
+
+.time-table-popup th:first-child {
+    width: 30%;
+  
+}
+
+.show-save-button{
+    text-align:right;
+    margin-bottom:15px
+}

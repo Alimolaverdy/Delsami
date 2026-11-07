@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "";
+}
+
+<script>
+    Delsami.documentReady(function () {
+        $(".shipping-method form").unbind("submit");
+
+        $(".shipping-method .buttons").detach().insertAfter("#available-delivery-datetimes");
+        var flag = true;
+
+        $(".shipping-method form").submit(function (e) {
+
+            var selectedRadioButton = $("input[name='deliveryDateTimesRadioGroup']:checked");
+            if (!selectedRadioButton.val()) {
+                alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.MustBeSelectedAtLeastOne")');
+                return false;
+            }
+
+            var shippingMethodCapacityId = selectedRadioButton.parent().attr("data-shippingmethod-capacity-id");
+            var deliveryDateOnUtc = selectedRadioButton.parent().attr("data-deliverydate-on-utc");
+            var deliveryTime = selectedRadioButton.parent().attr("data-delivery-time");
+            var availableDeliveryTimeRangeId = selectedRadioButton.parent().attr("data-available-delivery-time-range-id");
+            var selectedShippingOption = $('input[name=shippingoption]:checked').val();
+
+            var submitButton = $(".shipping-method .buttons .shipping-method-next-step-button")
+
+            if (flag) {
+                e.preventDefault();
+
+                $.ajax({
+                    url: '@Url.Action("CheckAvailabilityForSelectedDateTime", "DeliveryScheduling")',
+                    data: { shippingMethodCapacityId: shippingMethodCapacityId, deliveryDateOnUtc: deliveryDateOnUtc, availableDeliveryTimeRangeId: availableDeliveryTimeRangeId, deliveryTime: deliveryTime, selectedShippingOption: selectedShippingOption },
+                    type: 'post',
+                    success: function (data) {
+                        if (!data.Success) {
+                            alert('@T("Delsami.Plugin.OrderFulfillment.DeliveryScheduling.AvailableDeliveryDateTime.NoLongerAvailable")');
+                            return false;
+                        }
+                        else {
+                            flag = false;
+                            submitButton.click();
+                        }
+                    },
+                    complete: {},
+                    error: function (data) {
+                        alert('Error happend!');
+                        return false;
+                    },
+                });
+            }
+        });
+    });
+</script>
